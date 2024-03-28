@@ -18,6 +18,7 @@ export const SideBar = () => {
         'overflow-y-auto overflow-x-auto fixed transition duration-300 ease-in-out z-[99999]': true,
         'bg-white': theme === 'light',
         'bg-black': theme === 'dark',
+        'bg-gray-400': theme === 'custom',
         'h-full shadow-sm shadow-slate-500/40': true,
         'w-[20rem]': !toggleCollapse,
         'sm:w-[5.4rem] sm:left-0 left-[-100%]': toggleCollapse,
