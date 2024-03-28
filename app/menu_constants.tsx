@@ -20,7 +20,7 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
             icon: <BsGear size={20} />,
             submenu: true,
             subMenuItems: [
-                { title: 'Priveleges', path: '/Configurations' },
+                { title: 'Priveleges', path: '/priveleges' },
                 { title: 'System Settings', path: '/Configurations/new' },
                 { title: 'Translations', path: '/Configurations/new' },
             ],

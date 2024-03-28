@@ -1,18 +1,14 @@
 'use client'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { Button } from "./ui/button";
-import { Avatar,  AvatarImage } from "./ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { PenBox } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-export function UserNav() {
+export function Actionbutton() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-10 w-10">
-                        <AvatarImage src="/avatars/02.png" alt="" />
-                    </Avatar>
-                </Button>
+                   <PenBox className="hover:cursor-pointer"/>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 z-[99998]">
                 <DropdownMenuLabel>
