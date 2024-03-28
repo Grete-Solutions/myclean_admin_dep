@@ -34,7 +34,7 @@ export default function RootLayout({
             <SideBar />
             <div className="flex flex-col h-full w-full">
               <Header />
-              <PageWrapper children={children} />
+              <PageWrapper>{children}</PageWrapper>
             </div>
           </>
         </ThemeProvider>
