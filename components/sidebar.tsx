@@ -15,7 +15,7 @@ export const SideBar = () => {
 
     const asideStyle = classNames({
         sidebar: true,
-        'overflow-y-auto overflow-x-auto fixed transition duration-300  ease-in-out z-[99999]': true,
+        'overflow-y-auto overflow-x-auto bg-white fixed transition duration-300  ease-in-out z-[99999]': true,
         'text-black': theme === 'light',
         'text-white': theme === 'dark',
         'text-sky-100': theme === 'custom',
