@@ -77,7 +77,7 @@ export default function Tabs({}: Props) {
               <Input id="name" placeholder="0" />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="username">User Can Schedule A Ride After "X" minutes</Label>
+              <Label htmlFor="username">User Can Schedule A Ride After X minutes</Label>
               <Input id="username" placeholder="1" />
             </div>
             <div className="space-y-1">
