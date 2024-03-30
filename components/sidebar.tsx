@@ -16,6 +16,9 @@ export const SideBar = () => {
     const asideStyle = classNames({
         sidebar: true,
         'overflow-y-auto overflow-x-auto fixed transition duration-300  ease-in-out z-[99999]': true,
+        'text-black': theme === 'light',
+        'text-white': theme === 'dark',
+        'text-sky-100': theme === 'custom',
         'bg-white': theme === 'light',
         'bg-black': theme === 'dark',
         'bg-gray-400': theme === 'custom',
@@ -28,7 +31,7 @@ export const SideBar = () => {
 
     return (
         <aside className={asideStyle}>
-            <div className="sidebar-top relative flex items-center px-3.5 py-5">
+            <div className="sidebar-top  relative flex items-center px-3.5 py-5">
                 {mounted && <SideBarLogo />}
                 <h3 className={classNames("pl-2 font-bold text-2xl min-w-max text-sidebar-foreground",
                     { hidden: toggleCollapse })}>

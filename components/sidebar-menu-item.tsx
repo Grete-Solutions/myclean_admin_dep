@@ -54,10 +54,10 @@ export const SideBarMenuItem = ({ item }: { item: SideNavItem }) => {
                                         <Link
                                             key={idx}
                                             href={subItem.path}
-                                            className={`flex space-x-1 items-center ${navMenuDropdownItem} ${subItem.path === pathname ? ' text-white font-medium ' : ' text-sidebar-foreground'}`}
+                                            className={`flex space-x-1 items-center ${navMenuDropdownItem} ${subItem.path === pathname ? 'text-white bg-[#0A8791] font-medium ' : ' text-sidebar-foreground'} `}
                                         >
                                                 <Circle size={16}/>
-                                            <span>{subItem.title}</span>
+                                            <span >{subItem.title}</span>
                                         </Link>
                                     );
                                 })}
