@@ -75,7 +75,7 @@ export default function Tabs({}: Props) {
             <div className="space-y-1">
               <Label htmlFor="name">Driver Search radius in Kilometer</Label>
               <Input id="name" placeholder="0" />
-            </div>
+            </div> 
             <div className="space-y-1">
               <Label htmlFor="username">User Can Schedule A Ride After X minutes</Label>
               <Input id="username" placeholder="1" />
@@ -233,7 +233,7 @@ export default function Tabs({}: Props) {
           <CardHeader>
             <CardTitle>Map Settings</CardTitle>
             <CardDescription>
-              Change your Map Settings here. After saving, you'll be logged out.
+              Change your Map Settings here. After saving, you&apos;ll be logged out.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
