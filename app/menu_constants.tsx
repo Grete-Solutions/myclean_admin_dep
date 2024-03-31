@@ -62,8 +62,8 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                 submenu: true,
                 subMenuItems: [
                     { title: 'Completed Rides', path: '/TripRequests/CompletedRides' },
-                    { title: 'Scheduled rides', path: '/Trip Requests/ScheduledRides' },
-                    { title: 'Cancelled rides', path: '/Trip Requests/CancelledRides'},
+                    { title: 'Scheduled rides', path: '/TripRequests/ScheduledRides' },
+                    { title: 'Cancelled rides', path: '/TripRequests/CancelledRides'},
                 ],
             },
             {
