@@ -39,18 +39,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Payment,data } from "./countryConstants"
+import { VehicleConst,data } from "../(pages)/VehicleTypes/vehicleConstants"
 
-function generateAscendingSno(data:string) {
-  return Array.from({ length: data.length }, (_, index) => index + 1);
-}
 
-export const columns: ColumnDef<Payment>[] = [
-  {
-    accessorKey: "Sno",
-    header: "Sno",
-    cell: ({ row }) => <div>{row.index + 1}</div>, // Use row index as Sno value
-},
+
+export const columns: ColumnDef<VehicleConst>[] = [
+    {
+        accessorKey: "Sno",
+        header: "Sno",
+        cell: ({ row }) => <div>{row.getValue("Sno")}</div>,
+      },
   {
     accessorKey: "Name",
     header: ({ column }) => {
@@ -67,26 +65,27 @@ export const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => <div className="uppercase">{row.getValue("Name")}</div>,
   },
   {
-    accessorKey: "CurrencyCode",
-    header: "CurrencyCode",
+    accessorKey: "IconTypes",
+    header: "IconTypes",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("CurrencyCode")}</div>
+      <div className="capitalize">{row.getValue("IconTypes")}</div>
     ),
+  },
+   {
+    accessorKey: "Icon",
+    header: "Icon",
+    cell: ({ row }) => <img src={row.original.Icon} alt="" className="w-14 object-contain h-14"/>,
   },
     {
-    accessorKey: "CurrencySymbol",
-    header: "CurrencySymbol",
+    accessorKey: "Status",
+    header: "Status",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("CurrencySymbol")}</div>
+      <div className="capitalize">{row.getValue("Status")}</div>
     ),
   },
 
 
-  {
-    accessorKey: "Flag",
-    header: "Flag",
-    cell: ({ row }) => <img src={row.original.Flag} alt="" className="w-14 object-contain h-14"/>,
-  },
+ 
   {
     header: "Actions",
     id: "actions",
@@ -118,7 +117,7 @@ export const columns: ColumnDef<Payment>[] = [
   },
 ]
 
-export function CountryDataTable() {
+export function VehicleTypesDataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []

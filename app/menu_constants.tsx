@@ -68,7 +68,7 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
             },
             {
                 title: 'Vehicle Types',
-                path: '/vehicleTypes',
+                path: '/VehicleTypes',
                 icon: <Car size={20} />,
             },
             {
