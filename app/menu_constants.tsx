@@ -38,14 +38,11 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                 icon: <GitBranch size={20} />,
                 submenu: true,
                 subMenuItems: [
-                    { title: 'Vehicle Make', path: '/Master Data' },
-                    { title: 'Vehicle Model', path: '/Master Data/new' },
-                    { title: 'Country', path: '/Master Data/new' },
-                    { title: 'Driver Needed Documentation', path: '/Master Data/new' },
-                    { title: 'Owner Needed Documentation', path: '/Master Data/new' },
-                    { title: 'Fleet Needed Documentation', path: '/Master Data/new' },
-                    { title: 'Rental Package Type', path: '/Master Data/new' },
-                    { title: 'Banner Image', path: '/Master Data/new' },
+                    { title: 'Vehicle Make', path: '/MasterData/VehicleMake' },
+                    { title: 'Vehicle Model', path: '/MasterData/VehicleModel' },
+                    { title: 'Country', path: '/MasterData/Country' },
+                    { title: 'Driver Needed Documentation', path: '/MasterData/DriverNeededDocumentation' },
+                
                 ],
             },
             {
@@ -55,7 +52,7 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
             },
             {
                 title: 'Admins',
-                path: '/admins',
+                path: '/Admin',
                 icon: <BsPersonFillCheck size={20} />,
             },
             {
@@ -64,9 +61,9 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                 icon: <Ticket size={20} />,
                 submenu: true,
                 subMenuItems: [
-                    { title: 'Completed Rides', path: '/Trip Requests' },
-                    { title: 'Scheduled rides', path: '/Trip Requests/new' },
-                    { title: 'Cancelled rides', path: '/Trip Requests/new' },
+                    { title: 'Completed Rides', path: '/TripRequests/CompletedRides' },
+                    { title: 'Scheduled rides', path: '/Trip Requests/ScheduledRides' },
+                    { title: 'Cancelled rides', path: '/Trip Requests/CancelledRides'},
                 ],
             },
             {

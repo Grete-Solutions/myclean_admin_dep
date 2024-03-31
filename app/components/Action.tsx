@@ -10,29 +10,9 @@ export function Actionbutton() {
             <DropdownMenuTrigger asChild>
                    <PenBox className="hover:cursor-pointer"/>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 z-[99998]">
-                <DropdownMenuLabel>
-                    <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">Pascal Seth</p>
-                        <p className="text-xs leading-none text-muted-foreground">
-                            pascalelikem@gmail.com
-                        </p>
-                    </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                    <DropdownMenuItem>
-                        Profile
-                        <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        Settings
-                        <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
+            <DropdownMenuContent className="w-fit ">
                 <DropdownMenuItem>
-                    <Link href="">Log out</Link>
+                    <div>Edit</div>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

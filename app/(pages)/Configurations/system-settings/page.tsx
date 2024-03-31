@@ -21,7 +21,7 @@ type Props = {};
 
 export default function Tabs({}: Props) {
     return (
-    <BaseTabs defaultValue="account" className="w-full h-full">
+    <BaseTabs defaultValue="WalletSettings" className="w-full h-full">
       <BaseTabsList className="grid grid-cols-8 h-fit max-lg:grid-cols-3 w-full">
       <BaseTabsTrigger value="WalletSettings">Wallet Settings</BaseTabsTrigger>
         <BaseTabsTrigger value="TripSettings">Trip Settings</BaseTabsTrigger>
