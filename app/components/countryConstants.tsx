@@ -1,4 +1,4 @@
- const data: Payment[] = [
+export const data: Payment[] = [
     {
       id: "Algeria",
       Sno: 1,
@@ -146,4 +146,3 @@ export type Payment = {
   CurrencySymbol?: string;
   Name: string
 }
-export default data;
