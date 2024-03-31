@@ -1,4 +1,4 @@
-export const data: Admin[] = [
+ const data: Admin[] = [
   {
     id: "REQ_002150",
     Sno: 1,
@@ -21,3 +21,4 @@ Date: string
 DriverName: string;
 UserName: string
 }
+export default data;
