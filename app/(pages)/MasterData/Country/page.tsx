@@ -3,7 +3,7 @@ import React from 'react'
 
 type Props = {}
 
-export function page({}: Props) {
+export function Country({}: Props) {
   return (
     <div><CountryDataTable/></div>
   )
