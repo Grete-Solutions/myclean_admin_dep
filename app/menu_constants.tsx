@@ -77,11 +77,10 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                 icon: <BsPeople size={20} />,
                 submenu: true,
                 subMenuItems: [
-                    {title: 'Approved Drivers', path: '/Trip Requests' },
-                    {title: 'Approved Pending Drivers', path: '/Trip Requests' },
-                    {title: 'Driver Ratings', path: '/Trip Requests' },
-                    {title: 'Withdrawal Requests', path: '/Trip Requests' },
-                    {title: 'Negative Balance Drivers', path: '/Trip Requests' },
+                    {title: 'Approved Drivers', path: '/manageDrivers/ApprovedDrivers' },
+                    {title: 'Approve Pending Drivers', path: '/manageDrivers/ApprovePendingDrivers' },
+                    {title: 'Driver Ratings', path: '//manageDrivers/DriverRatings' },
+                    {title: 'Negative Balance Drivers', path: '//manageDrivers/NegativeBalanceDrivers' },
                ],
             },
                {
