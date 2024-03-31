@@ -1,10 +1,12 @@
-import { CountryDataTable } from '@/app/components/countries-data'
-import React from 'react'
+import { CountryDataTable } from '@/app/components/countries-data';
+import React from 'react';
 
-type Props = {}
-
-export function Country({}: Props) {
+const CountryPage: React.FC = () => {
   return (
-    <div><CountryDataTable/></div>
-  )
-}
+    <div>
+      <CountryDataTable />
+    </div>
+  );
+};
+
+export default CountryPage;
