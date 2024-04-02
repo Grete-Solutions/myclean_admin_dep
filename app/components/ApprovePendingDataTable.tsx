@@ -39,13 +39,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { ApprovedConst,data } from "./(pages)/manageDrivers/ApprovedDrivers/ApprovedDriverConstants "
+import { ApprovePendingConst,data } from "../(pages)/manageDrivers/ApprovePendingDrivers/ApprovedDriverConstants "
 
 function generateAscendingSno(data:string) {
     return Array.from({ length: data.length }, (_, index) => index + 1);
   }
   
-  export const columns: ColumnDef<ApprovedConst>[] = [
+  export const columns: ColumnDef<ApprovePendingConst>[] = [
     {
       accessorKey: "Sno",
       header: "Sno",
@@ -136,18 +136,18 @@ function generateAscendingSno(data:string) {
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}
             >
-              Copy ID
+              Copy  ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-          </DropdownMenuContent>
+            <DropdownMenuItem>Approve</DropdownMenuItem>
+            <DropdownMenuItem>Dissaprove</DropdownMenuItem>          </DropdownMenuContent>
         </DropdownMenu>
       )
     },
   },
 ]
 
-export function ApprovedDataTable() {
+export function ApprovePendingDataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []

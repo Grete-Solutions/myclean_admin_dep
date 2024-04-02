@@ -39,13 +39,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { ApprovePendingConst,data } from "./(pages)/manageDrivers/ApprovePendingDrivers/ApprovedDriverConstants "
+import { ApprovedConst,data } from "../(pages)/manageDrivers/ApprovedDrivers/ApprovedDriverConstants "
+import ApprovedDriversSheet from "./Sheetpop/ManageDRIVERS/ApprovedDriverSheet"
 
 function generateAscendingSno(data:string) {
     return Array.from({ length: data.length }, (_, index) => index + 1);
   }
   
-  export const columns: ColumnDef<ApprovePendingConst>[] = [
+  export const columns: ColumnDef<ApprovedConst>[] = [
     {
       accessorKey: "Sno",
       header: "Sno",
@@ -126,7 +127,7 @@ function generateAscendingSno(data:string) {
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button  className="h-8 w-8 p-0 bg-[#0A8791]">
+            <Button  className="h-8 w-8 p-0 #0A8791]">
               <span className="sr-only">Open menu</span>
               <DotsHorizontalIcon className="h-4 w-4" />
             </Button>
@@ -136,18 +137,18 @@ function generateAscendingSno(data:string) {
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}
             >
-              Copy  ID
+              Copy ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Approve</DropdownMenuItem>
-            <DropdownMenuItem>Dissaprove</DropdownMenuItem>          </DropdownMenuContent>
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+          </DropdownMenuContent>
         </DropdownMenu>
       )
     },
   },
 ]
 
-export function ApprovePendingDataTable() {
+export function ApprovedDataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -177,6 +178,7 @@ export function ApprovePendingDataTable() {
 
   return (
     <div className="w-full">
+      <ApprovedDriversSheet/>
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter Names..."

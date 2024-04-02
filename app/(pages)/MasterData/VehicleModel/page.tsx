@@ -10,6 +10,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Actionbutton } from '@/app/components/Action';
+import VehicleModelSheet from '@/app/components/Sheetpop/MasterDataPop/VehicleModelSheet';
 
 
 
@@ -34,6 +35,8 @@ const tabledata:Data[]=[
     }
 ]
     return (
+        <>
+        <VehicleModelSheet/>
         <Table>
             <TableCaption>A list of your priveleges.</TableCaption>
             <TableHeader>
@@ -60,7 +63,7 @@ const tabledata:Data[]=[
                     </TableRow>
                 ))}
             </TableBody>
-        </Table>
+        </Table></>
     );
 };
 

@@ -1,4 +1,4 @@
-import { DriverRatingDataTable } from '@/app/DriverRatingDataTable';
+import { DriverRatingDataTable } from '@/app/components/DriverRatingDataTable';
 import React from 'react';
 
 const CountryPage: React.FC = () => {

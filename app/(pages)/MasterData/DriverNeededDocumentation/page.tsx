@@ -10,6 +10,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Actionbutton } from '@/app/components/Action';
+import AddDriverDoc from '@/app/components/Sheetpop/MasterDataPop/AddDriverDocSheet';
 
 
 
@@ -38,6 +39,8 @@ const tabledata:Data[]=[
     }
 ]
     return (
+        <>
+        <AddDriverDoc/>
         <Table>
             <TableCaption>A list of your priveleges.</TableCaption>
             <TableHeader>
@@ -68,7 +71,7 @@ const tabledata:Data[]=[
                     </TableRow>
                 ))}
             </TableBody>
-        </Table>
+        </Table></>
     );
 };
 

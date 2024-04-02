@@ -39,7 +39,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { ApprovePendingConst,data } from "./(pages)/manageDrivers/DriverRatings/DriverRatingConstants"
+import { ApprovePendingConst,data } from "../(pages)/manageDrivers/DriverRatings/DriverRatingConstants"
 
 function generateAscendingSno(data:string) {
     return Array.from({ length: data.length }, (_, index) => index + 1);

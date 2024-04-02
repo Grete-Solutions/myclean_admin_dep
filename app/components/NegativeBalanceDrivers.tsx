@@ -39,7 +39,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { ApprovePendingConst,data } from "./(pages)/manageDrivers/NegativeBalanceDrivers/NegativeBalanceDriversCont"
+import { ApprovePendingConst,data } from "../(pages)/manageDrivers/NegativeBalanceDrivers/NegativeBalanceDriversCont"
 
 function generateAscendingSno(data:string) {
     return Array.from({ length: data.length }, (_, index) => index + 1);

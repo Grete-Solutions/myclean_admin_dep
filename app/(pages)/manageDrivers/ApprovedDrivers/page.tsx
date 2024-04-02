@@ -1,4 +1,4 @@
-import { ApprovedDataTable } from '@/app/ApprovedDataTable';
+import { ApprovedDataTable } from '@/app/components/ApprovedDataTable';
 import React from 'react';
 
 const CountryPage: React.FC = () => {
