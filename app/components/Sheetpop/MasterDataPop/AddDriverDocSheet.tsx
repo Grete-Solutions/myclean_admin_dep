@@ -32,7 +32,7 @@ function AddDriverDoc({}: Props) {
             <SheetHeader>
               <SheetTitle >Add </SheetTitle>
               <SheetDescription>
-                 Click save when you're done.
+                 Click save when you&apos;re done.
               </SheetDescription>
             </SheetHeader>
             <div className="grid gap-10 py-4">
