@@ -1,7 +1,7 @@
 import { ApprovePendingDataTable } from '@/app/ApprovePendingDataTable';
 import React from 'react';
 
-const CountryPage: React.FC = () => {
+const ApprovedPending: React.FC = () => {
   return (
     <div>
       <ApprovePendingDataTable />
@@ -9,4 +9,4 @@ const CountryPage: React.FC = () => {
   );
 };
 
-export default CountryPage;
+export default ApprovedPending;

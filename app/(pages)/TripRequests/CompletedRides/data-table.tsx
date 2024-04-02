@@ -9,6 +9,26 @@ export const data: Admin[] = [
     PayStatus: "Paid"
 
   },
+  {
+    id: "REQ_02150",
+    Sno: 1,
+    Date: "2024-03-30",
+    UserName: "peter haj",
+    DriverName: "amir hosen	",
+    TripStatus: "Completed",
+    PayStatus: "Paid"
+
+  },
+  {
+    id: "REQ_003150",
+    Sno: 1,
+    Date: "2024-03-30",
+    UserName: "kjhkj haj",
+    DriverName: "amir hosen	",
+    TripStatus: "Completed",
+    PayStatus: "Paid"
+
+  },
  ];
 
 

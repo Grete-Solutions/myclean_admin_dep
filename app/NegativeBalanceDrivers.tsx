@@ -39,67 +39,81 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Admin,data } from "../(pages)/TripRequests/CompletedRides/data-table"
+import { ApprovePendingConst,data } from "./(pages)/manageDrivers/NegativeBalanceDrivers/NegativeBalanceDriversCont"
 
-
-
-export const columns: ColumnDef<Admin>[] = [
+function generateAscendingSno(data:string) {
+    return Array.from({ length: data.length }, (_, index) => index + 1);
+  }
+  
+  export const columns: ColumnDef<ApprovePendingConst>[] = [
     {
-        accessorKey: "Sno",
-        header: "Sno",
-        cell: ({ row }) => <div>{row.getValue("Sno")}</div>,
-      },
-      {
-        accessorKey: "id",
-        header: "Request ID",
-        cell: ({ row }) => (
-          <div className="capitalize">{row.getValue("id")}</div>
-        ),
-      },  
-      {
-    accessorKey: "Date",
-    header: "Date",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("Date")}</div>
-    ),
+      accessorKey: "Sno",
+      header: "Sno",
+      cell: ({ row }) => <div>{row.index + 1}</div>, // Use row index as Sno value
   },
   {
-    accessorKey: "UserName",
+    accessorKey: "Name",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-         User Name
+          Name
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       )
     },
-    cell: ({ row }) => <div className="uppercase">{row.getValue("UserName")}</div>,
+    cell: ({ row }) => <div className="uppercase">{row.getValue("Name")}</div>,
   },
-
-    {
-    accessorKey: "DriverName",
-    header: "DriverName",
+  {
+    accessorKey: "ServiceLocation",
+    header: "ServiceLocation",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("DriverName")}</div>
+      <div className="capitalize">{row.getValue("ServiceLocation")}</div>
     ),
   },
   {
-    accessorKey: "TripStatus",
-    header: "TripStatus",
+    accessorKey: "Email",
+    header: "Email",
     cell: ({ row }) => (
-      <div className="capitalize ">{row.getValue("TripStatus")}</div>
+      <div className="capitalize">{row.getValue("Email")}</div>
     ),
+  },
+  {
+    accessorKey: "Mobile",
+    header: "Mobile",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("Mobile")}</div>
+    ),
+  },
+  {
+    accessorKey: "Type",
+    header: "Type",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("Type")}</div>
+    ),
+  },
+   {
+    accessorKey: "WalletBalance",
+    header: "WalletBalance",
+    cell: ({ row }) => <div>{row.getValue("WalletBalance")}</div>
   },
     {
-    accessorKey: "PayStatus",
-    header: "PayStatus",
+    accessorKey: "Status",
+    header: "Status",
     cell: ({ row }) => (
-      <div className="capitalize ">{row.getValue("PayStatus")}</div>
+      <div className="capitalize">{row.getValue("Status")}</div>
     ),
   },
+  {
+    accessorKey: "DeclinedReason",
+    header: "DeclinedReason",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("DeclinedReason")}</div>
+    ),
+  },
+ 
   {
     header: "Actions",
     id: "actions",
@@ -120,18 +134,18 @@ export const columns: ColumnDef<Admin>[] = [
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}
             >
-              Copy Country ID
+              Copy  ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-          </DropdownMenuContent>
+            <DropdownMenuItem>Approve</DropdownMenuItem>
+            <DropdownMenuItem>Dissaprove</DropdownMenuItem>          </DropdownMenuContent>
         </DropdownMenu>
       )
     },
   },
 ]
 
-export function CompletedRidesDataTable() {
+export function NegativeBalanceDriversDataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -164,9 +178,9 @@ export function CompletedRidesDataTable() {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter Names..."
-          value={(table.getColumn("UserName")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("Name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("UserName")?.setFilterValue(event.target.value)
+            table.getColumn("Name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
