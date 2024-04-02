@@ -29,8 +29,7 @@ export default function Tabs({}: Props) {
         <BaseTabsTrigger value="Installation">Installation</BaseTabsTrigger>
         <BaseTabsTrigger value="Referral">Referral</BaseTabsTrigger>
         <BaseTabsTrigger value="MapSettings">Map Settings</BaseTabsTrigger>
-        <BaseTabsTrigger value="FirebaseSettings">Firebase Settings</BaseTabsTrigger>
-        <BaseTabsTrigger value="MailConfiguration" className='max-lg:col-span-2'>Mail Configuration</BaseTabsTrigger>       
+ 
         
       </BaseTabsList>
     {/*Wallet Settings */}
