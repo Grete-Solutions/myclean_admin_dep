@@ -61,9 +61,9 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                 icon: <Ticket size={20} />,
                 submenu: true,
                 subMenuItems: [
-                    { title: 'Completed Pickup', path: '/PickupRequests/CompletedRides' },
-                    { title: 'Scheduled Pickup', path: '/PickupRequests/ScheduledRides' },
-                    { title: 'Cancelled Pickup', path: '/PickupRequests/CancelledRides'},
+                    { title: 'Completed Pickup', path: '/TripRequests/CompletedRides' },
+                    { title: 'Scheduled Pickup', path: '/TripRequests/ScheduledRides' },
+                    { title: 'Cancelled Pickup', path: '/TripRequests/CancelledRides'},
                 ],
             },
             {
