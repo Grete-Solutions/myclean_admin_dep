@@ -39,7 +39,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Admin,data } from "../(pages)/TripRequests/ScheduledRides/data-table"
+import { Admin,data } from "../(pages)/PickupRequests/ScheduledRides/data-table"
 
 
 
