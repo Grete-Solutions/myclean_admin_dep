@@ -166,7 +166,7 @@ export default function Home() {
           </Card>
           <Card className="lg:col-span-3">
             <CardHeader>
-              <CardTitle>Todays trips</CardTitle>
+              <CardTitle>Todays Pickup</CardTitle>
               <CardDescription>
                 Check progress on completing,pending or cancelled requests
               </CardDescription>
