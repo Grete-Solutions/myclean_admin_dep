@@ -56,14 +56,14 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                 icon: <BsPersonFillCheck size={20} />,
             },
             {
-                title: 'Trip Requests',
-                path: '/TripRequests',
+                title: 'Pickup Requests',
+                path: '/PickupRequests',
                 icon: <Ticket size={20} />,
                 submenu: true,
                 subMenuItems: [
-                    { title: 'Completed Rides', path: '/TripRequests/CompletedRides' },
-                    { title: 'Scheduled rides', path: '/TripRequests/ScheduledRides' },
-                    { title: 'Cancelled rides', path: '/TripRequests/CancelledRides'},
+                    { title: 'Completed Pickups', path: '/PickupRequests/CompletedPickups' },
+                    { title: 'Scheduled Pickups', path: '/PickupRequests/ScheduledPickups' },
+                    { title: 'Cancelled Pickups', path: '/PickupRequests/CancelledPickups'},
                 ],
             },
             {
