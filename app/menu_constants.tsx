@@ -1,6 +1,6 @@
 import { SideNavItemGroup } from "@/types/type";
 import { Car, GitBranch, LocateFixed, LucideSidebarClose, Speaker, Ticket } from "lucide-react";
-import { BsCash, BsChat, BsDoorClosed, BsEnvelope, BsFile, BsGear, BsHouseDoor, BsKanban, BsListUl, BsPeople, BsPersonFillCheck, BsQuestionCircle, BsX } from "react-icons/bs";
+import { BsCash, BsChat, BsDoorClosed, BsEnvelope, BsFile, BsGear, BsHouseDoor, BsKanban, BsListUl, BsPeople, BsPersonFillCheck, BsPersonFillGear, BsPersonGear, BsQuestionCircle, BsX } from "react-icons/bs";
 
 
 
@@ -82,6 +82,19 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                     {title: 'Driver Ratings', path: '/manageDrivers/DriverRatings' },
                     {title: 'Negative Balance Drivers', path: '/manageDrivers/NegativeBalanceDrivers' },
                ],
+            },
+            {
+                title: 'Manage Users',
+                path: '/manageUsers',
+                icon: <BsPersonGear size={20} />,
+                submenu: true,
+                subMenuItems: [
+                    {title: 'Approved Users', path: '/manageUsers/ApprovedUsers' },
+                    {title: 'Approve Pending Users', path: '/manageUsers/ApprovePendingUsers' },
+                    {title: 'Suspended Users', path: '/manageUsers/SuspendedUsers' },
+                    {title: 'Deactivated Users', path: '/manageUsers/DeactivatedUsers' },
+                    {title: 'Deleted Users', path: '/manageUsers/DeletedUsers' },
+                    ],
             },
                {
                         title: 'Set Price',
