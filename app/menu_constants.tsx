@@ -58,8 +58,6 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
             {
                 title: 'Pickup Requests',
                 path: '/PickupRequests',
-                title: 'Pickup Requests',
-                path: '/PickupRequests',
                 icon: <Ticket size={20} />,
                 submenu: true,
                 subMenuItems: [
