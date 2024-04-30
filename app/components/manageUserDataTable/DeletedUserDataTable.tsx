@@ -39,13 +39,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { SuspendedUsersConst,data } from "@/app/(pages)/manageUsers/SuspendedUsers/SuspendedUsersConstants"
+import { DeletedUsersConst,data } from "@/app/(pages)/manageUsers/DeletedUsers/DeletedUsersConstants"
 
 function generateAscendingSno(data:string) {
     return Array.from({ length: data.length }, (_, index) => index + 1);
   }
   
-  export const columns: ColumnDef<SuspendedUsersConst>[] = [
+  export const columns: ColumnDef<DeletedUsersConst>[] = [
     {
       accessorKey: "Sno",
       header: "Sno",
@@ -100,10 +100,10 @@ function generateAscendingSno(data:string) {
     ),
   },
   {
-    accessorKey: "SuspendedReason",
-    header: "Suspended Reason",
+    accessorKey: "DeletedReason",
+    header: "Deleted Reason",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("SuspendedReason")}</div>
+      <div className="capitalize">{row.getValue("DeletedReason")}</div>
     ),
   },
   {
@@ -147,7 +147,7 @@ function generateAscendingSno(data:string) {
   },
 ]
 
-export function SuspendedUsersDataTable() {
+export function DeletedUsersDataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
