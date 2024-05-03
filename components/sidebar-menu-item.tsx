@@ -57,7 +57,7 @@ export const SideBarMenuItem = ({ item }: { item: SideNavItem }) => {
                                             className={`flex space-x-1 items-center ${navMenuDropdownItem} ${subItem.path === pathname ? 'text-white bg-[#0A8791] font-medium ' : ' text-sidebar-foreground'} `}
                                         >
                                                 <Circle size={16}/>
-                                            <span >{subItem.title}</span>
+                                            <span className='font-[550] text-[15px] w-full' >{subItem.title}</span>
                                         </Link>
                                     );
                                 })}
