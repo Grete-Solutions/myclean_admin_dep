@@ -26,7 +26,6 @@ export default function Tabs({}: Props) {
       <BaseTabsTrigger value="WalletSettings">Wallet Settings</BaseTabsTrigger>
         <BaseTabsTrigger value="TripSettings">Trip Settings</BaseTabsTrigger>
         <BaseTabsTrigger value="AppSettings">App Settings</BaseTabsTrigger>
-        <BaseTabsTrigger value="Installation">Installation</BaseTabsTrigger>
         <BaseTabsTrigger value="Referral">Referral</BaseTabsTrigger>
         <BaseTabsTrigger value="MapSettings">Map Settings</BaseTabsTrigger>
  
@@ -161,36 +160,6 @@ export default function Tabs({}: Props) {
               <Label htmlFor="username">Show Wallet Feature On Mobile App User</Label>
               <Input id="username" placeholder="1" />
             </div>
-          </CardContent>
-          <CardFooter>
-            <Button>Save changes</Button>
-          </CardFooter>
-        </Card>
-      </BaseTabsContent>
-
-
-        {/*Installation */}
-      <BaseTabsContent value="Installation">
-        <Card>
-          <CardHeader>
-            <CardTitle>Installation</CardTitle>
-            <CardDescription>
-              Make changes to your Installation here. Click save when you&apos;re done.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {/* <div className="space-y-1">
-              <Label htmlFor="name">Minimum Wallet Amount For transfer</Label>
-              <Input id="name" placeholder="0" />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="username">Driver Wallet Minimum Amount To Get An Order</Label>
-              <Input id="username" placeholder="1" />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="username">Owner Wallet Minimum Amount To Get An Order</Label>
-              <Input id="username" placeholder="1" />
-            </div> */}
           </CardContent>
           <CardFooter>
             <Button>Save changes</Button>

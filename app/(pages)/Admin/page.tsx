@@ -10,6 +10,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Actionbutton } from '@/app/components/Action';
+import AddAdminDoc from '@/app/components/Sheetpop/Configuration/AddAdminSheet';
 
 
 
@@ -45,6 +46,7 @@ const tabledata:Data[]=[
         <Table>
             <TableCaption>A list of your Admins.</TableCaption>
             <TableHeader>
+                <AddAdminDoc/>
                 <TableRow>
                     {[
                         { label: 'Sr No', className: 'w-[100px]' },

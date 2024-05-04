@@ -19,8 +19,9 @@ const PromoCode = () => {
 interface Data{
     srNodata:string
     Code:string
-    From:string
-    To:string
+    UserType:string
+    CouponType:string
+    CountNum:number
     Status:string
     action: ReactNode
 
@@ -29,8 +30,9 @@ const tabledata:Data[]=[
     {
         srNodata:'001',
         Code:'greeting',
-        From:'hello',
-        To:'Driver',
+        UserType:'hello',
+        CouponType:'Driver',
+        CountNum:2,
         Status:'Active',
         action:  <Actionbutton/>
 
@@ -47,8 +49,9 @@ const tabledata:Data[]=[
                     {[
                         { label: 'Sr No', className: 'w-[100px]' },
                         { label: 'Code' },
-                        { label: 'From' },
-                        { label: 'To' },
+                        { label: 'User Type' },
+                        { label: 'Coupon Type' },
+                        { label: 'Count Number' },
                         { label: 'Status' },
                         {label:'Action'}
                     ].map((header, index) => (
@@ -61,9 +64,10 @@ const tabledata:Data[]=[
                     <TableRow key={index}>
                         <TableCell>{data.srNodata}</TableCell>
                         <TableCell>{data.Code}</TableCell>
-                        <TableCell>{data.From}</TableCell>
-                        <TableCell className="text-left">{data.To}</TableCell>
-                        <TableCell className="text-left">{data.Status}</TableCell>
+                        <TableCell>{data.UserType}</TableCell>
+                        <TableCell className="text-left">{data.CouponType}</TableCell>
+                        <TableCell>{data.CountNum}</TableCell>
+ <TableCell className="text-left">{data.Status}</TableCell>
                         <TableCell className='text-center  text-[#0A8791]'>{data.action}</TableCell>
                     </TableRow>
                 ))}

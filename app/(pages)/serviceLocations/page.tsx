@@ -10,13 +10,13 @@ import {
 } from "@/components/ui/table";
 import { Actionbutton } from '@/app/components/Action';
 import { Button } from '@/components/ui/button';
-import CancellationSheet from '@/app/components/Sheetpop/Cancellation/CancellationSheet';
+import ServiceLocationsSheet from '@/app/components/Sheetpop/serviceLocations/serviceLocationsSheet';
 
-const Cancellation = () => {
+const ServiceLocations = () => {
     interface Data {
         srNodata: string;
         Country: string;
-        Price: string;
+        Price: number;
         City: string;
         Status: string;
         action: ReactNode;
@@ -28,15 +28,16 @@ const Cancellation = () => {
 
     return (
         <div>
-            <CancellationSheet />
+            <ServiceLocationsSheet />
             <Table>
-                <TableCaption>A list of your Cancellation.</TableCaption>
+                <TableCaption>A list of your ServiceLocations.</TableCaption>
                 <TableHeader>
                     <TableRow>
                         {[
                             { label: 'Sr No', className: 'w-[100px]' },
                             { label: 'Country' },
                             { label: 'City' },
+                            { label: 'Price' },
                             { label: 'Status', className: 'text-left' },
                             { label: 'Action' }
                         ].map((header, index) => (
@@ -69,4 +70,4 @@ const Cancellation = () => {
     );
 };
 
-export default Cancellation;
+export default ServiceLocations;

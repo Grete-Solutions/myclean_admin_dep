@@ -45,11 +45,11 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                 
                 ],
             },
-            // {
-            //     title: 'Service Locations',
-            //     path: '/serviceLocations',
-            //     icon: <LocateFixed size={20} />,
-            // },
+            {
+                title: 'Service Locations',
+                path: '/serviceLocations',
+                icon: <LocateFixed size={20} />,
+            },
             {
                 title: 'Admins',
                 path: '/Admin',
@@ -127,20 +127,13 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                 icon: <BsQuestionCircle size={20} />,
             },
             {
-                title: 'Cancellation',
-                path: '/Cancellation',
-                icon: <BsX size={20} />,
-            },
-            {
                 title: 'Complaints',
                 path: '/Complaints',
                 icon: <BsQuestionCircle size={20} />,
                 submenu: true,
                 subMenuItems: [
-                    {title: 'Complaint Title', path: '/Complaints/ComplaintTitle' },
                     {title: 'User Complaint', path: '/Complaints/UserComplaint' },
                     {title: 'Driver Complaint', path: '/Complaints/DriverComplaint' },
-                    {title: 'Owner Complaint', path: '/Complaints/OwnerComplaint' },
                     ],
             },
             {
@@ -151,7 +144,6 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                 subMenuItems: [
                     {title: 'User Report', path: '/Reports/UserReport' },
                     {title: 'Driver Report', path: '/Reports/DriverReport' },
-                    {title: 'Owner Report', path: '/Reports/OwnerReport' },
                     {title: 'Finance Report', path: '/Reports/FinanceReport' },
 ],
             },

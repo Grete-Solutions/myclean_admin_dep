@@ -17,6 +17,8 @@ import { CirclePlusIcon, MessageCircle, MessageCirclePlusIcon, Plus, PlusCircle 
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { CheckboxReactHookFormMultipleDriver } from '../Notification/FormselectDriver'
 import { CheckboxReactHookFormMultipleUser } from '../Notification/FormSelect'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { PromoCalendarForm } from '@/app/(pages)/PromoCode/Calendar'
  
 type Props = {}
 
@@ -29,7 +31,7 @@ function PromoCodeSheet({}: Props) {
   Add Code
   </Button>
   </SheetTrigger>
-  <SheetContent className='z-[9999999]'>
+  <SheetContent className='z-[9999]'>
   <ScrollArea className="h-full w-[350px] ">
             <SheetHeader>
               <SheetTitle >Add Promo Code </SheetTitle>
@@ -38,50 +40,51 @@ function PromoCodeSheet({}: Props) {
               </SheetDescription>
             </SheetHeader>
             <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-1 items-center gap-4">
- <Label htmlFor="pushTitle" className="text-left">
- Select Area
-                </Label>
-    <ScrollArea className="h-fit max-h-[200px] w-[350px] rounded-md border p-1">
-  <CheckboxReactHookFormMultipleUser/>
-  </ScrollArea>
-              </div>
-          
               <div className="grid grid-cols-1 items-center gap-4">
                 <Label htmlFor="Pcode" className="text-left">
                   Code
                 </Label>
                 <Input id="Pcode" placeholder='Enter Code' className="col-span-3" />
               </div>
+
               <div className="grid grid-cols-1 items-center gap-4">
-                <Label htmlFor="Minimum Trade Amount" className="text-left">
-                  Minimum Trade Amount
+                <Label htmlFor="ModelName" className="text-left">
+                  User Type
                 </Label>
-                <Input id="Minimum Trade Amount" placeholder="Enter your Minimum Trade Amount" className="col-span-3" />
+                <Select>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="Select User Type" />
+  </SelectTrigger>
+  <SelectContent className='z-[99999]'>
+  <SelectItem value="User">User</SelectItem>
+  <SelectItem value="Driver">Driver</SelectItem>
+  <SelectItem value="All">All</SelectItem>
+  </SelectContent>
+</Select>
+              </div> 
+              <div className="grid grid-cols-1 items-center gap-4">
+                <Label htmlFor="ModelName" className="text-left">
+                  Coupon Type
+                </Label>
+                <Select>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="Select Coupon Type" />
+  </SelectTrigger>
+  <SelectContent className='z-[99999]'>
+  <SelectItem value="Percentage">Percentage</SelectItem>
+  <SelectItem value="Numeric">Numeric</SelectItem>
+  </SelectContent>
+</Select>
+              </div> 
+              <div className="grid grid-cols-1 items-center gap-4">
+                <Label htmlFor="CountNum" className="text-left">
+                  Count Number
+                </Label>
+                <Input type='number' min={0} id="CountNum" placeholder='Enter Count Number' className="col-span-3" />
               </div>
+
               <div className="grid grid-cols-1 items-center gap-4">
-                <Label htmlFor="MaximumTradeAmount" className="text-left">
-                  Maximum Trade Amount
-                </Label>
-                <Input id="MaximumTradeAmount" placeholder="Enter your Maximum Trade Amount" className="col-span-3" />
-              </div>
-              <div className="grid grid-cols-1 items-center gap-4">
-                <Label htmlFor="DiscountPercentage" className="text-left">
-                  Discount Percentage
-                </Label>
-                <Input id="DiscountPercentage" placeholder="Enter your Discount Percentage" className="col-span-3" />
-              </div>
-              <div className="grid grid-cols-1 items-center gap-4">
-                <Label htmlFor="From" className="text-left">
-                  From
-                </Label>
-                <Input id="From" placeholder="From" className="col-span-3" />
-              </div>
-              <div className="grid grid-cols-1 items-center gap-4">
-                <Label htmlFor="To" className="text-left">
-                  To
-                </Label>
-                <Input id="To" placeholder="To" className="col-span-3" />
+                <PromoCalendarForm/>
               </div>
             </div>
             <SheetFooter>
