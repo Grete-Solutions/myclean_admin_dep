@@ -9,7 +9,9 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Actionbutton } from '@/app/components/Action';
+
+import PriveledgeSheet from '@/app/components/Sheetpop/Priveleges/PriveledgeSheet';
+import { Actionbutton } from './Action';
 
 
 
@@ -37,6 +39,7 @@ const tabledata:Data[]=[
         <Table>
             <TableCaption>A list of your priveleges.</TableCaption>
             <TableHeader>
+                <PriveledgeSheet/>
                 <TableRow>
                     {[
                         { label: 'Sr No', className: 'w-[100px]' },

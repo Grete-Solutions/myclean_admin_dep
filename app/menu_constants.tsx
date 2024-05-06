@@ -14,6 +14,7 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
             icon: <BsHouseDoor size={20} />,
             
         },
+       
         {
             title: 'Configurations',
             path: '/Configurations',
@@ -96,15 +97,15 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                     {title: 'Deleted Users', path: '/manageUsers/DeletedUsers' },
                     ],
             },
-               {
-                        title: 'Set Price',
-                        path: '/setPrice',
-                        icon: <BsCash size={20} />,
-                        submenu: true,
-                        subMenuItems: [
-                            {title: 'World', path: '/Trip Requests' },
-                       ],
-                    },
+            //    {
+            //             title: 'Set Price',
+            //             path: '/setPrice',
+            //             icon: <BsCash size={20} />,
+            //             submenu: true,
+            //             subMenuItems: [
+            //                 {title: 'World', path: '/Trip Requests' },
+            //            ],
+            //         },
         ]
     },
     {
