@@ -275,7 +275,6 @@ export const accordionItems: AccordionItemData[] = [
         </label>
     </div>
     
-        {/* Similar structure for managing car models, driver-needed documents, and countries */}
     </div>
     )
     },

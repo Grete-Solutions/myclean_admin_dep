@@ -27,7 +27,7 @@ function AddAdminDoc({}: Props) {
   <SheetTrigger className='flex items-center'><Button className=' 
   text-[12px] bg-[#0A8791] py-2 h-fit'>
     <CirclePlusIcon className='mr-1' size={12}/>
-  Add Code
+  Add Admin
   </Button>
   </SheetTrigger>
   <SheetContent className='z-[999]'>
