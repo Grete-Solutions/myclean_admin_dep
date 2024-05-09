@@ -13,8 +13,14 @@ const karla = Karla({
 })
 export const metadata: Metadata = {
   title: "Clean App Admin dashboard",
-  description: "admindashboard"
-};
+  description: "admindashboard",
+  icons:{
+    icon:'/g1.png',
+  }
+}
+
+;
+
 
 export default function RootLayout({
   children,
