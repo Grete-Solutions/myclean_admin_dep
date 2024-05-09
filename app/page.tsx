@@ -1,4 +1,7 @@
+'use client'
 
+import React from 'react';
+import CountUp from 'react-countup'; // Import CountUp component
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Overview } from './components/overview'
 import { DataTableDemo } from './components/recent-cleaning'
@@ -31,8 +34,8 @@ export default function Home() {
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
               </svg>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-[#0A8791]">$45,231.89</div>
+            <CardContent >
+              <CountUp start={0} end={45231.89} duration={2.5} separator="," decimal="." decimals={2} prefix="$" className="text-2xl font-bold text-[#0A8791]" />
               <p className="text-xs text-muted-foreground">
                 +20.1% from last month
               </p>
@@ -60,7 +63,7 @@ export default function Home() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-[#0A8791]">+1650</div>
+            <CountUp start={0} end={1650} duration={2.5} separator=","  prefix="+" className="text-2xl font-bold text-[#0A8791]" />
               <p className="text-xs text-muted-foreground">
                 +180.1% from last month
               </p>
@@ -88,7 +91,7 @@ export default function Home() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-[#0A8791]">+2350</div>
+            <CountUp start={0} end={2350} duration={2.5} separator="," prefix="+" className="text-2xl font-bold text-[#0A8791]" />
               <p className="text-xs text-muted-foreground">
                 +180.1% from last month
               </p>
@@ -112,7 +115,7 @@ export default function Home() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-[#0A8791]">+12,234</div>
+            <CountUp start={0} end={12234} duration={2.5} separator="," prefix="+" className="text-2xl font-bold text-[#0A8791]" />
               <p className="text-xs text-muted-foreground">
                 +19% from last month
               </p>
@@ -137,7 +140,7 @@ export default function Home() {
               </svg>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-[#0A8791]">+573</div>
+            <CountUp start={0} end={573} duration={2.5} separator="," prefix="+" className="text-2xl font-bold text-[#0A8791]" />
               <p className="text-xs text-muted-foreground">
                 +201 since last hour
               </p>
