@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { ComboboxForm } from '@/app/(pages)/serviceLocations/Comoboxcountry'
 
 type Props = {}
 
@@ -40,29 +41,15 @@ function ServiceLocationsSheet({}: Props) {
                 <Label htmlFor="Country" className="text-left">
                   Country
                 </Label>
-                <Select>
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="Select Country" />
-  </SelectTrigger>
-  <SelectContent className='z-[99999]'>
-  <SelectItem value="Select Country">Select Country</SelectItem>
-  </SelectContent>
-</Select>
+                <ComboboxForm/>
 
               </div>
               <div className="grid grid-cols-1 items-center gap-4">
                 <Label htmlFor="City" className="text-left">
                   City
                 </Label>
-                <Select>
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="Select City" />
-  </SelectTrigger>
-  <SelectContent className='z-[99999]'>
-  <SelectItem value="Select City">Select</SelectItem>
+                <Input id="City" placeholder='Enter City' className="col-span-3" />
 
-  </SelectContent>
-</Select>
               </div>
               <div className="grid grid-cols-1 items-center gap-4">
                 <Label htmlFor="Price" className="text-left">
