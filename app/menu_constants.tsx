@@ -40,7 +40,7 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                 submenu: true,
                 subMenuItems: [
                     { title: 'Vehicle Make', path: '/MasterData/VehicleMake' },
-                    { title: 'Vehicle Model', path: '/MasterData/VehicleModel' },
+                    // { title: 'Vehicle Model', path: '/MasterData/VehicleModel' },
                     { title: 'Country', path: '/MasterData/Country' },
                     { title: 'Driver Needed Documentation', path: '/MasterData/DriverNeededDocumentation' },
                 
@@ -67,11 +67,11 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                     { title: 'Cancelled Pickups', path: '/PickupRequests/CancelledPickups'},
                 ],
             },
-            {
-                title: 'Vehicle Types',
-                path: '/VehicleTypes',
-                icon: <Car size={20} />,
-            },
+            // {
+            //     title: 'Vehicle Types',
+            //     path: '/VehicleTypes',
+            //     icon: <Car size={20} />,
+            // },
             {
                 title: 'Manage Drivers',
                 path: '/manageDrivers',

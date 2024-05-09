@@ -26,6 +26,7 @@ export default function RootLayout({
       <body className={karla.className + ' h-screen overflow-hidden'}>
         <ThemeProvider
           themes={['dark', 'custom', 'light']}
+          defaultTheme='light'
           attribute="class"
           enableSystem
           disableTransitionOnChange

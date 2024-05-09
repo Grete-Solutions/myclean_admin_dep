@@ -39,13 +39,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Payment,data } from "./countryConstants"
+import { CountryDataType,Countrydata as data } from "./countryConstants"
 
 function generateAscendingSno(data:string) {
   return Array.from({ length: data.length }, (_, index) => index + 1);
 }
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<CountryDataType>[] = [
   {
     accessorKey: "Sno",
     header: "Sno",
@@ -65,6 +65,13 @@ export const columns: ColumnDef<Payment>[] = [
       )
     },
     cell: ({ row }) => <div className="uppercase">{row.getValue("Name")}</div>,
+  },
+  {
+    accessorKey: "Capital",
+    header: "Capital",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("Capital")}</div>
+    ),
   },
   {
     accessorKey: "CurrencyCode",
@@ -92,7 +99,7 @@ export const columns: ColumnDef<Payment>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original;
+      const CountryDataType = row.original;
 
       return (
         <DropdownMenu>
@@ -105,7 +112,7 @@ export const columns: ColumnDef<Payment>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(CountryDataType.id)}
             >
               Copy Country ID
             </DropdownMenuItem>

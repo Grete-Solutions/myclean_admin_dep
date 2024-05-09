@@ -19,8 +19,10 @@ const Priveleges = () => {
 interface Data{
     srNodata:string
     VehicleMakeNamedata:string
-    VehicleMakeFor:string
+    VehicleModel:string
+    Year:number
     Status:string
+    Capacity:number
     action: ReactNode
 
 }
@@ -28,9 +30,12 @@ const tabledata:Data[]=[
     {
         srNodata:'001',
         VehicleMakeNamedata:'toyota',
-        VehicleMakeFor:'Taxi',
+        VehicleModel:'Taxi',
         Status:'Active',
-        action:             <Actionbutton/>
+        Year:2023,
+        Capacity:20,
+
+        action: <Actionbutton/>
 
 
     }
@@ -45,7 +50,9 @@ const tabledata:Data[]=[
                     {[
                         { label: 'Sr No', className: 'w-[100px]' },
                         { label: 'Vehicle Make Name	' },
-                        { label: 'Vehicle Make For' },
+                        { label: 'Vehicle Model' },
+                        { label: 'Year' },
+                        { label: 'Capacity' },                        
                         { label: 'Status', className: 'text-left' },
                         {label:'Action'}
                     ].map((header, index) => (
@@ -58,7 +65,9 @@ const tabledata:Data[]=[
                     <TableRow key={index}>
                         <TableCell>{data.srNodata}</TableCell>
                         <TableCell>{data.VehicleMakeNamedata}</TableCell>
-                        <TableCell>{data.VehicleMakeFor}</TableCell>
+                        <TableCell>{data.VehicleModel}</TableCell>
+                        <TableCell>{data.Year}</TableCell>
+                        <TableCell>{data.Capacity}</TableCell>
                         <TableCell className="text-left">{data.Status}</TableCell>
                         <TableCell className='text-center  text-[#0A8791]'>{data.action}</TableCell>
                     </TableRow>

@@ -14,6 +14,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { Plus, PlusCircle } from 'lucide-react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { CountryDataType,Countrydata } from '../../countryConstants'
+import { ComboboxForm } from '@/app/(pages)/Configurations/priveleges/Comoboxcountry'
  
 type Props = {}
 
@@ -21,7 +24,7 @@ function PriveledgeSheet({}: Props) {
   return (
 <Sheet>
   <SheetTrigger className='flex items-center'><Button className=' text-[12px] bg-[#0A8791] py-2 h-fit'><PlusCircle className='mr-1' size={12}/>Add </Button></SheetTrigger>
-  <SheetContent className='z-[9999999]'>
+  <SheetContent className='z-[999]'>
             <SheetHeader>
               <SheetTitle >Add </SheetTitle>
               <SheetDescription>
@@ -47,6 +50,19 @@ function PriveledgeSheet({}: Props) {
                 </Label>
                 <Input id="Description" placeholder="Description" className="col-span-3" />
               </div>
+              <div className="grid grid-cols-1 items-center gap-4">
+                <Label htmlFor="Country" className="text-left">
+                  Country
+                </Label>
+            <ComboboxForm/>
+            </div>
+              <div className="grid grid-cols-1 items-center gap-4">
+                <Label htmlFor="City" className="text-left">
+                  City
+                </Label>
+                <Input id="City" placeholder="City" className="col-span-3" />
+
+</div>
             </div>
             <SheetFooter>
               <SheetClose asChild>
