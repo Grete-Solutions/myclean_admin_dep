@@ -162,58 +162,7 @@ export const accordionItems: AccordionItemData[] = [
                 Toggle Car Make
             </label>
         </div>
-         {/* Manage Car Model */}
-    <div className="flex items-center space-x-2">
-        <Checkbox id="manage-carmodel" />
-        <label
-            htmlFor="manage-carmodel"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        >
-            Manage Car Model
-        </label>
-    </div>
-    
-    <div className="flex items-center space-x-2">
-        <Checkbox id="add-carmodel" />
-        <label
-            htmlFor="add-carmodel"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        >
-            Add Car Model
-        </label>
-    </div>
-    
-    <div className="flex items-center space-x-2">
-        <Checkbox id="edit-carmodel" />
-        <label
-            htmlFor="edit-carmodel"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        >
-            Edit Car Model
-        </label>
-    </div>
-    
-    <div className="flex items-center space-x-2">
-        <Checkbox id="delete-carmodel" />
-        <label
-            htmlFor="delete-carmodel"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        >
-            Delete Car Model
-        </label>
-    </div>
-    
-    <div className="flex items-center space-x-2">
-        <Checkbox id="toggle-carmodel" />
-        <label
-            htmlFor="toggle-carmodel"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        >
-            Toggle Car Model
-        </label>
-    </div>
-    
-    {/* Manage Driver-Needed Documents */}
+     {/* Manage Driver-Needed Documents */}
     <div className="flex items-center space-x-2">
         <Checkbox id="manage-driver-needed-document" />
         <label
