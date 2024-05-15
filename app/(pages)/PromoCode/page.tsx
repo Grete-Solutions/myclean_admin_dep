@@ -22,7 +22,7 @@ interface Data{
     user_type:string
     coupon_type:string
     count:number
-    status:string
+    status:Number
     action: ReactNode
 
 }
@@ -73,7 +73,7 @@ useEffect(() => {
                         <TableCell>{data.user_type}</TableCell>
                         <TableCell className="text-left">{data.coupon_type}</TableCell>
                         <TableCell>{data.count}</TableCell>
- <TableCell className="text-left">{data.status}</TableCell>
+                        <TableCell>{data.status === 0 ? 'Inactive' : 'Active'}</TableCell>
                         <TableCell className='text-center  text-[#0A8791]'>{data.action}</TableCell>
                     </TableRow>
                 ))}

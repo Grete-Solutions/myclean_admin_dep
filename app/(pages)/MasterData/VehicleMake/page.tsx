@@ -39,7 +39,7 @@ const Priveleges = () => {
         make: string;
         model: string;
         year: number;
-        Status: string;
+        status: Number;
         capacity: number;
         action: ReactNode;
     }
@@ -72,7 +72,7 @@ const Priveleges = () => {
                             <TableCell>{data.model}</TableCell>
                             <TableCell>{data.year}</TableCell>
                             <TableCell>{data.capacity}</TableCell>
-                            <TableCell className="text-left">{data.Status}</TableCell>
+                            <TableCell>{data.status === 0 ? 'Inactive' : 'Active'}</TableCell>
                             <TableCell className="text-center text-[#0A8791]">
                                 {data.action}
                             </TableCell>
