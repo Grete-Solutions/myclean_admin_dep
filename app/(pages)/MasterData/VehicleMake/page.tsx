@@ -72,8 +72,7 @@ const Priveleges = () => {
                             <TableCell>{data.model}</TableCell>
                             <TableCell>{data.year}</TableCell>
                             <TableCell>{data.capacity}</TableCell>
-                            <TableCell>{data.status === 0 ? 'Inactive' : 'Active'}</TableCell>
-                            <TableCell className="text-center text-[#0A8791]">
+                            <TableCell>{data.status === 1 ? 'Active' : 'Inactive'}</TableCell>                            <TableCell className="text-center text-[#0A8791]">
                                 {data.action}
                             </TableCell>
                         </TableRow>

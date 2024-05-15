@@ -73,8 +73,7 @@ useEffect(() => {
                         <TableCell>{data.user_type}</TableCell>
                         <TableCell className="text-left">{data.coupon_type}</TableCell>
                         <TableCell>{data.count}</TableCell>
-                        <TableCell>{data.status === 0 ? 'Inactive' : 'Active'}</TableCell>
-                        <TableCell className='text-center  text-[#0A8791]'>{data.action}</TableCell>
+                        <TableCell>{data.status === 1 ? 'Active' : 'Inactive'}</TableCell>                        <TableCell className='text-center  text-[#0A8791]'>{data.action}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>
