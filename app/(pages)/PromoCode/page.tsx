@@ -1,5 +1,5 @@
 "use client"
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import {
     Table,
     TableBody,
@@ -18,27 +18,33 @@ import PromoCodeSheet from '@/app/components/Sheetpop/PromoCodeSheet/PromoCode';
 const PromoCode = () => {
 interface Data{
     srNodata:string
-    Code:string
-    UserType:string
-    CouponType:string
-    CountNum:number
-    Status:string
+    code:string
+    user_type:string
+    coupon_type:string
+    count:number
+    status:string
     action: ReactNode
 
 }
-const tabledata:Data[]=[
-    {
-        srNodata:'001',
-        Code:'greeting',
-        UserType:'hello',
-        CouponType:'Driver',
-        CountNum:2,
-        Status:'Active',
-        action:  <Actionbutton/>
-
-
-    }
-]
+const [Coupon, setCoupon] = useState<Data[]>([]);
+    
+useEffect(() => {
+    const getCoupon = async () => {
+        try {
+            const response = await fetch('/lib/GET/getallCoupon');
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
+            }
+            const data = await response.json();
+            console.log(data.product);
+            setCoupon(data.product);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            // Handle error, e.g., set a default state or show an error message
+        }
+    };
+    getCoupon();
+}, []);
     return (
         <div>
            <PromoCodeSheet/>
@@ -60,14 +66,14 @@ const tabledata:Data[]=[
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {tabledata.map((data, index) => (
+                {Coupon.map((data, index) => (
                     <TableRow key={index}>
-                        <TableCell>{data.srNodata}</TableCell>
-                        <TableCell>{data.Code}</TableCell>
-                        <TableCell>{data.UserType}</TableCell>
-                        <TableCell className="text-left">{data.CouponType}</TableCell>
-                        <TableCell>{data.CountNum}</TableCell>
- <TableCell className="text-left">{data.Status}</TableCell>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{data.code}</TableCell>
+                        <TableCell>{data.user_type}</TableCell>
+                        <TableCell className="text-left">{data.coupon_type}</TableCell>
+                        <TableCell>{data.count}</TableCell>
+ <TableCell className="text-left">{data.status}</TableCell>
                         <TableCell className='text-center  text-[#0A8791]'>{data.action}</TableCell>
                     </TableRow>
                 ))}

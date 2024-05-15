@@ -1,5 +1,5 @@
 "use client"
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import {
     Table,
     TableBody,
@@ -13,67 +13,74 @@ import { Actionbutton } from '@/app/components/Action';
 import { Button } from '@/components/ui/button';
 import VehicleMakeSheet from '@/app/components/Sheetpop/MasterDataPop/VehicleMakeSheet';
 
-
-
 const Priveleges = () => {
-interface Data{
-    srNodata:string
-    VehicleMakeNamedata:string
-    VehicleModel:string
-    Year:number
-    Status:string
-    Capacity:number
-    action: ReactNode
+    const [vehicle, setVehicle] = useState<Data[]>([]);
+    
+    useEffect(() => {
+        const getVehicle = async () => {
+            try {
+                const response = await fetch('/lib/GET/getallVehicle');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                const data = await response.json();
+                console.log(data.product);
+                setVehicle(data.product);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                // Handle error, e.g., set a default state or show an error message
+            }
+        };
+        getVehicle();
+    }, []);
 
-}
-const tabledata:Data[]=[
-    {
-        srNodata:'001',
-        VehicleMakeNamedata:'toyota',
-        VehicleModel:'Taxi',
-        Status:'Active',
-        Year:2023,
-        Capacity:20,
-
-        action: <Actionbutton/>
-
-
+    interface Data {
+        srNodata: number;
+        make: string;
+        model: string;
+        year: number;
+        Status: string;
+        capacity: number;
+        action: ReactNode;
     }
-]
+
     return (
         <div>
-           <VehicleMakeSheet/>
-        <Table>
-            <TableCaption>A list of your priveleges.</TableCaption>
-            <TableHeader>
-                <TableRow>
-                    {[
-                        { label: 'Sr No', className: 'w-[100px]' },
-                        { label: 'Vehicle Make Name	' },
-                        { label: 'Vehicle Model' },
-                        { label: 'Year' },
-                        { label: 'Capacity' },                        
-                        { label: 'Status', className: 'text-left' },
-                        {label:'Action'}
-                    ].map((header, index) => (
-                        <TableHead key={index} className={header.className}>{header.label}</TableHead>
-                    ))}
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {tabledata.map((data, index) => (
-                    <TableRow key={index}>
-                        <TableCell>{data.srNodata}</TableCell>
-                        <TableCell>{data.VehicleMakeNamedata}</TableCell>
-                        <TableCell>{data.VehicleModel}</TableCell>
-                        <TableCell>{data.Year}</TableCell>
-                        <TableCell>{data.Capacity}</TableCell>
-                        <TableCell className="text-left">{data.Status}</TableCell>
-                        <TableCell className='text-center  text-[#0A8791]'>{data.action}</TableCell>
+            <VehicleMakeSheet/>
+            <Table>
+                <TableCaption>A list of your privileges.</TableCaption>
+                <TableHeader>
+                    <TableRow>
+                        {[
+                            { label: 'Sr No', className: 'w-[100px]' },
+                            { label: 'Vehicle Make Name' },
+                            { label: 'Vehicle Model' },
+                            { label: 'Year' },
+                            { label: 'Capacity' },
+                            { label: 'Status', className: 'text-left' },
+                            { label: 'Action' }
+                        ].map((header, index) => (
+                            <TableHead key={index} className={header.className}>{header.label}</TableHead>
+                        ))}
                     </TableRow>
-                ))}
-            </TableBody>
-        </Table></div>
+                </TableHeader>
+                <TableBody>
+                    {vehicle.map((data: Data, index: number) => (
+                        <TableRow key={index}>
+                            <TableCell>{index + 1}</TableCell> {/* Increment counter */}
+                            <TableCell>{data.make}</TableCell>
+                            <TableCell>{data.model}</TableCell>
+                            <TableCell>{data.year}</TableCell>
+                            <TableCell>{data.capacity}</TableCell>
+                            <TableCell className="text-left">{data.Status}</TableCell>
+                            <TableCell className="text-center text-[#0A8791]">
+                                {data.action}
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </div>
     );
 };
 
