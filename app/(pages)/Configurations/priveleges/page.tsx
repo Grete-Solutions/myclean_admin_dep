@@ -1,5 +1,5 @@
 "use client"
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import {
     Table,
     TableBody,
@@ -16,25 +16,34 @@ import { Actionbutton } from './Action';
 
 
 const Priveleges = () => {
+    
 interface Data{
     srNodata:string
-    slugdata:string
-    namedata:string
+    slug:string
+    name:string
     description:string
     action: ReactNode
 
 }
-const tabledata:Data[]=[
-    {
-        srNodata:'001',
-        slugdata:'admin',
-        namedata:'Admin',
-        description:'Admin group with restricted access',
-        action:             <Actionbutton/>
-
-
-    }
-]
+const [Priveledge, setPriveledge] = useState<Data[]>([]);
+    
+useEffect(() => {
+    const getPriveledge = async () => {
+        try {
+            const response = await fetch('/lib/GET/getallPriveledges');
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
+            }
+            const data = await response.json();
+            console.log(data.product);
+            setPriveledge(data.product);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            // Handle error, e.g., set a default state or show an error message
+        }
+    };
+    getPriveledge();
+}, []);
     return (
         <Table>
             <TableCaption>A list of your priveleges.</TableCaption>
@@ -53,11 +62,11 @@ const tabledata:Data[]=[
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {tabledata.map((data, index) => (
-                    <TableRow key={index}>
-                        <TableCell>{data.srNodata}</TableCell>
-                        <TableCell>{data.slugdata}</TableCell>
-                        <TableCell>{data.namedata}</TableCell>
+                {Priveledge.map((data: Data, index: number) => (
+                        <TableRow key={index}>
+                            <TableCell>{index + 1}</TableCell> {/* Increment counter */}
+                            <TableCell>{data.slug}</TableCell>
+                        <TableCell>{data.name}</TableCell>
                         <TableCell className="text-left">{data.description}</TableCell>
                         <TableCell className='text-center  text-[#0A8791]'>{data.action}</TableCell>
                     </TableRow>
