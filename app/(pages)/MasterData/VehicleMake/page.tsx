@@ -39,7 +39,8 @@ const Priveleges = () => {
         make: string;
         model: string;
         year: number;
-        status: Number;
+        description:string;
+        status: number;
         capacity: number;
         action: ReactNode;
     }
@@ -67,11 +68,12 @@ const Priveleges = () => {
                 <TableBody>
                     {vehicle.map((data: Data, index: number) => (
                         <TableRow key={index}>
-                            <TableCell>{index + 1}</TableCell> {/* Increment counter */}
+                            <TableCell>{index + 1}</TableCell> 
                             <TableCell>{data.make}</TableCell>
                             <TableCell>{data.model}</TableCell>
                             <TableCell>{data.year}</TableCell>
                             <TableCell>{data.capacity}</TableCell>
+                            <TableCell className="text-left">{data.description}</TableCell>
                             <TableCell>{data.status === 1 ? 'Active' : 'Inactive'}</TableCell>                            <TableCell className="text-center text-[#0A8791]">
                                 {data.action}
                             </TableCell>

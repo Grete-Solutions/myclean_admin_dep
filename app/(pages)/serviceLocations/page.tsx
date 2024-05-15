@@ -1,4 +1,5 @@
-import React, { ReactNode } from 'react';
+'use client'
+import React, { ReactNode, useEffect, useState } from 'react';
 import {
     Table,
     TableBody,
@@ -15,16 +16,31 @@ import ServiceLocationsSheet from '@/app/components/Sheetpop/serviceLocations/se
 const ServiceLocations = () => {
     interface Data {
         srNodata: string;
-        Country: string;
-        Price: number;
-        City: string;
-        Status: string;
+        countryISOCode: string;
+        price: number;
+        city: string;
+        description: string;
+        status: Number;
         action: ReactNode;
     }
 
-    const tabledata: Data[] = [
-     
-    ];
+    const [Location, setLocation] = useState<Data[]>([]);
+    
+    useEffect(() => {
+        const getLocation = async () => {
+            try {
+                const response = await fetch('/lib/GET/getallcities');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                const data = await response.json();
+                console.log(data);
+                setLocation(data.product);
+            } catch (error) {
+                console.error('Error fetching data:', error);            }
+        };
+        getLocation();
+    }, []);
 
     return (
         <div>
@@ -38,6 +54,7 @@ const ServiceLocations = () => {
                             { label: 'Country' },
                             { label: 'City' },
                             { label: 'Price' },
+                            { label: 'Description' },
                             { label: 'Status', className: 'text-left' },
                             { label: 'Action' }
                         ].map((header, index) => (
@@ -46,24 +63,16 @@ const ServiceLocations = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {tabledata.length === 0 ? (
-                        <TableRow>
-                            <TableCell className='text-[]' align='center' colSpan={7}>
-                                
-                                No data found.</TableCell>
-                        </TableRow>
-                    ) : (
-                        tabledata.map((data, index) => (
-                            <TableRow key={index}>
-                                <TableCell>{data.srNodata}</TableCell>
-                                <TableCell>{data.Country}</TableCell>
-                                <TableCell className="text-left">{data.City}</TableCell>
-                                <TableCell>{data.Price}</TableCell>
-                                <TableCell>{data.Status}</TableCell>
-                                <TableCell className='text-center text-[#0A8791]'>{data.action}</TableCell>
-                            </TableRow>
-                        ))
-                    )}
+                {Location.map((data, index) => (
+                    <TableRow key={index}>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{data.countryISOCode}</TableCell>
+                        <TableCell className="text-left">{data.city}</TableCell>
+                        <TableCell className="text-left">{data.description}</TableCell>
+                        <TableCell>{data.price}</TableCell>
+                        <TableCell>{data.status === 1 ? 'Active' : 'Inactive'}</TableCell>                        <TableCell className='text-center  text-[#0A8791]'>{data.action}</TableCell>
+                    </TableRow>
+                ))}
                 </TableBody>
             </Table>
         </div>
