@@ -3,9 +3,10 @@ export async function GET(request: Request) {
   const id = searchParams.get('id');
 
   const res = await fetch(`${process.env.URL}/vehicleMake/getAll`, {
-      headers: {
+    cache: 'no-cache',  
+    headers: {
           'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache',
+  
       },
   });
 
