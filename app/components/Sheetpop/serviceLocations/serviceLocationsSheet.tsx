@@ -26,6 +26,7 @@ function ServiceLocation({ onAddSuccess }: { onAddSuccess: () => void }) {
   const [countryISOCode, setCountry] = React.useState('');
   const [city, setCity] = React.useState('');
   const [price, setPrice] = React.useState('');
+  const [status, setStatus] = React.useState(''); 
  const handleCountrySelect = (countryISOCode: string) => {
       setCountry(countryISOCode); 
     };
@@ -44,7 +45,7 @@ function ServiceLocation({ onAddSuccess }: { onAddSuccess: () => void }) {
           countryISOCode,
           city,
           price: parseFloat(price), 
-          status: 'Inactive' 
+          status,
         })
       });
 
