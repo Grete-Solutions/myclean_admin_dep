@@ -43,8 +43,8 @@ function ServiceLocation({ onAddSuccess }: { onAddSuccess: () => void }) {
         body: JSON.stringify({
           countryISOCode,
           city,
-          price: parseFloat(price), // convert price to number
-          status: 'Inactive' // assuming you have a default status
+          price: parseFloat(price), 
+          status: 'Inactive' 
         })
       });
 
