@@ -19,14 +19,12 @@ const ServiceLocations = () => {
         countryISOCode: string;
         price: number;
         city: string;
-        description: string;
-        status: Number;
+        status: string;
         action: ReactNode;
     }
 
     const [Location, setLocation] = useState<Data[]>([]);
     
-    useEffect(() => {
         const getLocation = async () => {
             try {
                 const response = await fetch('/lib/GET/getallcities');
@@ -34,17 +32,23 @@ const ServiceLocations = () => {
                     throw new Error('Failed to fetch data');
                 }
                 const data = await response.json();
-                console.log(data);
                 setLocation(data.product);
             } catch (error) {
                 console.error('Error fetching data:', error);            }
         };
-        getLocation();
+       
+    React.useEffect(() => {
+       getLocation() ;
     }, []);
+
+    const handleAddSuccess = () => {
+        getLocation();
+    };
+    
 
     return (
         <div>
-            <ServiceLocationsSheet />
+            <ServiceLocationsSheet onAddSuccess={handleAddSuccess}/>
             <Table>
                 <TableCaption>A list of your ServiceLocations.</TableCaption>
                 <TableHeader>
@@ -54,7 +58,6 @@ const ServiceLocations = () => {
                             { label: 'Country' },
                             { label: 'City' },
                             { label: 'Price' },
-                            { label: 'Description' },
                             { label: 'Status', className: 'text-left' },
                             { label: 'Action' }
                         ].map((header, index) => (
@@ -63,16 +66,23 @@ const ServiceLocations = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                {Location.map((data, index) => (
-                    <TableRow key={index}>
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell>{data.countryISOCode}</TableCell>
-                        <TableCell className="text-left">{data.city}</TableCell>
-                        <TableCell className="text-left">{data.description}</TableCell>
-                        <TableCell>{data.price}</TableCell>
-                        <TableCell>{data.status === 1 ? 'Active' : 'Inactive'}</TableCell>                        <TableCell className='text-center  text-[#0A8791]'>{data.action}</TableCell>
-                    </TableRow>
-                ))}
+                    {Location.length === 0 ? (
+                        <TableRow>
+                            <TableCell className='text-[]' align='center' colSpan={7}>
+                                
+                                No data found.</TableCell>
+                        </TableRow>
+                    ) : (
+                        Location.map((data, index) => (
+                            <TableRow key={index}>
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell>{data.countryISOCode}</TableCell>
+                                <TableCell className="text-left">{data.city}</TableCell>
+                                <TableCell>{data.price}</TableCell>
+                                <TableCell>{data.status}</TableCell>
+                            </TableRow>
+                        ))
+                    )}
                 </TableBody>
             </Table>
         </div>

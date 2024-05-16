@@ -77,8 +77,8 @@ function VehicleMakeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
               <Input id="name" value={make} onChange={(e)=>setMake(e.target.value)} placeholder='Name' className="col-span-3" />
             </div>
             <div className="grid grid-cols-1 items-center gap-4">
-              <Label htmlFor="VehicleMakeFor" className="text-left">Vehicle Make For</Label>
-              <Input id="VehicleMakeFor" value={model} onChange={(e)=>setModel(e.target.value)} placeholder="VehicleMake" className="col-span-3" />
+              <Label htmlFor="VehicleMakeFor" className="text-left">Vehicle Model</Label>
+              <Input id="VehicleMakeFor" value={model} onChange={(e)=>setModel(e.target.value)} placeholder="Vehicle Model" className="col-span-3" />
             </div>
             <div className="grid grid-cols-1 items-center gap-4">
               <Label htmlFor="Year" className="text-left">Year</Label>
@@ -91,10 +91,6 @@ function VehicleMakeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
             <div className="grid grid-cols-1 items-center gap-4">
               <Label htmlFor="description" className="text-left">Description</Label>
               <Input id="description" value={description} onChange={(e)=>setDescription(e.target.value)} placeholder="Description" className="col-span-3" />
-            </div>
-            <div className="grid grid-cols-1 items-center gap-4">
-              <Label htmlFor="status" className="text-left">Status</Label>
-              <Input id="status" value={status} onChange={(e)=>setStatus(e.target.value)} placeholder="Status" className="col-span-3" />
             </div>
           </div>
           <SheetFooter>
