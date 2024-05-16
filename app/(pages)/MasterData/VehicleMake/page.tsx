@@ -1,4 +1,4 @@
-"use client"
+'use client'
 import React, { ReactNode } from 'react';
 import {
     Table,
@@ -9,28 +9,33 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Actionbutton } from '@/app/components/Action';
-import { Button } from '@/components/ui/button';
 import VehicleMakeSheet from '@/app/components/Sheetpop/MasterDataPop/VehicleMakeSheet';
 
 const Priveleges = () => {
     const [vehicle, setVehicle] = React.useState<Data[]>([]);
-    
-    React.useEffect(() => {
-        const getVehicle = async () => {
-            try {
-                const response = await fetch('/lib/GET/getallVehicle');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch data');
-                }
-                const data = await response.json();
-                setVehicle(data.product);
-            } catch (error) {
-                console.error('Error fetching data:', error);
+
+    const getVehicle = async () => {
+        try {
+            const response = await fetch('/lib/GET/getallVehicle');
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
             }
-        };
+            const data = await response.json();
+            setVehicle(data.product);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    React.useEffect(() => {
         getVehicle();
     }, []);
+
+    const handleAddSuccess = () => {
+        getVehicle();
+    };
+    
+
 
     interface Data {
         srNodata: number;
@@ -45,7 +50,7 @@ const Priveleges = () => {
 
     return (
         <div>
-            <VehicleMakeSheet/>
+            <VehicleMakeSheet onAddSuccess={handleAddSuccess} />
             <Table>
                 <TableCaption>A list of your privileges.</TableCaption>
                 <TableHeader>

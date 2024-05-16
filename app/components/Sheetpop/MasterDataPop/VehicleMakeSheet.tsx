@@ -23,7 +23,7 @@ interface NewVehicle {
   status: string;
 }
 
-function VehicleMakeSheet() {
+function VehicleMakeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
   const [make, setMake] = React.useState('');
   const [model, setModel] = React.useState('');
   const [year, setYear] = React.useState('');
@@ -50,6 +50,7 @@ function VehicleMakeSheet() {
   
       const data = await response.json();
       console.log('Data received:', data);
+      onAddSuccess();
     } catch (error) {
       console.error('Error:', error);
     }
