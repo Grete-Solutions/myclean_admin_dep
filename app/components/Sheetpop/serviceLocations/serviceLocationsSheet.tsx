@@ -44,6 +44,7 @@ function ServiceLocation({ onAddSuccess }: { onAddSuccess: () => void }) {
           countryISOCode,
           city,
           price: parseFloat(price), // convert price to number
+          status: 'Inactive' // assuming you have a default status
         })
       });
 
