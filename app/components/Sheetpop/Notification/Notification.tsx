@@ -24,7 +24,7 @@ function NotificationSheet({}: Props) {
   return (
 <Sheet>
   <SheetTrigger className='flex items-center'><Button className=' text-[12px] bg-[#0A8791] py-2 h-fit'><MessageCirclePlusIcon className='mr-1' size={12}/>Push </Button></SheetTrigger>
-  <SheetContent className='z-[9999999]'>
+  <SheetContent className='z-[9999]'>
             <SheetHeader>
               <SheetTitle >Push Notification </SheetTitle>
               <SheetDescription>

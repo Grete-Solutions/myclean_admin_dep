@@ -1,5 +1,5 @@
 "use client"
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode } from 'react';
 import {
     Table,
     TableBody,
@@ -14,9 +14,9 @@ import { Button } from '@/components/ui/button';
 import VehicleMakeSheet from '@/app/components/Sheetpop/MasterDataPop/VehicleMakeSheet';
 
 const Priveleges = () => {
-    const [vehicle, setVehicle] = useState<Data[]>([]);
+    const [vehicle, setVehicle] = React.useState<Data[]>([]);
     
-    useEffect(() => {
+    React.useEffect(() => {
         const getVehicle = async () => {
             try {
                 const response = await fetch('/lib/GET/getallVehicle');
@@ -24,11 +24,9 @@ const Priveleges = () => {
                     throw new Error('Failed to fetch data');
                 }
                 const data = await response.json();
-                console.log(data.product);
                 setVehicle(data.product);
             } catch (error) {
                 console.error('Error fetching data:', error);
-                // Handle error, e.g., set a default state or show an error message
             }
         };
         getVehicle();

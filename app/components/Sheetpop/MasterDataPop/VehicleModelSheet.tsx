@@ -21,7 +21,7 @@ function VehicleModelSheet({}: Props) {
   return (
 <Sheet>
   <SheetTrigger className='flex items-center'><Button className=' text-[12px] bg-[#0A8791] py-2 h-fit'><PlusCircle className='mr-1' size={12}/>Add </Button></SheetTrigger>
-  <SheetContent className='z-[9999999]'>
+  <SheetContent className='z-[9999]'>
             <SheetHeader>
               <SheetTitle >Add </SheetTitle>
               <SheetDescription>

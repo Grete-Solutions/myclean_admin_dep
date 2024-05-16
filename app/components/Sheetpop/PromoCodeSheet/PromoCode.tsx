@@ -88,10 +88,12 @@ function PromoCodeSheet({}: Props) {
               </div>
             </div>
             <SheetFooter>
-              <SheetClose asChild>
-                <Button type="submit">Save changes</Button>
-              </SheetClose>
-            </SheetFooter>
+  <SheetClose asChild>
+    <div>
+      <Button type="submit">Add</Button>
+    </div>
+  </SheetClose>
+</SheetFooter>
             </ScrollArea>
           </SheetContent>
 </Sheet>
