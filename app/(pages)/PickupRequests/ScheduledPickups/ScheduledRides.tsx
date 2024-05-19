@@ -86,6 +86,13 @@ export const columns: ColumnDef<RideData>[] = [
     ),
   },
   {
+    accessorKey: "pickupLocation",
+    header: "Pickup Location",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("pickupLocation")}</div>
+    ),
+  },
+  {
     accessorKey: "createdAt",
     header: "Created At",
     cell: ({ row }) => (
