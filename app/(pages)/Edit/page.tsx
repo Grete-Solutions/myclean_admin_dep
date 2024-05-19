@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -108,7 +108,7 @@ function EditPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const privilegeId = searchParams.get('id');
+  const privilegeId = searchParams.get('id') as string;
   const [privilegedData, setPrivilegedData] = useState<Data | undefined>(undefined);
 
 
@@ -1085,7 +1085,7 @@ function EditPage() {
     return <div>No data found</div>;
   }
     return (
-        <>
+        <Suspense fallback={<div>Loading...</div>}>
        <div className="grid grid-cols-1 items-center gap-4">
                 <Label htmlFor="Name" className="text-left">
                 Name
@@ -1099,7 +1099,8 @@ function EditPage() {
                     <AccordionContent>{item.content}</AccordionContent>
                 </AccordionItem>
             ))}
-        </Accordion></>
+        </Accordion>
+        </Suspense>
     );
 }
 
