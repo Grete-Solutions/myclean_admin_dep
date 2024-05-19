@@ -54,7 +54,8 @@ function PriveledgeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
 
       const data = await response.json();
       console.log('Data received:', data);
-      // Handle success, e.g., update state or show success message
+      onAddSuccess();
+      alert('Privilege added successfully!');
     } catch (error) {
       console.error('Error:', error);
       setError('Failed to add privilege.');

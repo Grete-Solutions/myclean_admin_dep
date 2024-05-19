@@ -41,28 +41,30 @@ const PromoCode = () => {
 
     const [couponList, setCouponList] = useState<Data[]>([]);
 
-        const getCoupon = async () => {
-            try {
-                const response = await fetch('/lib/GET/PromoCode/getallCoupon');
-                if (!response.ok) {
-                    throw new Error('Failed to fetch data');
-                }
-                const data = await response.json();
-                console.log(data.product);
-                setCouponList(data.product);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                // Handle error, e.g., set a default state or show an error message
+    const getCoupon = async () => {
+        try {
+            const response = await fetch('/lib/GET/PromoCode/getallCoupon');
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
             }
-        };
-        
+            const data = await response.json();
+            console.log(data.product);
+            setCouponList(data.product);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            // Handle error, e.g., set a default state or show an error message
+        }
+    };
+    
     React.useEffect(() => {
         getCoupon();
     }, []);
 
     const handleAddSuccess = () => {
         getCoupon();
+        alert('Promo code added successfully!');
     };
+    
     return (
         <div>
             <PromoCodeSheet onAddSuccess={handleAddSuccess} />
@@ -94,7 +96,6 @@ const PromoCode = () => {
                             <TableCell>{data.count}</TableCell>
                             <TableCell>{new Date(data.expired_at._seconds * 1000).toLocaleString()}</TableCell>
                             <TableCell>{data.status === 1 ? 'Active' : 'Inactive'}</TableCell>
-                  
                         </TableRow>
                     ))}
                 </TableBody>

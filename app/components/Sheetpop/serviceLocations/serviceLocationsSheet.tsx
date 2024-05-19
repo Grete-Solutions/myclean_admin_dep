@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,13 +28,11 @@ function ServiceLocation({ onAddSuccess }: { onAddSuccess: () => void }) {
   const [city, setCity] = React.useState('');
   const [price, setPrice] = React.useState('');
   const [status, setStatus] = React.useState(''); 
- const handleCountrySelect = (countryISOCode: string) => {
-      setCountry(countryISOCode); 
-    };
+  const handleCountrySelect = (countryISOCode: string) => {
+    setCountry(countryISOCode); 
+  };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-   
 
     try {
       const response = await fetch('/lib/POST/postserviceLocation', {
@@ -55,7 +54,8 @@ function ServiceLocation({ onAddSuccess }: { onAddSuccess: () => void }) {
 
       const data = await response.json();
       console.log('Data received:', data);
-      onAddSuccess(); // call the success callback
+      onAddSuccess();
+      alert('Service location added successfully!');
     } catch (error) {
       console.error('Error:', error);
     }
@@ -80,7 +80,7 @@ function ServiceLocation({ onAddSuccess }: { onAddSuccess: () => void }) {
             <div className="grid grid-cols-1 items-center gap-4">
               <Label htmlFor="name" className="text-left">Country</Label>
               <ComboboxForm onCountrySelect={handleCountrySelect} />         
-                 </div>
+            </div>
             <div className="grid grid-cols-1 items-center gap-4">
               <Label htmlFor="City" className="text-left">City</Label>
               <Input id="City" value={city} onChange={(e)=>setCity(e.target.value)} placeholder="City" className="col-span-3" />

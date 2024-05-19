@@ -38,7 +38,7 @@ function PromoCodeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if ( !userType || !couponType || !value || !countNumber || !expiredAt) {
+    if ( !userType || !couponType || !countNumber || !expiredAt) {
       setError('All fields are required.');
       return;
     }
@@ -66,8 +66,7 @@ function PromoCodeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
       }
 
       const data = await response.json();
-      console.log('Data received:', data);
-      // Call success callback or handle success
+      alert('Promo Code added successfully!');
     } catch (error) {
       console.error('Error:', error);
       setError('Failed to add promo code.');
@@ -95,9 +94,11 @@ function PromoCodeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-1 items-center gap-4">
                 <Label htmlFor="Pcode" className="text-left">Code</Label>
+                             <h6 className='text-[12px]'>will be auto generated</h6>
                 <Input
                   id="Pcode"
-                  placeholder='Enter Code'
+                  placeholder=' Code'
+                  disabled
                   className="col-span-3"
                   value={value}
                   onChange={(e) => setValue(e.target.value)}
