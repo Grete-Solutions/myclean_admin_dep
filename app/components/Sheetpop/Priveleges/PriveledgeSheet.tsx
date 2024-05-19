@@ -73,7 +73,7 @@ function PriveledgeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
       <SheetContent className='z-[999]'>
         <SheetHeader>
           <SheetTitle>Add Privilege</SheetTitle>
-          <SheetDescription>Click save when you're done.</SheetDescription>
+          <SheetDescription>Click save when you&apos;re done.</SheetDescription>
         </SheetHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
