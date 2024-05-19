@@ -1,4 +1,4 @@
-import { ScheduledRidesDataTable } from '@/app/components/ScheduledRides';
+import { ScheduledRidesDataTable } from '@/app/(pages)/PickupRequests/ScheduledPickups/ScheduledRides';
 import React from 'react';
 
 const ScheduledRides: React.FC = () => {

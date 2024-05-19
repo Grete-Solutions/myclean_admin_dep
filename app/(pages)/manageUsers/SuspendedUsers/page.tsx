@@ -1,4 +1,4 @@
-import { SuspendedUsersDataTable } from '@/app/components/manageUserDataTable/SuspendedUsersDataTable';
+import { SuspendedUsersDataTable } from '@/app/(pages)/manageUsers/SuspendedUsers/SuspendedUsersDataTable';
 import React from 'react';
 
 const ApprovedPending: React.FC = () => {

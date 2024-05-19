@@ -27,7 +27,7 @@ const ServiceLocations = () => {
     
         const getLocation = async () => {
             try {
-                const response = await fetch('/lib/GET/getallcities');
+                const response = await fetch('/lib/GET/serviceLocation/getallcities');
                 if (!response.ok) {
                     throw new Error('Failed to fetch data');
                 }

@@ -1,4 +1,4 @@
-import { DeletedUsersDataTable } from '@/app/components/manageUserDataTable/DeletedUserDataTable';
+import { DeletedUsersDataTable } from '@/app/(pages)/manageUsers/DeletedUsers/DeletedUserDataTable';
 import React from 'react';
 
 const ApprovedPending: React.FC = () => {

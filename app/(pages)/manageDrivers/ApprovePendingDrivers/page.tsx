@@ -1,5 +1,5 @@
-import { ApprovePendingDataTable } from '@/app/components/ApprovePendingDataTable';
 import React from 'react';
+import { ApprovePendingDataTable } from './ApprovePendingDataTable';
 
 const ApprovedPending: React.FC = () => {
   return (

@@ -1,11 +1,15 @@
 import { Checkbox } from '@/components/ui/checkbox';
-import React from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+
+
 
 export interface AccordionItemData {
     value: string;
     triggerText: string;
     content: JSX.Element;
 }
+
 
 export const accordionItems: AccordionItemData[] = [
     {

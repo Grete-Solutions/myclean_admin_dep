@@ -1,4 +1,4 @@
-import { ApproveUsersDataTable } from '@/app/components/manageUserDataTable/ApprovedUserDataTable';
+import { ApproveUsersDataTable } from '@/app/(pages)/manageUsers/ApprovedUsers/ApprovedUserDataTable';
 import React from 'react';
 
 const CountryPage: React.FC = () => {

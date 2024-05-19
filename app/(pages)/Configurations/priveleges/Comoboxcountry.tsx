@@ -1,8 +1,7 @@
-"use client"
+'use client'
 
-import * as React from "react"
-
-import { Button } from "@/components/ui/button"
+import * as React from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Command,
   CommandEmpty,
@@ -10,19 +9,21 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from '@/components/ui/command';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { Countrydata,CountryDataType } from "@/app/components/countryConstants"
+} from '@/components/ui/popover';
+import { Countrydata, CountryDataType } from '@/app/components/countryConstants';
 
-export function ComboboxForm() {
-  const [open, setOpen] = React.useState(false)
-  const [selectedCountry, setSelectedCountry] = React.useState<CountryDataType | null>(
-    null
-  )
+interface ComboboxFormProps {
+  selectedCountry: CountryDataType | null;
+  setSelectedCountry: React.Dispatch<React.SetStateAction<CountryDataType | null>>;
+}
+
+export function ComboboxForm({ selectedCountry, setSelectedCountry }: ComboboxFormProps) {
+  const [open, setOpen] = React.useState(false);
 
   return (
     <div className="flex items-center z-[9999] space-x-4">
@@ -44,10 +45,9 @@ export function ComboboxForm() {
                     value={status.id}
                     onSelect={(id) => {
                       setSelectedCountry(
-                        Countrydata.find((priority) => priority.id === id) ||
-                          null
-                      )
-                      setOpen(false)
+                        Countrydata.find((country) => country.id === id) || null
+                      );
+                      setOpen(false);
                     }}
                   >
                     {status.Name}
@@ -59,5 +59,5 @@ export function ComboboxForm() {
         </PopoverContent>
       </Popover>
     </div>
-  )
+  );
 }

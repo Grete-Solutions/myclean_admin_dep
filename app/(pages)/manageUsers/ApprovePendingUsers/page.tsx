@@ -1,10 +1,10 @@
-import { ApprovePendingUsersDataTable } from '@/app/components/manageUserDataTable/ApprovedPendingUserDataTable';
 import React from 'react';
+import { ApprovedPendingUserDataTable } from './ApprovedPendingUserDataTable';
 
 const ApprovedPending: React.FC = () => {
   return (
     <div>
-      <ApprovePendingUsersDataTable />
+      <ApprovedPendingUserDataTable />
     </div>
   );
 };

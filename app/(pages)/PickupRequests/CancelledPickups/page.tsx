@@ -1,4 +1,4 @@
-import { CancelledRidesDataTable } from '@/app/components/CancelledRides';
+import { CancelledRidesDataTable } from '@/app/(pages)/PickupRequests/CancelledPickups/CancelledRides';
 import React from 'react';
 
 const CancelledRides: React.FC = () => {

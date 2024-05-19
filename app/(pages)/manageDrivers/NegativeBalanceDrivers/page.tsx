@@ -1,4 +1,4 @@
-import { NegativeBalanceDriversDataTable } from '@/app/components/NegativeBalanceDrivers';
+import { NegativeBalanceDriversDataTable } from '@/app/(pages)/manageDrivers/NegativeBalanceDrivers/NegativeBalanceDrivers';
 import React from 'react';
 
 const NegativeBalanceDrivers: React.FC = () => {

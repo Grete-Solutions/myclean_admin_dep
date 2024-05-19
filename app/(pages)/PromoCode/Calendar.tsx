@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CalendarIcon } from "@radix-ui/react-icons"
@@ -12,7 +12,6 @@ import { Calendar } from "@/components/ui/calendar"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -31,7 +30,7 @@ const FormSchema = z.object({
   }),
 })
 
-export function PromoCalendarForm() {
+export function PromoCalendarForm({ onDateChange }: { onDateChange: (date: Date | null) => void }) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   })
@@ -55,7 +54,7 @@ export function PromoCalendarForm() {
           name="dob"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>  Expires at</FormLabel>
+              <FormLabel>Expires at</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -79,9 +78,12 @@ export function PromoCalendarForm() {
                   <Calendar
                     mode="single"
                     selected={field.value}
-                    onSelect={field.onChange}
+                    onSelect={(date) => {
+                      field.onChange(date)
+                      onDateChange(date ?? null)
+                    }}
                     disabled={(date) =>
-                      date < new Date() 
+                      date < new Date()
                     }
                     initialFocus
                   />
