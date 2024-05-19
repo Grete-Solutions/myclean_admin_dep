@@ -66,6 +66,7 @@ function PromoCodeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
       }
 
       const data = await response.json();
+      onAddSuccess();
       alert('Promo Code added successfully!');
     } catch (error) {
       console.error('Error:', error);
