@@ -112,10 +112,10 @@ const columns: ColumnDef<RideData>[] = [
     header: "Created At",
     cell: ({ row }) => (
       <div>
-        {new Date(row.getValue("createdAt")._seconds * 1000).toLocaleString()}
+        {new Date((row.getValue("createdAt") as { _seconds: number })._seconds * 1000).toLocaleString()}
       </div>
     ),
-  },
+  },  
   {
     header: "Actions",
     id: "actions",

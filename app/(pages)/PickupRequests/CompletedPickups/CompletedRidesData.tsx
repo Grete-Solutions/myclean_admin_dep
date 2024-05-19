@@ -87,13 +87,13 @@ export const columns: ColumnDef<RideData>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: "Date",
+    header: "Created At",
     cell: ({ row }) => (
-      <div className="capitalize">
-        {new Date(row.getValue("createdAt")._seconds* 1000).toLocaleString()} 
+      <div>
+        {new Date((row.getValue("createdAt") as { _seconds: number })._seconds * 1000).toLocaleString()}
       </div>
     ),
-  },
+  },  
   {
     accessorKey: "status",
     header: "Trip Status",
