@@ -41,21 +41,21 @@ import {
 // Define the RideData interface
 interface RideData {
   id: string;
-  country: string;
-  city: string;
-  isDelete: number;
-  name: string;
-  description: string;
-  slug: string;
-  status: number;
+  driverId: string;
+  pickupLocation: string;
+  userId: string;
   createdAt: {
     _seconds: number;
     _nanoseconds: number;
   };
+  updatedAt: {
+    _seconds: number;
+    _nanoseconds: number;
+  };
+  status: string;
 }
 
-// Define table columns
-const columns: ColumnDef<RideData>[] = [
+export const columns: ColumnDef<RideData>[] = [
   {
     accessorKey: "Sno",
     header: "Sno",
@@ -63,48 +63,27 @@ const columns: ColumnDef<RideData>[] = [
   },
   {
     accessorKey: "id",
-    header: "ID",
+    header: "Request ID",
     cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "name",
+    accessorKey: "userId",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Name
+        User ID
         <CaretSortIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => <div className="uppercase">{row.getValue("name")}</div>,
+    cell: ({ row }) => <div className="uppercase">{row.getValue("userId")}</div>,
   },
   {
-    accessorKey: "country",
-    header: "Country",
+    accessorKey: "driverId",
+    header: "Driver Name",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("country")}</div>
-    ),
-  },
-  {
-    accessorKey: "city",
-    header: "City",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("city")}</div>
-    ),
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status") === 0 ? "Inactive" : "Active"}</div>
-    ),
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("description")}</div>
+      <div className="capitalize">{row.getValue("driverId")}</div>
     ),
   },
   {
@@ -116,6 +95,13 @@ const columns: ColumnDef<RideData>[] = [
       </div>
     ),
   },  
+  {
+    accessorKey: "status",
+    header: "Trip Status",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("status")}</div>
+    ),
+  },
   {
     header: "Actions",
     id: "actions",
