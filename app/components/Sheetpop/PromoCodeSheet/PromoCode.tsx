@@ -19,8 +19,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { PromoCalendarForm } from './Calendar';
 
 interface Promocode {
-  coupon_type: string,
-  user_type: string,
+  coupon_type: number,
+  user_type: number,
   value: number,
   count: number,
   expired_at: string
