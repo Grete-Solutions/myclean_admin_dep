@@ -7,7 +7,7 @@
         throw new Error('ID parameter is missing');
       }
   
-      const res = await fetch(`${process.env.URL}/setPrice/getAllByCity/${id}`, {
+      const res = await fetch(`${process.env.URL}/setPrice/getCityById/${id}`, {
         cache: 'no-cache',  
         headers: {
           'Content-Type': 'application/json',

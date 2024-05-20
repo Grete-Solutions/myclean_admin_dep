@@ -30,12 +30,9 @@ const FormSchema = z.object({
   }),
 })
 
-export function PromoCalendarForm({ value, onDateChange }: { value: Date | undefined, onDateChange: (date: Date | undefined) => void }) {
+export function PromoCalendarForm({ onDateChange }: { onDateChange: (date: Date | null) => void }) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      dob: value,
-    },
   })
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -83,7 +80,7 @@ export function PromoCalendarForm({ value, onDateChange }: { value: Date | undef
                     selected={field.value}
                     onSelect={(date) => {
                       field.onChange(date)
-                      onDateChange(date)
+                      onDateChange(date ?? null)
                     }}
                     disabled={(date) =>
                       date < new Date()

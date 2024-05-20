@@ -16,7 +16,7 @@ import {
 import { CirclePlusIcon } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { PromoCalendarForm } from '@/app/(pages)/PromoCode/Calendar';
+import { PromoCalendarForm } from './Calendar';
 
 interface Promocode {
   coupon_type: string,

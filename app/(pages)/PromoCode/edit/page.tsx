@@ -13,8 +13,8 @@ import { PromoCalendarForm } from '../Calendar';
 type Data = {
   id: string;
   code: string;
-  user_type: string;
-  coupon_type: string;
+  user_type: number;
+  coupon_type: number;
   count: number;
   expired_at: {
     _seconds: number;
@@ -45,7 +45,7 @@ const EditPageContent = () => {
   const [userType, setUserType] = useState('');
   const [couponType, setCouponType] = useState('');
   const [count, setCountNumber] = useState('');
-  const [expiredAt, setExpiredAt] = useState<Date | null>(null);
+  const [expiredAt, setExpiredAt] = useState<Date | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -65,6 +65,7 @@ const EditPageContent = () => {
         }
 
         const data = await response.json();
+        console.log(data);
         setPromoData(data.product);
         setUserType(data.product.user_type.toString());
         setCouponType(data.product.coupon_type.toString());
@@ -146,7 +147,7 @@ const EditPageContent = () => {
             />
           </div>
           <div className="grid grid-cols-1 items-center gap-4">
-            <PromoCalendarForm onDateChange={setExpiredAt} />
+            <PromoCalendarForm value={expiredAt ?? undefined} onDateChange={setExpiredAt} />
           </div>
         </div>
         <div>

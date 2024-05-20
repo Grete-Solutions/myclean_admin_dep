@@ -44,7 +44,7 @@ export default function EditPage() {
       if (!vehicleId) return;
 
       try {
-        const response = await fetch(`/lib/GET/VehicleMake/getallbyvehiclemakeID?id=${vehicleId}`);
+        const response = await fetch(`/lib/GET/serviceLocation/getCityById?id=${vehicleId}`);
 
         if (!response.ok) {
           throw new Error('Failed to fetch vehicle data');
