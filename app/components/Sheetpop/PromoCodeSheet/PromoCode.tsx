@@ -106,7 +106,7 @@ function PromoCodeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
           <SheetHeader>
             <SheetTitle>Add Promo Code</SheetTitle>
             <SheetDescription>
-              Click save when you're done.
+              Click save when you&apos;re done.
             </SheetDescription>
           </SheetHeader>
           <form onSubmit={handleSubmit}>
