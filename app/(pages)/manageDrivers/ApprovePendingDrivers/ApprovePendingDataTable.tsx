@@ -109,9 +109,11 @@ const columns: ColumnDef<ApprovedData>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => <div>{row.getValue("status")}</div>,
+    cell: ({ row }) => (
+      <div className={`${row.getValue("status") === 1 ? 'text-green-500' : 'text-red-500 file'} font-semibold`}>
+        {row.getValue("status") === 1 ? 'Active' : 'Inactive'}</div>
+    ),
   },
-  // Add more columns as needed
 ];
 
 export function ApprovePendingDataTable() {

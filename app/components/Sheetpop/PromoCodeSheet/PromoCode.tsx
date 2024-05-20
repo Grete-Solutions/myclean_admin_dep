@@ -1,5 +1,5 @@
 'use client'
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,24 +27,44 @@ interface Promocode {
 }
 
 function PromoCodeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
-  const [userType, setUserType] = React.useState('');
-  const [couponType, setCouponType] = React.useState('');
-  const [value, setValue] = React.useState('');
-  const [countNumber, setCountNumber] = React.useState('');
-  const [expiredAt, setExpiredAt] = React.useState<Date | null>(null);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
+  const [userType, setUserType] = useState('')
+  const [couponType, setCouponType] = useState('')
+  const [value, setValue] = useState('')
+  const [countNumber, setCountNumber] = useState('')
+  const [expiredAt, setExpiredAt] = useState<Date | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    if ( !userType || !couponType || !countNumber || !expiredAt) {
-      setError('All fields are required.');
-      return;
+    if (!userType || !couponType || !countNumber || !expiredAt) {
+      setError('All fields are required.')
+      return
     }
 
-    setIsSubmitting(true);
-    setError(null);
+    let userTypeValue: number
+    if (userType === 'User') {
+      userTypeValue = 0
+    } else if (userType === 'Driver') {
+      userTypeValue = 1
+    } else {
+      userTypeValue = 2
+      return
+    }
+
+    let couponTypeValue: number
+    if (couponType === 'Percentage') {
+      couponTypeValue = 0
+    } else if (couponType === 'Numeric') {
+      couponTypeValue = 1
+    } else {
+      throw new Error('Invalid coupon type')
+      return
+    }
+
+    setIsSubmitting(true)
+    setError(null)
 
     try {
       const response = await fetch('/lib/POST/postPromoCode', {
@@ -53,58 +73,44 @@ function PromoCodeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          coupon_type: couponType,
-          user_type: userType,
+          coupon_type: couponTypeValue,
+          user_type: userTypeValue,
           value: parseFloat(value),
           count: parseInt(countNumber, 10),
           expired_at: expiredAt.toISOString(),
         }),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Network response was not ok')
       }
 
-      const data = await response.json();
-      onAddSuccess();
-      alert('Promo Code added successfully!');
+      const data = await response.json()
+      onAddSuccess()
+      alert('Promo Code added successfully!')
     } catch (error) {
-      console.error('Error:', error);
-      setError('Failed to add promo code.');
+      console.error('Error:', error)
+      setError('Failed to add promo code.')
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   return (
     <Sheet>
       <SheetTrigger className='flex items-center'>
-        <Button className='text-[12px] bg-[#0A8791] py-2 h-fit'>
-          <CirclePlusIcon className='mr-1' size={12} /> Add Code
-        </Button>
+        <Button className='text-[12px] bg-[#0A8791] py-2 h-fit'><CirclePlusIcon className='mr-1' size={12} /> Add Code</Button>
       </SheetTrigger>
       <SheetContent className='z-[9999]'>
         <ScrollArea className="h-full w-[350px]">
           <SheetHeader>
             <SheetTitle>Add Promo Code</SheetTitle>
             <SheetDescription>
-              Click save when you&apos;re done.
+              Click save when you're done.
             </SheetDescription>
           </SheetHeader>
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-1 items-center gap-4">
-                <Label htmlFor="Pcode" className="text-left">Code</Label>
-                             <h6 className='text-[12px]'>will be auto generated</h6>
-                <Input
-                  id="Pcode"
-                  placeholder=' Code'
-                  disabled
-                  className="col-span-3"
-                  value={value}
-                  onChange={(e) => setValue(e.target.value)}
-                />
-              </div>
               <div className="grid grid-cols-1 items-center gap-4">
                 <Label htmlFor="userType" className="text-left">User Type</Label>
                 <Select value={userType} onValueChange={setUserType}>
@@ -130,7 +136,17 @@ function PromoCodeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
                   </SelectContent>
                 </Select>
               </div>
-            
+              <div className="grid grid-cols-1 items-center gap-4">
+                <Label htmlFor="Value" className="text-left">Value</Label>
+                <Input
+                  id="Value"
+                  placeholder='Value'
+                  disabled
+                  className="col-span-3"
+                  value={value}
+                  onChange={(e) => setValue(e.target.value)}
+                />
+              </div>
               <div className="grid grid-cols-1 items-center gap-4">
                 <Label htmlFor="countNumber" className="text-left">Count Number</Label>
                 <Input
@@ -161,7 +177,7 @@ function PromoCodeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
         </ScrollArea>
       </SheetContent>
     </Sheet>
-  );
+  )
 }
 
 export default PromoCodeSheet;

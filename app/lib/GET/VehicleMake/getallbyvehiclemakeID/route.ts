@@ -1,12 +1,24 @@
+
 export async function GET(request: Request) {
-    const { searchParams } = new URL(request.url)
-    const id = searchParams.get('id')
-    const res = await fetch(`${process.env.URL}/setPrice/getAll`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    const product = await res.json()
-   
-    return Response.json({ product })
+  const url = new URL(request.url);
+  const id = url.searchParams.get('id');
+  
+  if (!id) {
+    throw new Error('ID parameter is missing');
   }
+
+  const res = await fetch(`${process.env.URL}/vehicleMake/getById/${id}`, {
+    cache: 'no-cache',  
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+
+  const product = await res.json();
+
+return Response.json({ product });
+}

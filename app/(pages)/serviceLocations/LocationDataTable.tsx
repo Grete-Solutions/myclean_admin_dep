@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 import {
   Table,
   TableBody,
@@ -38,17 +38,16 @@ import {
 
 import VehicleMakeSheet from '@/app/components/Sheetpop/MasterDataPop/VehicleMakeSheet';
 import { Actionbutton } from './Action';
+import ServiceLocation from '@/app/components/Sheetpop/serviceLocations/serviceLocationsSheet';
 
 interface Data {
-  id: string;
-  srNodata: number;
-  make: string;
-  model: string;
-  year: number;
-  description: string;
-  status: number;
-  capacity: number;
-  action: React.ReactNode;
+    id: string;
+    srNodata: string;
+    countryISOCode: string;
+    price: number;
+    city: string;
+    status: number;
+    action: ReactNode;
 }
 
 const columns: ColumnDef<Data>[] = [
@@ -58,39 +57,33 @@ const columns: ColumnDef<Data>[] = [
     cell: ({ row }) => <div>{row.index + 1}</div>, // Use row index as Sno value
   },
   {
-    accessorKey: "make",
-    header: "Vehicle Make Name",
-    cell: ({ row }) => <div>{row.getValue("make")}</div>,
+    accessorKey: "countryISOCode",
+    header: "Country",
+    cell: ({ row }) => <div>{row.getValue("countryISOCode")}</div>,
   },
   {
-    accessorKey: "model",
+    accessorKey: "city",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Vehicle Model
+        City
         <CaretSortIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
     cell: ({ row }) => (
-      <div>{row.getValue("model")}</div>
+      <div>{row.getValue("city")}</div>
     ),
   },
   {
-    accessorKey: "year",
-    header: "Year",
+    accessorKey: "price",
+    header: "Price",
     cell: ({ row }) => (
-      <div>{row.getValue("year")}</div>
+      <div>{row.getValue("price")}</div>
     ),
   },
-  {
-    accessorKey: "capacity",
-    header: "Capacity",
-    cell: ({ row }) => (
-      <div>{row.getValue("capacity")}</div>
-    ),
-  },
+
   {
     accessorKey: "status",
     header: "Status",
@@ -109,16 +102,16 @@ const columns: ColumnDef<Data>[] = [
   },
 ];
 
-export function VehicleMakeDataTable() {
+export function Location() {
   const [data, setData] = useState<Data[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
-  const getVehicle = async () => {
+  const getLocation = async () => {
     try {
-      const response = await fetch('/lib/GET/VehicleMake/getallVehicle');
+      const response = await fetch('/lib/GET/serviceLocation/getallcities');
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
@@ -131,11 +124,11 @@ export function VehicleMakeDataTable() {
   };
 
   useEffect(() => {
-    getVehicle();
+    getLocation();
   }, []);
 
   const handleAddSuccess = () => {
-    getVehicle();
+    getLocation();
   };
 
   const table = useReactTable({
@@ -159,14 +152,14 @@ export function VehicleMakeDataTable() {
 
   return (
     <div>
-      <VehicleMakeSheet onAddSuccess={handleAddSuccess} />
+      <ServiceLocation onAddSuccess={handleAddSuccess} />
       <div className="w-full">
         <div className="flex items-center py-4">
           <Input
-            placeholder="Filter Vehicle Make..."
-            value={(table.getColumn("make")?.getFilterValue() as string) ?? ""}
+            placeholder="Filter Country..."
+            value={(table.getColumn("countryISOCode")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
-              table.getColumn("make")?.setFilterValue(event.target.value)
+              table.getColumn("countryISOCode")?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />
@@ -274,4 +267,4 @@ export function VehicleMakeDataTable() {
   );
 }
 
-export default VehicleMakeDataTable;
+export default Location;

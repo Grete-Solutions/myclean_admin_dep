@@ -1,4 +1,3 @@
-// Actionbutton.tsx
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { PenBox } from "lucide-react";
@@ -14,7 +13,7 @@ export function Actionbutton({ id,status }: ActionButtonProps) {
     const router = useRouter();
 
     const handleEdit = () => {
-        router.push(`/Edit?id=${id}`); 
+        router.push(`serviceLocations/edit?id=${id}`); 
     };
     // const handleChangeStatus = async () => {
     //     try {

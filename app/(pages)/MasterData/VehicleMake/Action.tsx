@@ -14,7 +14,7 @@ export function Actionbutton({ id,status }: ActionButtonProps) {
     const router = useRouter();
 
     const handleEdit = () => {
-        router.push(`/Edit?id=${id}`); 
+        router.push(`VehicleMake/edit?id=${id}`); 
     };
     // const handleChangeStatus = async () => {
     //     try {

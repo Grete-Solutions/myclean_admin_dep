@@ -88,9 +88,17 @@ const columns: ColumnDef<Data>[] = [
     ),
   },
   {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => (
+      <div className={`${row.getValue("status") === 1 ? 'text-green-500' : 'text-red-500 file'} font-semibold`}>
+        {row.getValue("status") === 1 ? 'Active' : 'Inactive'}</div>
+    ),
+  },
+  {
     accessorKey: "action",
     header: "Action",
-    cell: ({ row }) => <Actionbutton id={row.original.id} />, 
+    cell: ({ row }) => <Actionbutton status= {row.getValue("status") === 1 ? 'Active' : 'Inactive'} id={row.original.id} />, 
   },
 
 ];

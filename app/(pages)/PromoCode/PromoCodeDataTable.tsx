@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 import {
   Table,
   TableBody,
@@ -13,7 +13,7 @@ import {
 import {
   CaretSortIcon,
   ChevronDownIcon,
-} from "@radix-ui/react-icons"
+} from "@radix-ui/react-icons";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -26,7 +26,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -35,68 +34,83 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-import VehicleMakeSheet from '@/app/components/Sheetpop/MasterDataPop/VehicleMakeSheet';
+import ServiceLocation from '@/app/components/Sheetpop/serviceLocations/serviceLocationsSheet';
 import { Actionbutton } from './Action';
+import PromoCodeSheet from '@/app/components/Sheetpop/PromoCodeSheet/PromoCode';
 
 interface Data {
   id: string;
-  srNodata: number;
-  make: string;
-  model: string;
-  year: number;
-  description: string;
+  user_type: string;
+  coupon_type: string;
+  code: string;
+  count: number;
+  expired_at: {
+    _seconds: number;
+    _nanoseconds: number;
+  };
+  value: number;
   status: number;
-  capacity: number;
-  action: React.ReactNode;
+  createdAt: {
+    _seconds: number;
+    _nanoseconds: number;
+  };
+  updateAt: {
+    _seconds: number;
+    _nanoseconds: number;
+  };
+  isDelete: number;
 }
 
 const columns: ColumnDef<Data>[] = [
   {
     accessorKey: "Sno",
     header: "Sr No",
-    cell: ({ row }) => <div>{row.index + 1}</div>, // Use row index as Sno value
+    cell: ({ row }) => <div>{row.index + 1}</div>,
   },
   {
-    accessorKey: "make",
-    header: "Vehicle Make Name",
-    cell: ({ row }) => <div>{row.getValue("make")}</div>,
+    accessorKey: "code",
+    header: "Code",
+    cell: ({ row }) => <div>{row.getValue("code")}</div>,
   },
   {
-    accessorKey: "model",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Vehicle Model
-        <CaretSortIcon className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <div>{row.getValue("model")}</div>
-    ),
+    accessorKey: "user_type",
+    header: "User Type",
+    cell: ({ row }) => <div>{row.getValue("user_type")}</div>,
   },
   {
-    accessorKey: "year",
-    header: "Year",
-    cell: ({ row }) => (
-      <div>{row.getValue("year")}</div>
-    ),
+    accessorKey: "coupon_type",
+    header: "Coupon Type",
+    cell: ({ row }) => <div>{row.getValue("coupon_type")}</div>,
   },
   {
-    accessorKey: "capacity",
-    header: "Capacity",
-    cell: ({ row }) => (
-      <div>{row.getValue("capacity")}</div>
-    ),
+    accessorKey: "count",
+    header: "Count",
+    cell: ({ row }) => <div>{row.getValue("count")}</div>,
+  },
+  {
+    accessorKey: "expired_at",
+    header: "Expiry Date",
+    cell: ({ row }) => {
+      const expiredAt = row.getValue("expired_at") as { _seconds: number; _nanoseconds: number } | undefined;
+      return (
+        <div>
+          {expiredAt ? new Date(expiredAt._seconds * 1000).toLocaleString() : 'N/A'}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "value",
+    header: "Value",
+    cell: ({ row }) => <div>{row.getValue("value")}</div>,
   },
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <div className={`${row.getValue("status") === 1 ? 'text-green-500' : 'text-red-500 file'} font-semibold`}>
-        {row.getValue("status") === 1 ? 'Active' : 'Inactive'}</div>
+      <div className={`${row.getValue("status") === 1 ? 'text-green-500' : 'text-red-500'} font-semibold`}>
+        {row.getValue("status") === 1 ? 'Active' : 'Inactive'}
+      </div>
     ),
   },
   {
@@ -104,21 +118,22 @@ const columns: ColumnDef<Data>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div className="text-center text-[#0A8791]">
-<Actionbutton id={row.original.id} status={row.getValue("status") === 1 ? 'Active' : 'Inactive'} />      </div>
+        <Actionbutton id={row.original.id} status={row.getValue("status") === 1 ? 'Active' : 'Inactive'} />
+      </div>
     ),
   },
 ];
 
-export function VehicleMakeDataTable() {
+export function PromoCode() {
   const [data, setData] = useState<Data[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
-  const getVehicle = async () => {
+  const getLocation = async () => {
     try {
-      const response = await fetch('/lib/GET/VehicleMake/getallVehicle');
+      const response = await fetch('/lib/GET/PromoCode/getallCoupon');
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
@@ -126,16 +141,15 @@ export function VehicleMakeDataTable() {
       setData(Array.isArray(data.product) ? data.product : []);
     } catch (error) {
       console.error('Error fetching data:', error);
-      // Handle error, e.g., set a default state or show an error message
     }
   };
 
   useEffect(() => {
-    getVehicle();
+    getLocation();
   }, []);
 
   const handleAddSuccess = () => {
-    getVehicle();
+    getLocation();
   };
 
   const table = useReactTable({
@@ -159,14 +173,14 @@ export function VehicleMakeDataTable() {
 
   return (
     <div>
-      <VehicleMakeSheet onAddSuccess={handleAddSuccess} />
+      <PromoCodeSheet onAddSuccess={handleAddSuccess} />
       <div className="w-full">
         <div className="flex items-center py-4">
           <Input
-            placeholder="Filter Vehicle Make..."
-            value={(table.getColumn("make")?.getFilterValue() as string) ?? ""}
+            placeholder="Filter Code..."
+            value={(table.getColumn("code")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
-              table.getColumn("make")?.setFilterValue(event.target.value)
+              table.getColumn("code")?.setFilterValue(event.target.value)
             }
             className="max-w-sm"
           />
@@ -192,14 +206,14 @@ export function VehicleMakeDataTable() {
                     >
                       {column.id}
                     </DropdownMenuCheckboxItem>
-                  )
+                  );
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
         <div className="rounded-md border">
           <Table>
-            <TableCaption>A list of your privileges.</TableCaption>
+            <TableCaption>A list of your coupons.</TableCaption>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
@@ -213,7 +227,7 @@ export function VehicleMakeDataTable() {
                               header.getContext()
                             )}
                       </TableHead>
-                    )
+                    );
                   })}
                 </TableRow>
               ))}
@@ -274,4 +288,4 @@ export function VehicleMakeDataTable() {
   );
 }
 
-export default VehicleMakeDataTable;
+export default PromoCode;
