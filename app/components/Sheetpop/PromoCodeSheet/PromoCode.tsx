@@ -47,9 +47,11 @@ function PromoCodeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
       userTypeValue = 0;
     } else if (userType === 'Driver') {
       userTypeValue = 1;
-    } else {
+    } else if (userType === 'All'){
       userTypeValue = 2;
       return;
+    }else{
+      throw new Error('Invalid user type');
     }
   
     let couponTypeValue: number;
