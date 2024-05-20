@@ -42,9 +42,9 @@ export default function EditPage() {
 }
 
 const EditPageContent = () => {
-  const [userType, setUserType] = useState('');
-  const [couponType, setCouponType] = useState('');
-  const [count, setCountNumber] = useState('');
+  const [userType, setUserType] = useState<string>('');
+  const [couponType, setCouponType] = useState<string>('');
+  const [count, setCountNumber] = useState<string>('');
   const [expiredAt, setExpiredAt] = useState<Date | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -111,7 +111,7 @@ const EditPageContent = () => {
           </div>
           <div className="grid grid-cols-1 items-center gap-4">
             <Label htmlFor="userType" className="text-left">User Type</Label>
-            <Select value={userType} onValueChange={setUserType}>
+            <Select value={userType === '1' ? 'Driver' : userType === '0' ? 'User' : 'All'} onValueChange={setUserType}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select User Type" />
               </SelectTrigger>
@@ -124,7 +124,7 @@ const EditPageContent = () => {
           </div>
           <div className="grid grid-cols-1 items-center gap-4">
             <Label htmlFor="couponType" className="text-left">Coupon Type</Label>
-            <Select value={couponType} onValueChange={setCouponType}>
+            <Select value={couponType === '1'? 'Numeric' : 'Percentage'} onValueChange={setCouponType}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select Coupon Type" />
               </SelectTrigger>

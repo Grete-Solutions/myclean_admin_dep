@@ -75,17 +75,20 @@ const columns: ColumnDef<Data>[] = [
   {
     accessorKey: "user_type",
     header: "User Type",
-    cell: ({ row }) => <div>{row.getValue("user_type")}</div>,
-  },
+    cell: ({ row }) => {
+      const userType = row.getValue("user_type");
+      return <div>{userType === 1 ? 'Driver' : userType === 0 ? 'User' : 'All'}</div>;
+    },},
   {
     accessorKey: "coupon_type",
     header: "Coupon Type",
-    cell: ({ row }) => <div>{row.getValue("coupon_type")}</div>,
+    cell: ({ row }) =>
+       <div>{row.getValue("coupon_type")=== 1 ? 'Numeric' : 'Percentage'}</div>,
   },
   {
     accessorKey: "count",
     header: "Count",
-    cell: ({ row }) => <div>{row.getValue("count")}</div>,
+    cell: ({ row }) => <div>{row.getValue("count") }</div>,
   },
   {
     accessorKey: "expired_at",
