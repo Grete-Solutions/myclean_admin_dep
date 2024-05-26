@@ -42,6 +42,7 @@ import { Actionbutton } from './Action';
 interface Data {
   id: string;
   srNodata: number;
+  isDelete: number;
   make: string;
   model: string;
   year: number;
@@ -50,6 +51,15 @@ interface Data {
   capacity: number;
   action: React.ReactNode;
 }
+
+
+export function VehicleMakeDataTable() {
+  const [data, setData] = useState<Data[]>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+
 
 const columns: ColumnDef<Data>[] = [
   {
@@ -104,19 +114,12 @@ const columns: ColumnDef<Data>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div className="text-center text-[#0A8791]">
-<Actionbutton id={row.original.id} status={row.getValue("status") === 1 ? 'Active' : 'Inactive'} />      </div>
+    <Actionbutton onDelete={row.original.isDelete} status= {row.original.status} id={row.original.id} refreshData={getVehicle} />, 
+ </div>
     ),
   },
-];
-
-export function VehicleMakeDataTable() {
-  const [data, setData] = useState<Data[]>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
-
-  const getVehicle = async () => {
+]; 
+ const getVehicle = async () => {
     try {
       const response = await fetch('/lib/GET/VehicleMake/getallVehicle');
       if (!response.ok) {

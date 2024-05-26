@@ -14,7 +14,7 @@ type Data = {
   id: string;
   code: string;
   user_type: number;
-  coupon_type: number;
+  coupon_type:string ;
   count: number;
   expired_at: {
     _seconds: number;
@@ -45,20 +45,22 @@ const EditPageContent = () => {
   const [userType, setUserType] = useState<string>('');
   const [couponType, setCouponType] = useState<string>('');
   const [count, setCountNumber] = useState<string>('');
+  const [value, setValue] = useState<string>('');
   const [expiredAt, setExpiredAt] = useState<Date | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const searchParams = useSearchParams();
-  const PromoCodeId = searchParams.get('id') as string;
+  const id = searchParams.get('id') as string;
   const [promoData, setPromoData] = useState<Data | undefined>(undefined);
 
   useEffect(() => {
     const getPromoCodeById = async () => {
-      if (!PromoCodeId) return;
+      if (!id) return;
 
       try {
-        const response = await fetch(`/lib/GET/PromoCode/getCouponID?id=${PromoCodeId}`);
+        const response = await fetch(`/lib/GET/PromoCode/getCouponID?id=${id}`);
 
         if (!response.ok) {
           throw new Error('Failed to fetch promo code data');
@@ -70,6 +72,7 @@ const EditPageContent = () => {
         setUserType(data.product.user_type.toString());
         setCouponType(data.product.coupon_type.toString());
         setCountNumber(data.product.count.toString());
+        setValue(data.product.value.toString());
         setExpiredAt(new Date(data.product.expired_at._seconds * 1000));
       } catch (error: any) {
         setError(error.message);
@@ -79,7 +82,67 @@ const EditPageContent = () => {
     };
 
     getPromoCodeById();
-  }, [PromoCodeId]);
+  }, [id]);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (!userType || !couponType || !count || !expiredAt || !value) {
+      setError('All fields are required.');
+      return;
+    }
+
+    let userTypeValue: number;
+    switch (userType) {
+      case '0':
+        userTypeValue = 0;
+        break;
+      case '1':
+        userTypeValue = 1;
+        break;
+      case '2':
+        userTypeValue = 2;
+        break;
+      default:
+        throw new Error('Invalid user type');
+    }
+
+    setIsSubmitting(true);
+    setError(null);
+
+    const requestBody = {
+      coupon_type: couponType,
+      user_type: userTypeValue,
+      value: parseFloat(value),
+      count: parseInt(count, 10),
+      expired_at: expiredAt.toISOString(),
+    };
+
+    console.log('Request Body:', requestBody); // Log the request body for debugging
+
+    try {
+      const response = await fetch(`/lib/PUT/PromoCode/updateByCouponID?id=${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({...requestBody,id}),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      alert('Promo Code updated successfully!');
+      router.push('/PromoCode'); // Redirect after successful update
+    } catch (error) {
+      console.error('Error:', error);
+      setError('Failed to update promo code.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -94,16 +157,16 @@ const EditPageContent = () => {
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <>
       <h2 className='text-[#0A8791] font-semibold mb-8'>Edit Promo Code</h2>
-      <form className='grid grid-cols-1 items-center gap-8'>
+      <form className='grid grid-cols-1 items-center gap-8' onSubmit={handleSubmit}>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-1 items-center gap-4">
             <Label htmlFor="Pcode" className="text-left">Code</Label>
             <h6 className='text-[12px]'>will be auto generated</h6>
             <Input
               id="Pcode"
-              placeholder=' Code'
+              placeholder='Code'
               disabled
               className="col-span-3"
               value={promoData.code}
@@ -111,20 +174,20 @@ const EditPageContent = () => {
           </div>
           <div className="grid grid-cols-1 items-center gap-4">
             <Label htmlFor="userType" className="text-left">User Type</Label>
-            <Select value={userType === '1' ? 'Driver' : userType === '0' ? 'User' : 'All'} onValueChange={setUserType}>
+            <Select value={userType} onValueChange={setUserType}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select User Type" />
               </SelectTrigger>
               <SelectContent className='z-[99999]'>
-                <SelectItem value="User">User</SelectItem>
-                <SelectItem value="Driver">Driver</SelectItem>
-                <SelectItem value="All">All</SelectItem>
+                <SelectItem value="0">User</SelectItem>
+                <SelectItem value="1">Driver</SelectItem>
+                <SelectItem value="2">All</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div className="grid grid-cols-1 items-center gap-4">
             <Label htmlFor="couponType" className="text-left">Coupon Type</Label>
-            <Select value={couponType === '1'? 'Numeric' : 'Percentage'} onValueChange={setCouponType}>
+            <Select value={couponType} onValueChange={setCouponType}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select Coupon Type" />
               </SelectTrigger>
@@ -147,13 +210,27 @@ const EditPageContent = () => {
             />
           </div>
           <div className="grid grid-cols-1 items-center gap-4">
+            <Label htmlFor="value" className="text-left">Value</Label>
+            <Input
+              type='number'
+              min={0}
+              id="value"
+              placeholder='Enter Value'
+              className="col-span-3"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+            />
+          </div>
+          <div className="grid grid-cols-1 items-center gap-4">
             <PromoCalendarForm value={expiredAt ?? undefined} onDateChange={setExpiredAt} />
           </div>
         </div>
         <div>
-          <Button className='bg-[#0A8791] hover:bg-[#0a8891b1]' type="submit">Save</Button>
+          <Button className='bg-[#0A8791] hover:bg-[#0a8891b1]' type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Saving...' : 'Save'}
+          </Button>
         </div>
       </form>
-    </Suspense>
+    </>
   );
-}
+};

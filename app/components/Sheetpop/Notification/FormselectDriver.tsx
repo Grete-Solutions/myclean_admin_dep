@@ -44,7 +44,7 @@ export function CheckboxReactHookFormMultipleDriver() {
       const allItems = items.map(item => item.id); // Get IDs of all items
       form.setValue('items', checked ? allItems : []); // Set form value accordingly
     };
-  
+   
     return (
       <Form {...form}>
         <form className="">

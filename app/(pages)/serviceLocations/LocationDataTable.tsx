@@ -39,6 +39,7 @@ import {
 import VehicleMakeSheet from '@/app/components/Sheetpop/MasterDataPop/VehicleMakeSheet';
 import { Actionbutton } from './Action';
 import ServiceLocation from '@/app/components/Sheetpop/serviceLocations/serviceLocationsSheet';
+import { CountriesIsoData } from './countryisocode';
 
 interface Data {
     id: string;
@@ -48,7 +49,42 @@ interface Data {
     city: string;
     status: number;
     action: ReactNode;
+    isDelete:number
 }
+
+
+export function Location() {
+  const [data, setData] = useState<Data[]>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+
+  const getLocation = async () => {
+    try {
+      const response = await fetch('/lib/GET/serviceLocation/getallcities');
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const data = await response.json();
+      setData(Array.isArray(data.product) ? data.product : []);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      // Handle error, e.g., set a default state or show an error message
+    }
+  };
+
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  const handleAddSuccess = () => {
+    getLocation();
+  };
+const countryIsoCodes: { [name: string]: string } = {};
+  CountriesIsoData.forEach(country => {
+    countryIsoCodes[country.name] = country.code;
+  });
 
 const columns: ColumnDef<Data>[] = [
   {
@@ -59,7 +95,10 @@ const columns: ColumnDef<Data>[] = [
   {
     accessorKey: "countryISOCode",
     header: "Country",
-    cell: ({ row }) => <div>{row.getValue("countryISOCode")}</div>,
+    cell: ({ row }) => {
+      const countryCode = row.getValue("countryISOCode") as string; // Assert type
+      return <div>{countryIsoCodes[countryCode]}</div>;
+    },
   },
   {
     accessorKey: "city",
@@ -97,40 +136,10 @@ const columns: ColumnDef<Data>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div className="text-center text-[#0A8791]">
-<Actionbutton id={row.original.id} status={row.getValue("status") === 1 ? 'Active' : 'Inactive'} />      </div>
+<Actionbutton onDelete={row.original.isDelete} id={row.original.id} status={row.getValue("status")} refreshData={getLocation} />     </div>
     ),
   },
 ];
-
-export function Location() {
-  const [data, setData] = useState<Data[]>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
-
-  const getLocation = async () => {
-    try {
-      const response = await fetch('/lib/GET/serviceLocation/getallcities');
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-      const data = await response.json();
-      setData(Array.isArray(data.product) ? data.product : []);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      // Handle error, e.g., set a default state or show an error message
-    }
-  };
-
-  useEffect(() => {
-    getLocation();
-  }, []);
-
-  const handleAddSuccess = () => {
-    getLocation();
-  };
-
   const table = useReactTable({
     data,
     columns,

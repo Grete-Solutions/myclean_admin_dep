@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CountUp from 'react-countup'; // Import CountUp component
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Overview } from './components/overview'
@@ -9,13 +9,60 @@ import PieChartBox from './components/Piechart'
 import Earnings from './components/Earnings'
 
 export default function Home() {
+  const [currentMonthRevenue, setCurrentMonthRevenue] = useState('');
+  const [revenuePercentageDifference, setRevenuePercentageDifference] = useState('');
+  const [usersRegistered, setUsersRegistered] = useState(0);
+  const [usersPercentageDifference, setUsersPercentageDifference] = useState('');
+  const [driversRegistered, setDriversRegistered] = useState(0);
+  const [driversPercentageDifference, setDriversPercentageDifference] = useState('');
+  const [pickupCount, setPickupCount] = useState(0);
+  const [pickupPercentageDifference, setPickupPercentageDifference] = useState('');
+  const [activeNow, setActiveNow] = useState(0);
+  const [activeNowPercentageDifference, setActiveNowPercentageDifference] = useState('');
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const revenueResponse = await fetch('/lib/GET/Dashboard/getCurrentRevenue'); 
+        const revenueData = await revenueResponse.json();
+        setCurrentMonthRevenue(revenueData.product['Current Month Revenue']);
+        setRevenuePercentageDifference(revenueData.product['Percentage Difference']);
+        console.log(revenueData);
+
+        const usersResponse = await fetch('/lib/GET/Dashboard/getCurrentUsers');
+        const usersData = await usersResponse.json();
+        setUsersRegistered(usersData.product);
+        setUsersPercentageDifference(usersData.percentageDifference);
+
+        const driversResponse = await fetch('/lib/GET/Dashboard/getCurrentDrivers');
+        const driversData = await driversResponse.json();
+        setDriversRegistered(driversData.count);
+        setDriversPercentageDifference(driversData.percentageDifference);
+
+        const pickupResponse = await fetch('/lib/GET/Dashboard/getCurrenyPickups');
+        const pickupData = await pickupResponse.json();
+        setPickupCount(pickupData.count);
+        setPickupPercentageDifference(pickupData.percentageDifference);
+
+        const activeNowResponse = await fetch('/lib/GET/Dashboard/getActiveNow');
+        const activeNowData = await activeNowResponse.json();
+        setActiveNow(activeNowData.count);
+        setActiveNowPercentageDifference(activeNowData.percentageDifference);
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
   return (
     <>
-       <h2 className="text-3xl font-bold tracking-tight my-4">Dashboard</h2>
+      <h2 className="text-3xl font-bold tracking-tight my-4">Dashboard</h2>
 
       <div className="flex-1 space-y-4 overflow-x-auto">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-semibold">
@@ -34,10 +81,10 @@ export default function Home() {
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
               </svg>
             </CardHeader>
-            <CardContent >
-              <CountUp start={0} end={45231.89} duration={2.5} separator="," decimal="." decimals={2} prefix="$" className="text-2xl font-bold text-[#0A8791]" />
+            <CardContent>
+              <CountUp start={0} end={parseFloat(currentMonthRevenue)} duration={2.5} separator="," decimal="." decimals={2} prefix="$" className="text-2xl font-bold text-[#0A8791]" />
               <p className="text-xs text-muted-foreground">
-                +20.1% from last month
+                {revenuePercentageDifference} from last month
               </p>
             </CardContent>
           </Card>
@@ -63,9 +110,9 @@ export default function Home() {
               </svg>
             </CardHeader>
             <CardContent>
-            <CountUp start={0} end={1650} duration={2.5} separator=","  prefix="+" className="text-2xl font-bold text-[#0A8791]" />
+              <CountUp start={0} end={usersRegistered} duration={2.5} separator="," prefix="+" className="text-2xl font-bold text-[#0A8791]" />
               <p className="text-xs text-muted-foreground">
-                +180.1% from last month
+                {usersPercentageDifference} from last month
               </p>
             </CardContent>
           </Card>
@@ -91,12 +138,13 @@ export default function Home() {
               </svg>
             </CardHeader>
             <CardContent>
-            <CountUp start={0} end={2350} duration={2.5} separator="," prefix="+" className="text-2xl font-bold text-[#0A8791]" />
+              <CountUp start={0} end={driversRegistered} duration={2.5} separator="," prefix="+" className="text-2xl font-bold text-[#0A8791]" />
               <p className="text-xs text-muted-foreground">
-                +180.1% from last month
+                {driversPercentageDifference} from last month
               </p>
             </CardContent>
           </Card>
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-semibold">Pickup</CardTitle>
@@ -115,12 +163,13 @@ export default function Home() {
               </svg>
             </CardHeader>
             <CardContent>
-            <CountUp start={0} end={12234} duration={2.5} separator="," prefix="+" className="text-2xl font-bold text-[#0A8791]" />
+              <CountUp start={0} end={pickupCount} duration={2.5} separator="," prefix="+" className="text-2xl font-bold text-[#0A8791]" />
               <p className="text-xs text-muted-foreground">
-                +19% from last month
+                {pickupPercentageDifference} from last month
               </p>
             </CardContent>
           </Card>
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-semibold">
@@ -140,13 +189,14 @@ export default function Home() {
               </svg>
             </CardHeader>
             <CardContent>
-            <CountUp start={0} end={573} duration={2.5} separator="," prefix="+" className="text-2xl font-bold text-[#0A8791]" />
+              <CountUp start={0} end={activeNow} duration={2.5} separator="," prefix="+" className="text-2xl font-bold text-[#0A8791]" />
               <p className="text-xs text-muted-foreground">
-                +201 since last hour
+                {activeNowPercentageDifference} since last hour
               </p>
             </CardContent>
           </Card>
         </div>
+        
         <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-7">
           <Card className="lg:col-span-4">
             <CardHeader>
@@ -160,7 +210,7 @@ export default function Home() {
             <CardHeader>
               <CardTitle>Recent Pickup</CardTitle>
               <CardDescription>
-                You made 265 pickup this month.
+                You made 265 pickups this month.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -171,14 +221,14 @@ export default function Home() {
             <CardHeader>
               <CardTitle>Todays Pickup</CardTitle>
               <CardDescription>
-                Check progress on completing,pending or cancelled requests
+                Check progress on completing, pending or cancelled requests
               </CardDescription>
             </CardHeader>
             <CardContent>
               <PieChartBox />
             </CardContent>
           </Card>
-          <Card className="lg:col-span-4 ">
+          <Card className="lg:col-span-4">
             <CardHeader>
               <CardTitle>Earnings</CardTitle>
               <CardDescription>
@@ -189,9 +239,8 @@ export default function Home() {
               <Earnings />
             </CardContent>
           </Card>
-          
         </div>
       </div>
     </>
-  )
+  );
 }

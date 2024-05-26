@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Table,
   TableBody,
@@ -13,7 +13,7 @@ import {
 import {
   CaretSortIcon,
   ChevronDownIcon,
-} from "@radix-ui/react-icons"
+} from "@radix-ui/react-icons";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -26,7 +26,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -35,7 +34,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import PriveledgeSheet from '@/app/components/Sheetpop/Priveleges/PriveledgeSheet';
 import { Actionbutton } from './Action';
 
@@ -54,55 +52,6 @@ interface Data {
   };
 }
 
-const columns: ColumnDef<Data>[] = [
-  {
-    accessorKey: "Sno",
-    header: "Sr No",
-    cell: ({ row }) => <div>{row.index + 1}</div>, // Use row index as Sno value
-  },
-  {
-    accessorKey: "slug",
-    header: "Slug",
-    cell: ({ row }) => <div>{row.getValue("slug")}</div>,
-  },
-  {
-    accessorKey: "name",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Name
-        <CaretSortIcon className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <div>{row.getValue("name")}</div>
-    ),
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
-    cell: ({ row }) => (
-      <div className="text-left">{row.getValue("description")}</div>
-    ),
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className={`${row.getValue("status") === 1 ? 'text-green-500' : 'text-red-500 file'} font-semibold`}>
-        {row.getValue("status") === 1 ? 'Active' : 'Inactive'}</div>
-    ),
-  },
-  {
-    accessorKey: "action",
-    header: "Action",
-    cell: ({ row }) => <Actionbutton status= {row.getValue("status") === 1 ? 'Active' : 'Inactive'} id={row.original.id} />, 
-  },
-
-];
-
 export function Priveleges() {
   const [data, setData] = useState<Data[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -110,7 +59,7 @@ export function Priveleges() {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
-  const getPriveledges = async () => {
+  const getPriveledges = useCallback(async () => {
     try {
       const response = await fetch('/lib/GET/Priveledges/getallPriveledges');
       if (!response.ok) {
@@ -120,17 +69,64 @@ export function Priveleges() {
       setData(Array.isArray(data.product) ? data.product : []);
     } catch (error) {
       console.error('Error fetching data:', error);
-      // Handle error, e.g., set a default state or show an error message
     }
-  };
+  }, []);
 
   useEffect(() => {
     getPriveledges();
-  }, []);
+  }, [getPriveledges]);
 
   const handleAddSuccess = () => {
     getPriveledges();
   };
+
+  const columns: ColumnDef<Data>[] = [
+    {
+      accessorKey: "Sno",
+      header: "Sr No",
+      cell: ({ row }) => <div>{row.index + 1}</div>, // Use row index as Sno value
+    },
+    {
+      accessorKey: "slug",
+      header: "Slug",
+      cell: ({ row }) => <div>{row.getValue("slug")}</div>,
+    },
+    {
+      accessorKey: "name",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Name
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div>{row.getValue("name")}</div>
+      ),
+    },
+    {
+      accessorKey: "description",
+      header: "Description",
+      cell: ({ row }) => (
+        <div className="text-left">{row.getValue("description")}</div>
+      ),
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => (
+        <div className={`${row.getValue("status") === 1 ? 'text-green-500' : 'text-red-500 file'} font-semibold`}>
+          {row.getValue("status") === 1 ? 'Active' : 'InActive' }</div>
+      ),
+    },
+    {
+      accessorKey: "action",
+      header: "Action",
+      cell: ({ row }) => <Actionbutton onDelete={row.original.isDelete} status={row.original.status} id={row.original.id} refreshData={getPriveledges} />, 
+    },
+  ];
 
   const table = useReactTable({
     data,
@@ -186,7 +182,7 @@ export function Priveleges() {
                     >
                       {column.id}
                     </DropdownMenuCheckboxItem>
-                  )
+                  );
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
@@ -207,7 +203,7 @@ export function Priveleges() {
                               header.getContext()
                             )}
                       </TableHead>
-                    )
+                    );
                   })}
                 </TableRow>
               ))}

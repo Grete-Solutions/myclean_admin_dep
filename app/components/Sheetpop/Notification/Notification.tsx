@@ -18,9 +18,9 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { CheckboxReactHookFormMultipleDriver } from './FormselectDriver'
 import { CheckboxReactHookFormMultipleUser } from './FormSelect'
  
-type Props = {}
 
-function NotificationSheet({}: Props) {
+function NotificationSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
+  
   return (
 <Sheet>
   <SheetTrigger className='flex items-center'><Button className=' text-[12px] bg-[#0A8791] py-2 h-fit'><MessageCirclePlusIcon className='mr-1' size={12}/>Push </Button></SheetTrigger>

@@ -25,7 +25,7 @@ export function ComboboxForm({ onCountrySelect }: ComboboxFormProps) {
   const [selectedCountry, setSelectedCountry] = React.useState<CountryDataType | null>(null);
 
   const handleCountrySelect = (countryISOCode: string) => {
-    setSelectedCountry(CountriesIsoData.find((country) => country.code === countryISOCode) || null);
+    setSelectedCountry(CountriesIsoData.find((country) => country.name === countryISOCode) || null);
     setOpen(false);
     onCountrySelect(countryISOCode); // Call the callback function with the ISO code of the selected country
   };
@@ -35,7 +35,7 @@ export function ComboboxForm({ onCountrySelect }: ComboboxFormProps) {
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" className="w-full justify-start">
-            {selectedCountry ? <>{selectedCountry.code}</> : <> Set Country</>}
+            {selectedCountry ? <>{selectedCountry.name}</> : <> Set Country</>}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="p-0 z-[99999]" side="top" align="start">
@@ -47,8 +47,8 @@ export function ComboboxForm({ onCountrySelect }: ComboboxFormProps) {
                 {CountriesIsoData.map((country) => (
                   <CommandItem
                     key={country.name}
-                    value={country.code}
-                    onSelect={(code) => handleCountrySelect(code)}
+                    value={country.name}
+                    onSelect={(name) => handleCountrySelect(name)}
                   >
                     {country.name}
                   </CommandItem>

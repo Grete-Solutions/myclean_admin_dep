@@ -19,7 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { PromoCalendarForm } from './Calendar';
 
 interface Promocode {
-  coupon_type: number,
+  coupon_type: string,
   user_type: number,
   value: number,
   count: number,
@@ -54,15 +54,6 @@ function PromoCodeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
       throw new Error('Invalid user type');
     }
   
-    let couponTypeValue: number;
-    if (couponType === 'Percentage') {
-      couponTypeValue = 0;
-    } else if (couponType === 'Numeric') {
-      couponTypeValue = 1;
-    } else {
-      throw new Error('Invalid coupon type');
-      return;
-    }
 
     setIsSubmitting(true);
     setError(null);
@@ -74,7 +65,7 @@ function PromoCodeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          coupon_type: couponTypeValue,
+          coupon_type: couponType,
           user_type: userTypeValue,
           value: parseFloat(value),
           count: parseInt(count, 10),

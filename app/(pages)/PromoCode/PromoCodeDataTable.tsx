@@ -61,6 +61,34 @@ interface Data {
   isDelete: number;
 }
 
+
+export function PromoCode() {
+  const [data, setData] = useState<Data[]>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
+
+  const getPromoCode = async () => {
+    try {
+      const response = await fetch('/lib/GET/PromoCode/getallCoupon');
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const data = await response.json();
+      setData(Array.isArray(data.product) ? data.product : []);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    getPromoCode();
+  }, []);
+
+  const handleAddSuccess = () => {
+    getPromoCode();
+  };
 const columns: ColumnDef<Data>[] = [
   {
     accessorKey: "Sno",
@@ -83,7 +111,7 @@ const columns: ColumnDef<Data>[] = [
     accessorKey: "coupon_type",
     header: "Coupon Type",
     cell: ({ row }) =>
-       <div>{row.getValue("coupon_type")=== 1 ? 'Numeric' : 'Percentage'}</div>,
+       <div>{row.getValue("coupon_type")}</div>,
   },
   {
     accessorKey: "count",
@@ -121,39 +149,11 @@ const columns: ColumnDef<Data>[] = [
     header: "Action",
     cell: ({ row }) => (
       <div className="text-center text-[#0A8791]">
-        <Actionbutton id={row.original.id} status={row.getValue("status") === 1 ? 'Active' : 'Inactive'} />
+        <Actionbutton onDelete={row.original.isDelete} id={row.original.id} status={row.getValue("status")} refreshData={getPromoCode} />
       </div>
     ),
   },
 ];
-
-export function PromoCode() {
-  const [data, setData] = useState<Data[]>([]);
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = useState({});
-
-  const getLocation = async () => {
-    try {
-      const response = await fetch('/lib/GET/PromoCode/getallCoupon');
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-      const data = await response.json();
-      setData(Array.isArray(data.product) ? data.product : []);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-  useEffect(() => {
-    getLocation();
-  }, []);
-
-  const handleAddSuccess = () => {
-    getLocation();
-  };
 
   const table = useReactTable({
     data,
