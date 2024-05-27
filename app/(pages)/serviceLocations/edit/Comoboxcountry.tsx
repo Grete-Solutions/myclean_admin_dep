@@ -18,16 +18,22 @@ import { CountriesIsoData, CountryDataType } from "../countryisocode";
 
 interface ComboboxFormProps {
   onCountrySelect: (countryISOCode: string) => void;
-  selectedCountryISOCode: string; // New prop to hold the selected country ISO code
+  selectedCountryISOCode?: string;
 }
 
 export function ComboboxForm({ onCountrySelect, selectedCountryISOCode }: ComboboxFormProps) {
   const [open, setOpen] = React.useState(false);
-  const selectedCountry = CountriesIsoData.find((country) => country.code === selectedCountryISOCode);
+  const [selectedCountry, setSelectedCountry] = React.useState<CountryDataType | null>(
+    selectedCountryISOCode
+      ? CountriesIsoData.find((country) => country.code === selectedCountryISOCode) || null
+      : null
+  );
 
   const handleCountrySelect = (countryISOCode: string) => {
-    onCountrySelect(countryISOCode); // Call the callback function with the ISO code of the selected country
+    const country = CountriesIsoData.find((country) => country.code === countryISOCode) || null;
+    setSelectedCountry(country);
     setOpen(false);
+    onCountrySelect(countryISOCode);
   };
 
   return (
@@ -35,7 +41,7 @@ export function ComboboxForm({ onCountrySelect, selectedCountryISOCode }: Combob
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" className="w-full justify-start">
-            {selectedCountry ? <>{selectedCountry.name}</> : <>Set Country</>}
+            {selectedCountry ? selectedCountry.name : "Set Country"}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="p-0 z-[99999]" side="top" align="start">
@@ -46,7 +52,7 @@ export function ComboboxForm({ onCountrySelect, selectedCountryISOCode }: Combob
               <CommandGroup>
                 {CountriesIsoData.map((country) => (
                   <CommandItem
-                    key={country.name}
+                    key={country.code}
                     value={country.code}
                     onSelect={(code) => handleCountrySelect(code)}
                   >

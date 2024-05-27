@@ -3,15 +3,15 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   if (req.method === 'POST') {
     try {
-      const newLocation = await req.json();
-      console.log('Received new location:', newLocation);
+      const {countryISOCode,city,price} = await req.json();
+      console.log('Received new location:', {countryISOCode,city,price});
 
       const response = await fetch(`${process.env.URL}/setPrice/createCity`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newLocation),
+        body: JSON.stringify({countryISOCode,city,price}),
       });
 
       const data = await response.json();

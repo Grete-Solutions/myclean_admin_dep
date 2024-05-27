@@ -44,11 +44,11 @@ function PromoCodeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
     }
     let userTypeValue: number;
     if (userType === 'User') {
-      userTypeValue = 0;
-    } else if (userType === 'Driver') {
       userTypeValue = 1;
-    } else if (userType === 'All'){
+    } else if (userType === 'Driver') {
       userTypeValue = 2;
+    } else if (userType === 'All'){
+      userTypeValue = 0;
       return;
     }else{
       throw new Error('Invalid user type');

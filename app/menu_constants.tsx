@@ -63,8 +63,9 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                 submenu: true,
                 subMenuItems: [
                     { title: 'Completed Pickups', path: '/PickupRequests/CompletedPickups' },
-                    { title: 'Scheduled Pickups', path: '/PickupRequests/ScheduledPickups' },
+                    { title: 'Pending Pickups', path: '/PickupRequests/PendingPickups' },
                     { title: 'Cancelled Pickups', path: '/PickupRequests/CancelledPickups'},
+                    { title: 'Ongoing Pickups', path: '/PickupRequests/OngoingPickups'},
                 ],
             },
             // {

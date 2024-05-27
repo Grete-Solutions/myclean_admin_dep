@@ -2,6 +2,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { PenBox, Trash } from "lucide-react"; 
 import { useRouter } from 'next/navigation';
 import React from "react";
+import { useToast } from "@/components/ui/use-toast"
 
 interface ActionButtonProps {
     id: string; 
@@ -11,15 +12,11 @@ interface ActionButtonProps {
 }
 
 export function Actionbutton({ id, status, onDelete, refreshData }: ActionButtonProps) {
-    const router = useRouter();
-
-    const showAlert = (message: string) => {
-        alert(message);
-    };
+   const { toast } = useToast();
+   const router = useRouter();
 
     const handleEdit = () => {
         router.push(`PromoCode/edit?id=${id}`);
-        showAlert("Privilege edit page loaded successfully");
     };
 
     const handleChangeStatus = async () => {
@@ -36,22 +33,23 @@ export function Actionbutton({ id, status, onDelete, refreshData }: ActionButton
                 throw new Error('Network response was not ok');
             }
             console.log(`Successfully changed status for ID ${id}`);
-            showAlert("Status changed successfully");
-            refreshData(); // Call the refresh function
+            toast({ title: "Success", description: "Status changed successfully" });
+            refreshData(); 
         } catch (error) {
             console.error('Failed to change status:', error);
+            toast({ title: "Error", description: "Failed to change status" });
         }
     };
 
     const handleDelete = async () => {
         try {
-            const newDel = onDelete === 0 ? 1 : 0; // Toggle onDelete
-            const response = await fetch(`/lib/DELETE/Priveledge/deleteByID?id=${id}`, {
+            const newDel = onDelete === 0 ? 1 : 0;
+            const response = await fetch(`/lib/DELETE/PromoCode/deleteByID?id=${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ id, status: newDel }), // Pass updated onDelete status
+                body: JSON.stringify({ id, status: newDel }), 
             });
 
             if (!response.ok) {
@@ -59,10 +57,11 @@ export function Actionbutton({ id, status, onDelete, refreshData }: ActionButton
             }
 
             console.log(`Successfully deleted item with ID ${id}`);
-            showAlert("Item deleted successfully");
-            refreshData(); // Call the refresh function
+            toast({ title: "Success", description: "Item deleted successfully" });
+            refreshData(); 
         } catch (error) {
             console.error('Failed to delete item:', error);
+            toast({ title: "Error", description: "Failed to delete item" });
         }
     };
 

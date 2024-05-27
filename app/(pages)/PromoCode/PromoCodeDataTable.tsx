@@ -105,7 +105,7 @@ const columns: ColumnDef<Data>[] = [
     header: "User Type",
     cell: ({ row }) => {
       const userType = row.getValue("user_type");
-      return <div>{userType === 1 ? 'Driver' : userType === 0 ? 'User' : 'All'}</div>;
+      return <div>{userType === 2 ? 'Driver' : userType === 1 ? 'User' : 'All'}</div>;
     },},
   {
     accessorKey: "coupon_type",

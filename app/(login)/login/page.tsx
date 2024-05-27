@@ -1,6 +1,7 @@
 'use client'
 import React from 'react'
 import { LoginLogo } from './LoginLogo'
+import Link from 'next/link'
 
 type Props = {}
 
@@ -39,9 +40,9 @@ function Login({}: Props) {
                 Password
               </label>
               <div className="text-sm">
-                <a href="#" className="font-semibold text-[#08898D] hover:text-[#08898d9e]">
+                <Link href="/" className="font-semibold text-[#08898D] hover:text-[#08898d9e]">
                   Forgot password?
-                </a>
+                </Link>
               </div>
             </div>
             <div className="mt-2">

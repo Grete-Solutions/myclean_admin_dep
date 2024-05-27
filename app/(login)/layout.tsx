@@ -40,11 +40,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <>
-            <SideBar />
             <div className="flex flex-col h-full w-full">
-              <Header />
               <Toaster />
-              <PageWrapper>{children}</PageWrapper>
+              {children}
             </div>
           </>
         </ThemeProvider>

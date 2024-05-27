@@ -38,6 +38,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+// Define the RideData interface
 interface RideData {
   id: string;
   driverId: string;
@@ -80,16 +81,9 @@ export const columns: ColumnDef<RideData>[] = [
   },
   {
     accessorKey: "driverId",
-    header: "Driver ID",
+    header: "Driver Name",
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("driverId")}</div>
-    ),
-  },
-  {
-    accessorKey: "pickupLocation",
-    header: "Pickup Location",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("pickupLocation")}</div>
     ),
   },
   {
@@ -100,8 +94,7 @@ export const columns: ColumnDef<RideData>[] = [
         {new Date((row.getValue("createdAt") as { _seconds: number })._seconds * 1000).toLocaleString()}
       </div>
     ),
-  },
-  
+  },  
   {
     accessorKey: "status",
     header: "Trip Status",
@@ -138,8 +131,8 @@ export const columns: ColumnDef<RideData>[] = [
   },
 ];
 
-
-export function ScheduledRidesDataTable() {
+// Define the CancelledRidesDataTable component
+export function CancelledRidesDataTable() {
   const [data, setData] = useState<RideData[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -149,7 +142,7 @@ export function ScheduledRidesDataTable() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/lib/GET/PickupRequests/getscheduledPickups');
+        const response = await fetch('/lib/GET/PickupRequests/getCancelledPickups');
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
@@ -191,9 +184,9 @@ export function ScheduledRidesDataTable() {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter User Names..."
-          value={(table.getColumn("userId")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("userId")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -253,10 +246,7 @@ export function ScheduledRidesDataTable() {
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>

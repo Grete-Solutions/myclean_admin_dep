@@ -83,7 +83,7 @@ export function Location() {
   };
 const countryIsoCodes: { [name: string]: string } = {};
   CountriesIsoData.forEach(country => {
-    countryIsoCodes[country.name] = country.code;
+    countryIsoCodes[country.code] = country.name;
   });
 
 const columns: ColumnDef<Data>[] = [
@@ -96,8 +96,9 @@ const columns: ColumnDef<Data>[] = [
     accessorKey: "countryISOCode",
     header: "Country",
     cell: ({ row }) => {
-      const countryCode = row.getValue("countryISOCode") as string; // Assert type
-      return <div>{countryIsoCodes[countryCode]}</div>;
+      // const countryCode = row.getValue("countryISOCode") as string; // Assert type
+      // return <div>{countryIsoCodes[countryCode]}</div>;
+      return <div> {row.getValue("countryISOCode")}</div>;
     },
   },
   {

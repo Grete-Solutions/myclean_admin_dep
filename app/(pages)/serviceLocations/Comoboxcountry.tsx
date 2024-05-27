@@ -25,7 +25,7 @@ export function ComboboxForm({ onCountrySelect }: ComboboxFormProps) {
   const [selectedCountry, setSelectedCountry] = React.useState<CountryDataType | null>(null);
 
   const handleCountrySelect = (countryISOCode: string) => {
-    setSelectedCountry(CountriesIsoData.find((country) => country.name === countryISOCode) || null);
+    setSelectedCountry(CountriesIsoData.find((country) => country.code === countryISOCode) || null);
     setOpen(false);
     onCountrySelect(countryISOCode); // Call the callback function with the ISO code of the selected country
   };
@@ -46,9 +46,9 @@ export function ComboboxForm({ onCountrySelect }: ComboboxFormProps) {
               <CommandGroup>
                 {CountriesIsoData.map((country) => (
                   <CommandItem
-                    key={country.name}
-                    value={country.name}
-                    onSelect={(name) => handleCountrySelect(name)}
+                    key={country.code}
+                    value={country.code}
+                    onSelect={(code) => handleCountrySelect(code)}
                   >
                     {country.name}
                   </CommandItem>

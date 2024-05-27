@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ComboboxForm } from './Comoboxcountry';
+import { CountriesIsoData } from '../countryisocode';
 
 type Data = {
   id: string;
@@ -25,18 +26,17 @@ export default function EditPage() {
 const EditPageContent = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [vehicleData, setLocationData] = useState<Data | undefined>(undefined);
-  const [formData, setFormData] = useState({
-    countryISOCode: '',
-    city: '',
-    price: '',
-  });
+  const [vehicleData, setVehicleData] = useState<Data | undefined>(undefined);
+  const [countryISOCode, setCountryISOCode] = useState<string>('');
+  const [city, setCity] = useState<string>('');
+  const [price, setPrice] = useState<string>('');
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get('id') as string;
 
-  const handleCountrySelect = (countryISOCode: string) => {
-    setFormData((prevData) => ({ ...prevData, countryISOCode }));
+  const handleCountrySelect = (selectedCountryISOCode: string) => {
+    setCountryISOCode(selectedCountryISOCode);
   };
 
   useEffect(() => {
@@ -51,13 +51,12 @@ const EditPageContent = () => {
         }
 
         const data = await response.json();
-        setLocationData(data.product);
-        setFormData({
-          countryISOCode: data.product.countryISOCode,
-          city: data.product.city,
-          price: data.product.price.toString(),
-        });
+        setVehicleData(data.product);
+        setCountryISOCode(data.product.countryISOCode);
+        setCity(data.product.city);
+        setPrice(data.product.price.toString());
       } catch (error: any) {
+        console.error('Error fetching vehicle data:', error);
         setError(error.message);
       } finally {
         setLoading(false);
@@ -72,17 +71,17 @@ const EditPageContent = () => {
 
     if (!vehicleData) return;
 
-    console.log('Request Body:', formData);
     try {
-      const response = await fetch(`/lib/PUT/serviceLocation/updateByID?id=${id}`, {
-        method: 'PUT',
+      const response = await fetch(`/lib/PUT/serviceLocation/updateByLocationID?id=${id}`, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           id: id,
-          ...formData,
-          price: parseFloat(formData.price),
+          countryISOCode,
+          city,
+          price: parseFloat(price),
         }),
       });
 
@@ -96,11 +95,17 @@ const EditPageContent = () => {
           throw new Error(errorText || 'Failed to update vehicle data');
         }
       }
-
-      router.push('/serviceLocations'); 
+      console.log('Request Body:', { city, price, countryISOCode });
+      router.push('/serviceLocations');
     } catch (error: any) {
+      console.error('Error updating vehicle data:', error);
       setError(error.message);
     }
+  };
+
+  const getCountryName = (isoCode: string) => {
+    const country = CountriesIsoData.find((c) => c.code === isoCode);
+    return country ? country.name : 'Unknown Country';
   };
 
   if (loading) {
@@ -122,15 +127,16 @@ const EditPageContent = () => {
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-1 items-center gap-4">
             <Label htmlFor="country" className="text-left">Country</Label>
-            <ComboboxForm onCountrySelect={handleCountrySelect} selectedCountryISOCode={formData.countryISOCode} />
+            <ComboboxForm onCountrySelect={handleCountrySelect} selectedCountryISOCode={countryISOCode} />
+            <div>{getCountryName(countryISOCode)}</div>
           </div>
           <div className="grid grid-cols-1 items-center gap-4">
             <Label htmlFor="city" className="text-left">City</Label>
-            <Input id="city" value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} placeholder="City" className="col-span-3" />
+            <Input id="city" value={city} onChange={(e) => setCity(e.target.value)} placeholder="City" className="col-span-3" />
           </div>
           <div className="grid grid-cols-1 items-center gap-4">
             <Label htmlFor="price" className="text-left">Price</Label>
-            <Input type="number" id="price" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} placeholder="Price" className="col-span-3" />
+            <Input type="number" id="price" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Price" className="col-span-3" />
           </div>
         </div>
         <div>
