@@ -8,7 +8,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Actionbutton } from '@/app/components/Action';
 import { Button } from '@/components/ui/button';
 import CancellationSheet from '@/app/components/Sheetpop/Cancellation/CancellationSheet';
 
@@ -19,7 +18,6 @@ const Cancellation = () => {
         Price: string;
         City: string;
         Status: string;
-        action: ReactNode;
     }
 
     const tabledata: Data[] = [
@@ -59,7 +57,6 @@ const Cancellation = () => {
                                 <TableCell className="text-left">{data.City}</TableCell>
                                 <TableCell>{data.Price}</TableCell>
                                 <TableCell>{data.Status}</TableCell>
-                                <TableCell className='text-center text-[#0A8791]'>{data.action}</TableCell>
                             </TableRow>
                         ))
                     )}
