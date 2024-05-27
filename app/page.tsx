@@ -1,53 +1,55 @@
-'use client'
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import CountUp from 'react-countup'; // Import CountUp component
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Overview } from './components/overview'
-import { DataTableDemo } from './components/recent-cleaning'
-import PieChartBox from './components/Piechart'
-import Earnings from './components/Earnings'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Overview } from './components/overview';
+import { DataTableDemo } from './components/recent-cleaning';
+import PieChartBox from './components/Piechart';
+import Earnings from './components/Earnings';
 
+interface Data{
+  Current_Month_Users:number
+}
 export default function Home() {
-  const [currentMonthRevenue, setCurrentMonthRevenue] = useState('');
-  const [revenuePercentageDifference, setRevenuePercentageDifference] = useState('');
+  const [currentMonthRevenue, setCurrentMonthRevenue] = useState('0.00');
+  const [revenuePercentageDifference, setRevenuePercentageDifference] = useState('0.00%');
   const [usersRegistered, setUsersRegistered] = useState(0);
-  const [usersPercentageDifference, setUsersPercentageDifference] = useState('');
-  const [driversRegistered, setDriversRegistered] = useState(0);
-  const [driversPercentageDifference, setDriversPercentageDifference] = useState('');
-  const [pickupCount, setPickupCount] = useState(0);
-  const [pickupPercentageDifference, setPickupPercentageDifference] = useState('');
-  const [activeNow, setActiveNow] = useState(0);
-  const [activeNowPercentageDifference, setActiveNowPercentageDifference] = useState('');
+  const [usersPercentageDifference, setUsersPercentageDifference] = useState('0.00%');
+  // const [driversRegistered, setDriversRegistered] = useState(0);
+  // const [driversPercentageDifference, setDriversPercentageDifference] = useState('0.00%');
+  // const [pickupCount, setPickupCount] = useState(0);
+  // const [pickupPercentageDifference, setPickupPercentageDifference] = useState('0.00%');
+  // const [activeNow, setActiveNow] = useState(0);
+  // const [activeNowPercentageDifference, setActiveNowPercentageDifference] = useState('0.00%');
 
   useEffect(() => {
     async function fetchData() {
       try {
         const revenueResponse = await fetch('/lib/GET/Dashboard/getCurrentRevenue'); 
         const revenueData = await revenueResponse.json();
-        setCurrentMonthRevenue(revenueData.product['Current Month Revenue']);
-        setRevenuePercentageDifference(revenueData.product['Percentage Difference']);
-        console.log(revenueData);
+        setCurrentMonthRevenue(revenueData.product.Current_Month_Revenue);
+        setRevenuePercentageDifference(revenueData.product.Percentage_Difference);
 
         const usersResponse = await fetch('/lib/GET/Dashboard/getCurrentUsers');
         const usersData = await usersResponse.json();
-        setUsersRegistered(usersData.product);
-        setUsersPercentageDifference(usersData.percentageDifference);
+        setUsersRegistered(usersData.product.Current_Month_Users);
+        setUsersPercentageDifference(usersData.product.Percentage_Difference);
 
-        const driversResponse = await fetch('/lib/GET/Dashboard/getCurrentDrivers');
-        const driversData = await driversResponse.json();
-        setDriversRegistered(driversData.count);
-        setDriversPercentageDifference(driversData.percentageDifference);
+        // const driversResponse = await fetch('/lib/GET/Dashboard/getCurrentDrivers');
+        // const driversData = await driversResponse.json();
+        // setDriversRegistered(driversData.count);
+        // setDriversPercentageDifference(driversData.percentageDifference);
 
-        const pickupResponse = await fetch('/lib/GET/Dashboard/getCurrenyPickups');
-        const pickupData = await pickupResponse.json();
-        setPickupCount(pickupData.count);
-        setPickupPercentageDifference(pickupData.percentageDifference);
+        // const pickupResponse = await fetch('/lib/GET/Dashboard/getCurrentPickups');
+        // const pickupData = await pickupResponse.json();
+        // setPickupCount(pickupData.count);
+        // setPickupPercentageDifference(pickupData.percentageDifference);
 
-        const activeNowResponse = await fetch('/lib/GET/Dashboard/getActiveNow');
-        const activeNowData = await activeNowResponse.json();
-        setActiveNow(activeNowData.count);
-        setActiveNowPercentageDifference(activeNowData.percentageDifference);
+        // const activeNowResponse = await fetch('/lib/GET/Dashboard/getActiveNow');
+        // const activeNowData = await activeNowResponse.json();
+        // setActiveNow(activeNowData.count);
+        // setActiveNowPercentageDifference(activeNowData.percentageDifference);
 
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -117,7 +119,7 @@ export default function Home() {
             </CardContent>
           </Card>
 
-          <Card>
+          {/* <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-semibold">
                 Drivers Registered
@@ -172,6 +174,31 @@ export default function Home() {
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-semibold">Pickup</CardTitle>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                className="h-4 w-4 text-muted-foreground"
+              >
+                <rect width="20" height="14" x="2" y="5" rx="2" />
+                <path d="M2 10h20" />
+              </svg>
+            </CardHeader>
+            <CardContent>
+              <CountUp start={0} end={pickupCount} duration={2.5} separator="," prefix="+" className="text-2xl font-bold text-[#0A8791]" />
+              <p className="text-xs text-muted-foreground">
+                {pickupPercentageDifference} from last month
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-semibold">
                 Active Now
               </CardTitle>
@@ -194,10 +221,9 @@ export default function Home() {
                 {activeNowPercentageDifference} since last hour
               </p>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
         
-        <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-7">
           <Card className="lg:col-span-4">
             <CardHeader>
               <CardTitle>Overview</CardTitle>
@@ -206,7 +232,8 @@ export default function Home() {
               <Overview />
             </CardContent>
           </Card>
-          <Card className="lg:col-span-3">
+                 <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-7">
+ <Card className="lg:col-span-4">
             <CardHeader>
               <CardTitle>Recent Pickup</CardTitle>
               <CardDescription>
@@ -228,7 +255,7 @@ export default function Home() {
               <PieChartBox />
             </CardContent>
           </Card>
-          <Card className="lg:col-span-4">
+          <Card className="lg:col-span-7">
             <CardHeader>
               <CardTitle>Earnings</CardTitle>
               <CardDescription>
