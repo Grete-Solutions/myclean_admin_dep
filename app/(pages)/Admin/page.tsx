@@ -9,7 +9,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Actionbutton } from '@/app/components/Action';
 import AddAdminDoc from '@/app/components/Sheetpop/Configuration/AddAdminSheet';
 
 
@@ -24,7 +23,6 @@ interface Data{
     ServiceLocation:string
     Status:string
     RolesData:string
-    action: ReactNode
 
 }
 const tabledata:Data[]=[
@@ -37,7 +35,6 @@ const tabledata:Data[]=[
         ServiceLocation:'',
         RolesData:'Super Admin',
         Status:'Active',
-        action:             <Actionbutton/>
 
 
     }
@@ -74,7 +71,6 @@ const tabledata:Data[]=[
                     <TableCell className=''>{data.ServiceLocation}</TableCell>
                     <TableCell className=''>{data.RolesData}</TableCell>
                         <TableCell className="text-left">{data.Status}</TableCell>
-                        <TableCell className='text-center  text-[#0A8791]'>{data.action}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>

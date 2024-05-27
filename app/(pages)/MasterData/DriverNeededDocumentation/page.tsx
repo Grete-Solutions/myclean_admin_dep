@@ -9,7 +9,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Actionbutton } from '@/app/components/Action';
 import AddDriverDoc from '@/app/components/Sheetpop/MasterDataPop/AddDriverDocSheet';
 
 
@@ -22,7 +21,6 @@ interface Data{
     Status:string
     AccountType:string
     HasExpiryDate:string
-    action: ReactNode
 
 }
 const tabledata:Data[]=[
@@ -33,7 +31,6 @@ const tabledata:Data[]=[
         AccountType:'Individual',
         HasExpiryDate:'yes',
         Status:'Active',
-        action:             <Actionbutton/>
 
 
     }
@@ -67,7 +64,6 @@ const tabledata:Data[]=[
                     <TableCell>{data.AccountType}</TableCell>                    
                     <TableCell className=''>{data.HasExpiryDate}</TableCell>
                         <TableCell className="text-left">{data.Status}</TableCell>
-                        <TableCell className='text-center  text-[#0A8791]'>{data.action}</TableCell>
                     </TableRow>
                 ))}
             </TableBody>
