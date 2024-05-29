@@ -52,7 +52,8 @@ const Page: React.FC<Props> = () => {
                           inputRefs.current[index] = el;
                         }
                       }}
-                      className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1 ring-blue-700"
+                      className="w-full h-full flex flex-col items-center justify-center text-center px-5 outline-none rounded-xl border border-gray-200 text-lg bg-white focus:bg-gray-50 focus:ring-1
+                       ring-[#0A8791]"
                       type="text"
                       maxLength={1}
                       onChange={(event) => handleInputChange(index, event)}
@@ -64,14 +65,14 @@ const Page: React.FC<Props> = () => {
 
                 <div className="flex flex-col space-y-5">
                   <div>
-                    <button className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-blue-700 border-none text-white text-sm shadow-sm">
+                    <button className="flex flex-row items-center justify-center text-center w-full border rounded-xl outline-none py-5 bg-[#0A8791] border-none text-white text-sm shadow-sm">
                       Verify Account
                     </button>
                   </div>
 
                   <div className="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
                     <p>Didn&apos;t receive code?</p>
-                    <a className="flex flex-row items-center text-blue-600" href="http://" target="_blank" rel="noopener noreferrer">Resend</a>
+                    <a className="flex flex-row items-center text-[#0A8791]" href="http://" target="_blank" rel="noopener noreferrer">Resend</a>
                   </div>
                 </div>
               </div>
