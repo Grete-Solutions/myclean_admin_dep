@@ -12,7 +12,7 @@ export async function PUT(req: Request) {
 
     console.log(`Received request to update promo code data for ID ${id}`);
 
-    const response = await fetch(`${process.env.Url}/coupons/updateCoupon/${id}`, {
+    const response = await fetch(`${process.env.URL_BACKEND}/coupons/updateCoupon/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

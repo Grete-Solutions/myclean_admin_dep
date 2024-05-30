@@ -6,7 +6,7 @@ export async function POST(req: Request) {
       const {countryISOCode,city,price} = await req.json();
       console.log('Received new location:', {countryISOCode,city,price});
 
-      const response = await fetch(`${process.env.Url}/setPrice/createCity`, {
+      const response = await fetch(`${process.env.URL_BACKEND}/setPrice/createCity`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

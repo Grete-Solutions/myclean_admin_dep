@@ -1,7 +1,7 @@
 export async function GET(request: Request) {
-    const { searchParams } = new Url(request.url)
+    const { searchParams } = new URL_BACKEND(request.url)
     const id = searchParams.get('id')
-    const res = await fetch(`${process.env.Url}/setPrice/getAll`, {
+    const res = await fetch(`${process.env.URL_BACKEND}/setPrice/getAll`, {
       headers: {
         'Content-Type': 'application/json',
       },

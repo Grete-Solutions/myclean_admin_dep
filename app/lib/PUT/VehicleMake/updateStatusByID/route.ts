@@ -10,7 +10,7 @@ export async function PATCH(request: Request) {
 
       console.log(`Received request to update status for ID ${id} to ${status}`);
 
-      const res = await fetch(`${process.env.Url}/vehicleMake/updateStatus/${id}`, {
+      const res = await fetch(`${process.env.URL_BACKEND}/vehicleMake/updateStatus/${id}`, {
         method: 'PATCH',
           headers: {
               'Content-Type': 'application/json',
