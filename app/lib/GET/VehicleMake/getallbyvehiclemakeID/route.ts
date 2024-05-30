@@ -1,6 +1,6 @@
 
 export async function GET(request: Request) {
-  const url = new URLB(request.url);
+  const url = new URL(request.url);
   const id = url.searchParams.get('id');
   
   if (!id) {
