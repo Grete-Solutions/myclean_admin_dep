@@ -1,13 +1,13 @@
 
   export async function GET(request: Request) {
-      const url = new URL(request.url);
+      const url = new Url(request.url);
       const id = url.searchParams.get('id');
       
       if (!id) {
         throw new Error('ID parameter is missing');
       }
   
-      const res = await fetch(`${process.env.URL}/setPrice/getCityById/${id}`, {
+      const res = await fetch(`${process.env.Url}/setPrice/getCityById/${id}`, {
         cache: 'no-cache',  
         headers: {
           'Content-Type': 'application/json',

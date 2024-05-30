@@ -10,7 +10,7 @@ export async function PATCH(request: Request) {
 
       console.log(`Received request to update status for ID ${id} to ${status}`);
 
-      const res = await fetch(`${process.env.URL}/setPrice/updateStatus/${id}`, {
+      const res = await fetch(`${process.env.Url}/setPrice/updateStatus/${id}`, {
         cache: 'reload',  
         method: 'PATCH',
           headers: {

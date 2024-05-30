@@ -13,7 +13,7 @@ export async function DELETE(request: Request) {
         // Toggle the onDelete status
         const newOnDelete = onDelete === 0 ? 1 : 0;
 
-        const res = await fetch(`${process.env.URL}/vehicleMake/deleteVehicleMake/${id}`, {
+        const res = await fetch(`${process.env.Url}/vehicleMake/deleteVehicleMake/${id}`, {
             cache: 'reload',
             method: 'DELETE',
             headers: {

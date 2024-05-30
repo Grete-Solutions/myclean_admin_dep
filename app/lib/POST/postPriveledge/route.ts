@@ -5,7 +5,7 @@ export async function POST(req: Request) {
     try {
       const newCode = await req.json();
       console.log(newCode);
-      const response = await fetch(`${process.env.URL}/privileges/createPrivilege`, {
+      const response = await fetch(`${process.env.Url}/privileges/createPrivilege`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

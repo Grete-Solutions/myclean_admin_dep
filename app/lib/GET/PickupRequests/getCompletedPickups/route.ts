@@ -1,8 +1,8 @@
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
+  const { searchParams } = new Url(request.url);
   const id = searchParams.get('id');
 
-  const res = await fetch(`${process.env.URL}/booking/getByStatus/completed`, {
+  const res = await fetch(`${process.env.Url}/booking/getByStatus/completed`, {
     cache: 'no-cache',  
     headers: {
           'Content-Type': 'application/json',
