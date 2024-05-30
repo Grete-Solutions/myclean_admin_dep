@@ -16,10 +16,10 @@ export default function Home() {
   const [revenuePercentageDifference, setRevenuePercentageDifference] = useState('0.00%');
   const [usersRegistered, setUsersRegistered] = useState(0);
   const [usersPercentageDifference, setUsersPercentageDifference] = useState('0.00%');
-  // const [driversRegistered, setDriversRegistered] = useState(0);
-  // const [driversPercentageDifference, setDriversPercentageDifference] = useState('0.00%');
-  // const [pickupCount, setPickupCount] = useState(0);
-  // const [pickupPercentageDifference, setPickupPercentageDifference] = useState('0.00%');
+  const [driversRegistered, setDriversRegistered] = useState(0);
+  const [driversPercentageDifference, setDriversPercentageDifference] = useState('0.00%');
+  const [pickupCount, setPickupCount] = useState(0);
+  const [pickupPercentageDifference, setPickupPercentageDifference] = useState('0.00%');
   // const [activeNow, setActiveNow] = useState(0);
   // const [activeNowPercentageDifference, setActiveNowPercentageDifference] = useState('0.00%');
 
@@ -28,27 +28,27 @@ export default function Home() {
       try {
         const revenueResponse = await fetch('/lib/GET/Dashboard/getCurrentRevenue'); 
         const revenueData = await revenueResponse.json();
-        setCurrentMonthRevenue(revenueData.product.Current_Month_Revenue);
-        setRevenuePercentageDifference(revenueData.product.Percentage_Difference);
+        setCurrentMonthRevenue(revenueData.product.currentMonthRevenue);
+        setRevenuePercentageDifference(revenueData.product.percentageDifference);
 
         const usersResponse = await fetch('/lib/GET/Dashboard/getCurrentUsers');
         const usersData = await usersResponse.json();
-        setUsersRegistered(usersData.product.Current_Month_Users);
-        setUsersPercentageDifference(usersData.product.Percentage_Difference);
+        setUsersRegistered(usersData.product.currentMonthUsers);
+        setUsersPercentageDifference(usersData.product.percentageDifference);
 
-        // const driversResponse = await fetch('/lib/GET/Dashboard/getCurrentDrivers');
-        // const driversData = await driversResponse.json();
-        // setDriversRegistered(driversData.count);
-        // setDriversPercentageDifference(driversData.percentageDifference);
+        const driversResponse = await fetch('/lib/GET/Dashboard/getCurrentDrivers');
+        const driversData = await driversResponse.json();
+        setDriversRegistered(driversData.product.currentMonthDrivers);
+        setDriversPercentageDifference(driversData.product.percentageDifference);
 
-        // const pickupResponse = await fetch('/lib/GET/Dashboard/getCurrentPickups');
-        // const pickupData = await pickupResponse.json();
-        // setPickupCount(pickupData.count);
-        // setPickupPercentageDifference(pickupData.percentageDifference);
+        const pickupResponse = await fetch('/lib/GET/Dashboard/getCurrentPickups');
+        const pickupData = await pickupResponse.json();
+        setPickupCount(pickupData.product.currentMonthPickups);
+        setPickupPercentageDifference(pickupData.product.percentageDifference);
 
         // const activeNowResponse = await fetch('/lib/GET/Dashboard/getActiveNow');
         // const activeNowData = await activeNowResponse.json();
-        // setActiveNow(activeNowData.count);
+        // setActiveNow(activeNowData.product.);
         // setActiveNowPercentageDifference(activeNowData.percentageDifference);
 
       } catch (error) {
@@ -119,7 +119,7 @@ export default function Home() {
             </CardContent>
           </Card>
 
-          {/* <Card>
+        <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-semibold">
                 Drivers Registered
@@ -196,7 +196,7 @@ export default function Home() {
               </p>
             </CardContent>
           </Card>
-
+   {/*
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-semibold">
