@@ -5,7 +5,7 @@ export async function POST(req: Request) {
     try {
       const newVehicle = await req.json();
       console.log(newVehicle);
-      const response = await fetch(`${process.env.URL_BACKEND}/vehicleMake/createVehicle`, {
+      const response = await fetch(`${process.env.URLB}/vehicleMake/createVehicle`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

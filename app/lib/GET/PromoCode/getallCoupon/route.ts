@@ -1,7 +1,7 @@
 export async function GET(request: Request) {
-    const { searchParams } = new URL_BACKEND(request.url)
+    const { searchParams } = new URLB(request.url)
     const id = searchParams.get('id')
-    const res = await fetch(`${process.env.URL_BACKEND}/coupons/getAll`, {
+    const res = await fetch(`${process.env.URLB}/coupons/getAll`, {
       cache: 'no-cache',  
     headers: {
           'Content-Type': 'application/json',

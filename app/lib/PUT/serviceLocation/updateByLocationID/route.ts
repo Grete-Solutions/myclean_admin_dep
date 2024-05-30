@@ -16,7 +16,7 @@ export async function PATCH(req: Request) {
 
     console.log(`Received request to update vehicle data for ID ${id}`);
 
-    const response = await fetch(`${process.env.URL_BACKEND}/setPrice/updateCity/${id}`, {
+    const response = await fetch(`${process.env.URLB}/setPrice/updateCity/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

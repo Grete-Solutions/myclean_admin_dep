@@ -1,8 +1,8 @@
 export async function GET(request: Request) {
-  const { searchParams } = new URL_BACKEND(request.url);
+  const { searchParams } = new URLB(request.url);
   const id = searchParams.get('id');
 
-  const res = await fetch(`${process.env.URL_BACKEND}/user/getByStatus/approved`, {
+  const res = await fetch(`${process.env.URLB}/user/getByStatus/approved`, {
     cache: 'no-cache',  
     headers: {
           'Content-Type': 'application/json',

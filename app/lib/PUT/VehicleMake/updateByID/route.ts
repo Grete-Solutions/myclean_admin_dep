@@ -13,7 +13,7 @@ export async function PUT(req: Request) {
 
       console.log(`Received request to update vehicle data for ID ${id}`);
 
-      const response = await fetch(`${process.env.URL_BACKEND}/vehicleMake/setVehicleById/${id}`, {
+      const response = await fetch(`${process.env.URLB}/vehicleMake/setVehicleById/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

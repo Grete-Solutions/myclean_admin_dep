@@ -5,7 +5,7 @@ export async function POST(req: Request) {
     try {
       const newCode = await req.json();
       console.log(newCode);
-      const response = await fetch(`${process.env.URL_BACKEND}/coupons/createCoupon`, {
+      const response = await fetch(`${process.env.URLB}/coupons/createCoupon`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
