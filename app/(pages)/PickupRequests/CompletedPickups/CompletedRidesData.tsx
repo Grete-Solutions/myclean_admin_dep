@@ -37,6 +37,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
 interface RideData {
   id: string;
   driverId: string;
@@ -65,7 +66,7 @@ interface Driver {
   firstname: string;
 }
 
-export const columns: ColumnDef<RideData & { DriverName: string; UserName: string;}>[] = [
+export const columns: ColumnDef<RideData & { driverName: string; userName: string; }>[] = [
   {
     accessorKey: "Sno",
     header: "Sno",
@@ -77,7 +78,7 @@ export const columns: ColumnDef<RideData & { DriverName: string; UserName: strin
     cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "UserName",
+    accessorKey: "userName",
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -87,13 +88,13 @@ export const columns: ColumnDef<RideData & { DriverName: string; UserName: strin
         <CaretSortIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => <div className="uppercase">{row.getValue("UserName")}</div>,
+    cell: ({ row }) => <div className="uppercase">{row.getValue("userName")}</div>,
   },
   {
-    accessorKey: "DriverName",
+    accessorKey: "driverName",
     header: "Driver Name",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("DriverName")}</div>
+      <div className="capitalize">{row.getValue("driverName")}</div>
     ),
   },
   {
@@ -104,7 +105,7 @@ export const columns: ColumnDef<RideData & { DriverName: string; UserName: strin
         {new Date((row.getValue("createdAt") as { _seconds: number })._seconds * 1000).toLocaleString()}
       </div>
     ),
-  },  
+  },
   {
     accessorKey: "status",
     header: "Trip Status",
@@ -143,7 +144,7 @@ export const columns: ColumnDef<RideData & { DriverName: string; UserName: strin
 
 export function CompletedRidesDataTable() {
   const [data, setData] = useState<RideData[]>([]);
-  const [sortedData, setSortedData] = useState<(RideData & { DriverName: string; UserName: string; })[]>([]);
+  const [sortedData, setSortedData] = useState<(RideData & { driverName: string; userName: string; })[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -187,7 +188,7 @@ export function CompletedRidesDataTable() {
     const DriverMap = new Map(driver.map(drivers => [drivers.id, drivers.firstname]));
 
     const newSortedData = data.map(route => ({
-     ...route,
+      ...route,
       userName: UserMap.get(route.userId) || route.userId,
       driverName: DriverMap.get(route.driverId) || route.driverId,
     }));
@@ -195,9 +196,8 @@ export function CompletedRidesDataTable() {
     setSortedData(newSortedData);
   }, [data, user, driver]);
 
-
   const table = useReactTable({
-    data:sortedData,
+    data: sortedData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -220,9 +220,9 @@ export function CompletedRidesDataTable() {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter User Names..."
-          value={(table.getColumn("UserName")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("userName")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("UserName")?.setFilterValue(event.target.value)
+            table.getColumn("userName")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
