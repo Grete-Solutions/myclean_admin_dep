@@ -1,11 +1,45 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import { LoginLogo } from './LoginLogo'
 import Link from 'next/link'
+import { Input } from '@/components/ui/input'
+import { useRouter } from 'next/navigation'
 
 type Props = {}
 
 function Login({}: Props) {
+  const [email,setEmail]= useState('')
+  const [password,setPassword]= useState('')
+
+  const router= useRouter()
+
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+  try {
+    const response = await fetch('/lib/POST/postlogin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({email,password})
+      
+    });
+    // Check if the response is not okay (status 2xx)
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();   
+     router.push(`login/OTP?email=${email}`,)
+
+    console.log('Data received:', data);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -17,18 +51,19 @@ function Login({}: Props) {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" action="#" method="POST">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block text-sm font-medium leading-6">
               Email address
             </label>
             <div className="mt-2">
-              <input
+              <Input
                 id="email"
                 name="email"
                 type="email"
-                autoComplete="email"
-                required
+                value={email}
+                onChange={(e) =>setEmail(e.target.value)}
+  
                 className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
@@ -46,12 +81,12 @@ function Login({}: Props) {
               </div>
             </div>
             <div className="mt-2">
-              <input
+              <Input
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="current-password"
-                required
+                value={password}
+                onChange={(e)=> setPassword(e.target.value) }
                 className="block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>

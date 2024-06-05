@@ -142,7 +142,7 @@ export function CancelledRidesDataTable() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/lib/GET/PickupRequests/getCancelledPickups');
+        const response = await fetch('/lib/GET/PickupRequests/getOngoingPickups');
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }

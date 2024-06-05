@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { PromoCalendarForm } from '../Calendar';
+import { useToast } from '@/components/ui/use-toast';
 
 type Data = {
   id: string;
@@ -54,6 +55,7 @@ const EditPageContent = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get('id') as string;
   const [promoData, setPromoData] = useState<Data | undefined>(undefined);
+  const { toast } = useToast();
 
   useEffect(() => {
     const getPromoCodeById = async () => {
@@ -76,6 +78,7 @@ const EditPageContent = () => {
         setExpiredAt(new Date(data.product.expired_at._seconds * 1000));
       } catch (error: any) {
         setError(error.message);
+        toast({ title: "Error", description: error.message });
       } finally {
         setLoading(false);
       }
@@ -89,6 +92,7 @@ const EditPageContent = () => {
 
     if (!userType || !couponType || !count || !expiredAt || !value) {
       setError('All fields are required.');
+      toast({ title: "Error", description: "All fields are required." });
       return;
     }
 
@@ -134,11 +138,12 @@ const EditPageContent = () => {
       }
 
       const data = await response.json();
-      alert('Promo Code updated successfully!');
+      toast({ title: "Success", description: "Promo Code updated successfully!" });
       router.push('/PromoCode'); // Redirect after successful update
     } catch (error) {
       console.error('Error:', error);
       setError('Failed to update promo code.');
+      toast({ title: "Error", description: "Failed to update promo code." });
     } finally {
       setIsSubmitting(false);
     }

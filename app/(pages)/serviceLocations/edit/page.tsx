@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ComboboxForm } from './Comoboxcountry';
 import { CountriesIsoData } from '../countryisocode';
+import { useToast } from '@/components/ui/use-toast'; // Import useToast
 
 type Data = {
   id: string;
@@ -30,10 +31,11 @@ const EditPageContent = () => {
   const [countryISOCode, setCountryISOCode] = useState<string>('');
   const [city, setCity] = useState<string>('');
   const [price, setPrice] = useState<string>('');
-
+  
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get('id') as string;
+  const { toast } = useToast(); // Initialize toast
 
   const handleCountrySelect = (selectedCountryISOCode: string) => {
     setCountryISOCode(selectedCountryISOCode);
@@ -58,6 +60,7 @@ const EditPageContent = () => {
       } catch (error: any) {
         console.error('Error fetching vehicle data:', error);
         setError(error.message);
+        toast({ title: 'Error', description: error.message }); // Display error toast
       } finally {
         setLoading(false);
       }
@@ -95,11 +98,14 @@ const EditPageContent = () => {
           throw new Error(errorText || 'Failed to update vehicle data');
         }
       }
+      
       console.log('Request Body:', { city, price, countryISOCode });
+      toast({ title: 'Success', description: 'Location updated successfully!' }); // Display success toast
       router.push('/serviceLocations');
     } catch (error: any) {
       console.error('Error updating vehicle data:', error);
       setError(error.message);
+      toast({ title: 'Error', description: error.message }); // Display error toast
     }
   };
 

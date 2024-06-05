@@ -37,7 +37,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
 interface RideData {
   id: string;
   driverId: string;
@@ -54,7 +53,19 @@ interface RideData {
   status: string;
 }
 
-export const columns: ColumnDef<RideData>[] = [
+interface User {
+  id: string;
+  lastname: string;
+  firstname: string;
+}
+
+interface Driver {
+  id: string;
+  lastname: string;
+  firstname: string;
+}
+
+export const columns: ColumnDef<RideData & { DriverName: string; UserName: string;}>[] = [
   {
     accessorKey: "Sno",
     header: "Sno",
@@ -66,7 +77,7 @@ export const columns: ColumnDef<RideData>[] = [
     cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
   },
   {
-    accessorKey: "userId",
+    accessorKey: "UserName",
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -76,13 +87,13 @@ export const columns: ColumnDef<RideData>[] = [
         <CaretSortIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => <div className="uppercase">{row.getValue("userId")}</div>,
+    cell: ({ row }) => <div className="uppercase">{row.getValue("UserName")}</div>,
   },
   {
-    accessorKey: "driverId",
+    accessorKey: "DriverName",
     header: "Driver Name",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("driverId")}</div>
+      <div className="capitalize">{row.getValue("DriverName")}</div>
     ),
   },
   {
@@ -132,21 +143,34 @@ export const columns: ColumnDef<RideData>[] = [
 
 export function CompletedRidesDataTable() {
   const [data, setData] = useState<RideData[]>([]);
+  const [sortedData, setSortedData] = useState<(RideData & { DriverName: string; UserName: string; })[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [user, setUser] = useState<User[]>([]);
+  const [driver, setDriver] = useState<Driver[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/lib/GET/PickupRequests/getCompletedPickups');
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
+        const [CompletedResponse, UserResponse, DriverResponse] = await Promise.all([
+          fetch('/lib/GET/PickupRequests/getCompletedPickups'),
+          fetch('/lib/GET/User/getallUsers'),
+          fetch('/lib/GET/Driver/getallDrivers')]
+        )
+     
+        const CompletedData = await CompletedResponse.json();
+        const UserData = await UserResponse.json();
+        const DriverData = await DriverResponse.json();
+        if (Array.isArray(UserData.product)) {
+          setUser(UserData.product);
         }
-        const result = await response.json();
-        if (Array.isArray(result.product)) {
-          setData(result.product);
+        if (Array.isArray(DriverData.product)) {
+          setDriver(DriverData.product);
+        }
+        if (Array.isArray(CompletedData.product)) {
+          setData(CompletedData.product);
         } else {
           setData([]);
         }
@@ -158,8 +182,22 @@ export function CompletedRidesDataTable() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const UserMap = new Map(user.map(users => [users.id, users.firstname]));
+    const DriverMap = new Map(driver.map(drivers => [drivers.id, drivers.firstname]));
+
+    const newSortedData = data.map(route => ({
+     ...route,
+      userName: UserMap.get(route.userId) || route.userId,
+      driverName: DriverMap.get(route.driverId) || route.driverId,
+    }));
+
+    setSortedData(newSortedData);
+  }, [data, user, driver]);
+
+
   const table = useReactTable({
-    data,
+    data:sortedData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -182,9 +220,9 @@ export function CompletedRidesDataTable() {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter User Names..."
-          value={(table.getColumn("userId")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("UserName")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("userId")?.setFilterValue(event.target.value)
+            table.getColumn("UserName")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

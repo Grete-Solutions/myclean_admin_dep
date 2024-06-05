@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useToast } from "@/components/ui/use-toast";
 
 type Timestamp = {
   _seconds: number;
@@ -26,6 +27,7 @@ export default function EditPage() {
     </Suspense>
   );
 }
+
 const EditPageContent = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,6 +38,7 @@ const EditPageContent = () => {
     capacity: '',
     description: '',
   });
+  const { toast } = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get('id') as string;
@@ -57,6 +60,7 @@ const EditPageContent = () => {
       } catch (error: any) {
         setError(error.message);
         setLoading(false);
+        toast({ title: "Error", description: error.message });
       }
     };
 
@@ -78,17 +82,18 @@ const EditPageContent = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({...formData, id}),
+        body: JSON.stringify({ ...formData, id }),
       });
 
       if (!response.ok) {
         throw new Error('Failed to update vehicle data');
       }
 
-      router.push('/MasterData/VehicleMake'); // Corrected the route
-
+      toast({ title: "Success", description: "Vehicle data updated successfully" });
+      router.push('/MasterData/VehicleMake');
     } catch (error: any) {
       setError(error.message);
+      toast({ title: "Error", description: error.message });
     } finally {
       setLoading(false);
     }
@@ -114,32 +119,35 @@ const EditPageContent = () => {
           <Label htmlFor="make" className="text-left">
             Vehicle Make Name
           </Label>
-          <Input id="make" value={formData.make || ''} onChange={handleChange} placeholder=' Name' className="col-span-3" />
+          <Input id="make" value={formData.make || ''} onChange={handleChange} placeholder='Name' className="col-span-3" />
         </div>
 
         <div className="grid grid-cols-1 items-center gap-4">
           <Label htmlFor="model" className="text-left">
             Vehicle Model
           </Label>
-          <Input id="model" value={formData.model || ''} onChange={handleChange} placeholder=' Enter Model' className="col-span-3" />
+          <Input id="model" value={formData.model || ''} onChange={handleChange} placeholder='Enter Model' className="col-span-3" />
         </div>
+
         <div className="grid grid-cols-1 items-center gap-4">
           <Label htmlFor="year" className="text-left">
             Year
           </Label>
           <Input id="year" value={formData.year?.toString() || ''} onChange={handleChange} placeholder='Enter Year' className="col-span-3" />
         </div>
+
         <div className="grid grid-cols-1 items-center gap-4">
           <Label htmlFor="capacity" className="text-left">
             Capacity
           </Label>
           <Input type='number' id="capacity" value={formData.capacity?.toString() || ''} onChange={handleChange} placeholder='Enter Capacity' className="col-span-3" />
         </div>
+
         <div className="grid grid-cols-1 items-center gap-4">
           <Label htmlFor="description" className="text-left">
             Description
           </Label>
-          <Input  id="description" value={formData.description?.toString() || ''} onChange={handleChange} placeholder='Enter Capacity' className="col-span-3" />
+          <Input id="description" value={formData.description?.toString() || ''} onChange={handleChange} placeholder='Enter Description' className="col-span-3" />
         </div>
 
         <div>
