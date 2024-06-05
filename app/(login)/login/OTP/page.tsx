@@ -1,9 +1,10 @@
 'use client';
+import { Suspense } from 'react';
 import { Input } from '@/components/ui/input';
 import { useSearchParams } from 'next/navigation';
 import React, { useRef, useCallback, useState, useEffect } from 'react';
 
-const Page = () => {
+const OtpPage = () => {
   const [email, setEmail] = useState('');
   const [Otp, setOtp] = useState(new Array(6).fill(''));
   const inputRefs = useRef<HTMLInputElement[]>([]);
@@ -131,5 +132,11 @@ const Page = () => {
     </div>
   );
 };
+
+const Page = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <OtpPage />
+  </Suspense>
+);
 
 export default Page;
