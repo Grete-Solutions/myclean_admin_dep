@@ -1,15 +1,36 @@
 export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
 
-  const res = await fetch(`${process.env.URLB}/dashboard/getCurrentRev`, {
-    cache: 'no-cache',  
-    headers: {
-          'Content-Type': 'application/json',
-  
+  try {
+    const res = await fetch(`${process.env.URLB}/dashboard/getCurrentRev`, {
+      cache: 'no-cache',  
+      headers: {
+        'Content-Type': 'application/json',
       },
-  });
+    });
 
-  const product = await res.json();
+    // Check if the response is OK
+    if (!res.ok) {
+      // If the response is not OK, throw an error with the status text
+      throw new Error(`Server error: ${res.status} ${res.statusText}`);
+    }
 
-  return Response.json({ product });
+    // Attempt to parse the response as JSON
+    const product = await res.json();
+
+    return new Response(JSON.stringify({ product }), {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  } catch (error:any) {
+    // Catch any errors that occurred during the fetch or parsing
+    console.error('Fetch error:', error.message);
+
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
 }
