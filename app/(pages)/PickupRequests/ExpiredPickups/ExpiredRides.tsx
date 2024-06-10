@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
+  CaretSortIcon,
   ChevronDownIcon,
   DotsHorizontalIcon,
 } from "@radix-ui/react-icons";
@@ -17,9 +18,8 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -29,7 +29,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -39,10 +38,21 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface Payment {
-  userId: string;
+interface RideData {
+  id: string;
+  bookingId: string;
   driverId: string;
-  actualAmount: number;
+  pickupLocation: string;
+  userId: string;
+  createdAt: {
+    _seconds: number;
+    _nanoseconds: number;
+  };
+  updatedAt: {
+    _seconds: number;
+    _nanoseconds: number;
+  };
+  status: string;
 }
 
 interface User {
@@ -57,74 +67,75 @@ interface Driver {
   firstname: string;
 }
 
-// Update columns definition to combine first and last names
-export const columns: ColumnDef<(Payment & { userFullName: string; driverFullName: string; })>[] = [
+export const columns: ColumnDef<RideData & { driverName: string; userName: string; }>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value: boolean) => table.toggleAllPageRowsSelected(value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value: boolean) => row.toggleSelected(value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
+    accessorKey: "Sno",
+    header: "Sno",
+    cell: ({ row }) => <div>{row.index + 1}</div>,
   },
   {
-    accessorKey: "userFullName",
-    header: "User Name",
+    accessorKey: "bookingId",
+    header: "Request ID",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("bookingId")}</div>,
   },
   {
-    accessorKey: "driverFullName",
+    accessorKey: "userName",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        User 
+        <CaretSortIcon className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => <div className="uppercase">{row.getValue("userName")}</div>,
+  },
+  {
+    accessorKey: "driverName",
     header: "Driver Name",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("driverName")}</div>
+    ),
   },
   {
-    accessorKey: "actualAmount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = row.getValue("actualAmount");
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount as number);
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
+    accessorKey: "createdAt",
+    header: "Created At",
+    cell: ({ row }) => (
+      <div>
+        {new Date((row.getValue("createdAt") as { _seconds: number })._seconds * 1000).toLocaleString()}
+      </div>
+    ),
   },
   {
+    accessorKey: "status",
+    header: "Trip Status",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("status")}</div>
+    ),
+  },
+  {
+    header: "Actions",
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original;
+      const ride = row.original;
 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button className="h-8 w-8 p-0 bg-[#0A8791]">
               <span className="sr-only">Open menu</span>
               <DotsHorizontalIcon className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.userId)}
-            >
-              Copy User ID
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(ride.id)}>
+              Copy Ride ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>Edit</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -132,13 +143,10 @@ export const columns: ColumnDef<(Payment & { userFullName: string; driverFullNam
   },
 ];
 
-export function DataTableDemo() {
-  const [data, setData] = useState<Payment[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+export function ExpiredRideDataTable() {
+  const [data, setData] = useState<RideData[]>([]);
+  const [sortedData, setSortedData] = useState<(RideData & { driverName: string; userName: string; })[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [sortedData, setSortedData] = useState<(Payment & { driverFullName: string; userFullName: string; })[]>([]);
-
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
@@ -148,32 +156,28 @@ export function DataTableDemo() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
-        const [dataResponse, userResponse, driverResponse] = await Promise.all([
-          fetch('/lib/GET/Dashboard/getRecentCompletedPickupsMonth'),
+        const [ExpiredResponse, UserResponse, DriverResponse] = await Promise.all([
+          fetch('/lib/GET/PickupRequests/getExpiredPickups'),
           fetch('/lib/GET/User/getallUsers'),
           fetch('/lib/GET/Driver/getallDrivers')
         ]);
 
-        const pickupData = await dataResponse.json();
-        const userData = await userResponse.json();
-        const driverData = await driverResponse.json();
-
-        if (Array.isArray(userData.product)) {
-          setUser(userData.product);
+        const ExpiredData = await ExpiredResponse.json();
+        const UserData = await UserResponse.json();
+        const DriverData = await DriverResponse.json();
+        if (Array.isArray(UserData.product)) {
+          setUser(UserData.product);
         }
-        if (Array.isArray(driverData.product)) {
-          setDriver(driverData.product);
+        if (Array.isArray(DriverData.product)) {
+          setDriver(DriverData.product);
         }
-        if (Array.isArray(pickupData.product)) {
-          setData(pickupData.product);
+        if (Array.isArray(ExpiredData.product)) {
+          setData(ExpiredData.product);
         } else {
           setData([]);
         }
-        setLoading(false);
       } catch (error) {
-        setError('Error fetching data');
-        setLoading(false);
+        console.error('Error fetching data:', error);
       }
     };
 
@@ -186,8 +190,8 @@ export function DataTableDemo() {
 
     const newSortedData = data.map(route => ({
       ...route,
-      userFullName: userMap.get(route.userId) || route.userId,
-      driverFullName: driverMap.get(route.driverId) || route.driverId,
+      userName: userMap.get(route.userId) || route.userId,
+      driverName: driverMap.get(route.driverId) || route.driverId,
     }));
 
     setSortedData(newSortedData);
@@ -212,22 +216,14 @@ export function DataTableDemo() {
     },
   });
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter user IDs..."
-          value={(table.getColumn("userId")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter User Names..."
+          value={(table.getColumn("userName")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("userId")?.setFilterValue(event.target.value)
+            table.getColumn("userName")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -297,10 +293,7 @@ export function DataTableDemo() {
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>

@@ -1,12 +1,12 @@
-import { CancelledRidesDataTable } from '@/app/(pages)/PickupRequests/CancelledPickups/CancelledRides';
 import React from 'react';
+import { OngoingRideDataTable } from './CancelledRides';
 
-const CancelledRides: React.FC = () => {
+const OngoingRides: React.FC = () => {
   return (
     <div>
-      <CancelledRidesDataTable />
+      <OngoingRideDataTable />
     </div>
   );
 };
 
-export default CancelledRides;
+export default OngoingRides;

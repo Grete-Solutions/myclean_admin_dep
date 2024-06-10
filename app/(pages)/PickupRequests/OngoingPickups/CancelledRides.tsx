@@ -38,9 +38,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-// Define the RideData interface
 interface RideData {
   id: string;
+  bookingId: string;
   driverId: string;
   pickupLocation: string;
   userId: string;
@@ -55,35 +55,47 @@ interface RideData {
   status: string;
 }
 
-export const columns: ColumnDef<RideData>[] = [
+interface User {
+  id: string;
+  lastname: string;
+  firstname: string;
+}
+
+interface Driver {
+  id: string;
+  lastname: string;
+  firstname: string;
+}
+
+export const columns: ColumnDef<RideData & { driverName: string; userName: string; }>[] = [
   {
     accessorKey: "Sno",
     header: "Sno",
     cell: ({ row }) => <div>{row.index + 1}</div>,
   },
   {
-    accessorKey: "id",
+    accessorKey: "bookingId",
     header: "Request ID",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
+    cell: ({ row }) => <div className="capitalize">{row.getValue("bookingId")}</div>,
   },
   {
-    accessorKey: "userId",
+    accessorKey: "userName",
     header: ({ column }) => (
       <Button
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        User ID
+        User 
         <CaretSortIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => <div className="uppercase">{row.getValue("userId")}</div>,
+    cell: ({ row }) => <div className="uppercase">{row.getValue("userName")}</div>,
   },
   {
-    accessorKey: "driverId",
+    accessorKey: "driverName",
     header: "Driver Name",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("driverId")}</div>
+      <div className="capitalize">{row.getValue("driverName")}</div>
     ),
   },
   {
@@ -94,7 +106,7 @@ export const columns: ColumnDef<RideData>[] = [
         {new Date((row.getValue("createdAt") as { _seconds: number })._seconds * 1000).toLocaleString()}
       </div>
     ),
-  },  
+  },
   {
     accessorKey: "status",
     header: "Trip Status",
@@ -131,24 +143,36 @@ export const columns: ColumnDef<RideData>[] = [
   },
 ];
 
-// Define the CancelledRidesDataTable component
-export function CancelledRidesDataTable() {
+export function OngoingRideDataTable() {
   const [data, setData] = useState<RideData[]>([]);
+  const [sortedData, setSortedData] = useState<(RideData & { driverName: string; userName: string; })[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [user, setUser] = useState<User[]>([]);
+  const [driver, setDriver] = useState<Driver[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/lib/GET/PickupRequests/getOngoingPickups');
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
+        const [OngoingResponse, UserResponse, DriverResponse] = await Promise.all([
+          fetch('/lib/GET/PickupRequests/getOngoingPickups'),
+          fetch('/lib/GET/User/getallUsers'),
+          fetch('/lib/GET/Driver/getallDrivers')
+        ]);
+
+        const OngoingData = await OngoingResponse.json();
+        const UserData = await UserResponse.json();
+        const DriverData = await DriverResponse.json();
+        if (Array.isArray(UserData.product)) {
+          setUser(UserData.product);
         }
-        const result = await response.json();
-        if (Array.isArray(result.product)) {
-          setData(result.product);
+        if (Array.isArray(DriverData.product)) {
+          setDriver(DriverData.product);
+        }
+        if (Array.isArray(OngoingData.product)) {
+          setData(OngoingData.product);
         } else {
           setData([]);
         }
@@ -160,8 +184,21 @@ export function CancelledRidesDataTable() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const userMap = new Map(user.map(users => [users.id, `${users.firstname} ${users.lastname}`]));
+    const driverMap = new Map(driver.map(drivers => [drivers.id, `${drivers.firstname} ${drivers.lastname}`]));
+
+    const newSortedData = data.map(route => ({
+      ...route,
+      userName: userMap.get(route.userId) || route.userId,
+      driverName: driverMap.get(route.driverId) || route.driverId,
+    }));
+
+    setSortedData(newSortedData);
+  }, [data, user, driver]);
+
   const table = useReactTable({
-    data,
+    data: sortedData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -184,9 +221,9 @@ export function CancelledRidesDataTable() {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter User Names..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("userName")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("userName")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -246,7 +283,10 @@ export function CancelledRidesDataTable() {
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>

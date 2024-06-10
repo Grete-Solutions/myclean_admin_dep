@@ -1,10 +1,10 @@
 import React from 'react';
-import { ScheduledRidesDataTable } from './ScheduledRides';
+import { PendingRideDataTable } from './ScheduledRides';
 
 const ScheduledRides: React.FC = () => {
   return (
     <div>
-      <ScheduledRidesDataTable />
+      <PendingRideDataTable />
     </div>
   );
 };

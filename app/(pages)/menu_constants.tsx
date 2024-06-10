@@ -66,6 +66,7 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                     { title: 'Pending Pickups', path: '/PickupRequests/PendingPickups' },
                     { title: 'Cancelled Pickups', path: '/PickupRequests/CancelledPickups'},
                     { title: 'Ongoing Pickups', path: '/PickupRequests/OngoingPickups'},
+                    { title: 'Expired Pickups', path: '/PickupRequests/ExpiredPickups'},
                 ],
             },
             // {

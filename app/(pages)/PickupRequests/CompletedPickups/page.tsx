@@ -1,10 +1,10 @@
-import { CompletedRidesDataTable } from '@/app/(pages)/PickupRequests/CompletedPickups/CompletedRidesData';
 import React from 'react';
+import { CompletedRideDataTable } from './CompletedRidesData';
 
 const CompletedRides: React.FC = () => {
   return (
     <div>
-      <CompletedRidesDataTable />
+      <CompletedRideDataTable />
     </div>
   );
 };

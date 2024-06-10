@@ -1,9 +1,5 @@
 import { Karla } from 'next/font/google'
 import './globals.css'
-import { SideBar } from '@/components/sidebar';
-import Header from '@/components/header';
-import PageWrapper from '@/components/pagewrapper';
-import { ThemeProvider } from '@/components/theme-provider';
 import { Metadata } from 'next';
 import { Toaster } from "@/components/ui/toaster"
 
@@ -24,28 +20,21 @@ export const metadata: Metadata = {
 ;
 
 
-export default function RootLayout({
+export default function LoginLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={karla.className + ' h-screen overflow-hidden'}>
-        <ThemeProvider
-          themes={['dark', 'custom', 'light']}
-          defaultTheme='light'
-          attribute="class"
-          enableSystem
-          disableTransitionOnChange
-        >
+      <body className={karla.className + ' h-screen justify-center w-full overflow-hidden'}>
+
           <>
             <div className="flex flex-col h-full w-full">
               <Toaster />
               {children}
             </div>
           </>
-        </ThemeProvider>
       </body>
     </html>
   )

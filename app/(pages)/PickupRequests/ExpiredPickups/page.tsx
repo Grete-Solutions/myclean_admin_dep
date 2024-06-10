@@ -1,10 +1,10 @@
 import React from 'react';
-import { CancelledRideDataTable } from './CancelledRides';
+import { ExpiredRideDataTable } from './ExpiredRides';
 
 const CancelledRides: React.FC = () => {
   return (
     <div>
-      <CancelledRideDataTable />
+      <ExpiredRideDataTable />
     </div>
   );
 };

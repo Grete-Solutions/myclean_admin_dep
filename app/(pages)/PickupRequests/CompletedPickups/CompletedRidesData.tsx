@@ -40,6 +40,7 @@ import {
 
 interface RideData {
   id: string;
+  bookingId: string;
   driverId: string;
   pickupLocation: string;
   userId: string;
@@ -73,9 +74,9 @@ export const columns: ColumnDef<RideData & { driverName: string; userName: strin
     cell: ({ row }) => <div>{row.index + 1}</div>,
   },
   {
-    accessorKey: "id",
+    accessorKey: "bookingId",
     header: "Request ID",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("id")}</div>,
+    cell: ({ row }) => <div className="capitalize">{row.getValue("bookingId")}</div>,
   },
   {
     accessorKey: "userName",
@@ -84,7 +85,7 @@ export const columns: ColumnDef<RideData & { driverName: string; userName: strin
         variant="ghost"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        User ID
+        User 
         <CaretSortIcon className="ml-2 h-4 w-4" />
       </Button>
     ),
@@ -142,7 +143,7 @@ export const columns: ColumnDef<RideData & { driverName: string; userName: strin
   },
 ];
 
-export function CompletedRidesDataTable() {
+export function CompletedRideDataTable() {
   const [data, setData] = useState<RideData[]>([]);
   const [sortedData, setSortedData] = useState<(RideData & { driverName: string; userName: string; })[]>([]);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -158,9 +159,9 @@ export function CompletedRidesDataTable() {
         const [CompletedResponse, UserResponse, DriverResponse] = await Promise.all([
           fetch('/lib/GET/PickupRequests/getCompletedPickups'),
           fetch('/lib/GET/User/getallUsers'),
-          fetch('/lib/GET/Driver/getallDrivers')]
-        )
-     
+          fetch('/lib/GET/Driver/getallDrivers')
+        ]);
+
         const CompletedData = await CompletedResponse.json();
         const UserData = await UserResponse.json();
         const DriverData = await DriverResponse.json();
@@ -184,13 +185,13 @@ export function CompletedRidesDataTable() {
   }, []);
 
   useEffect(() => {
-    const UserMap = new Map(user.map(users => [users.id, users.firstname]));
-    const DriverMap = new Map(driver.map(drivers => [drivers.id, drivers.firstname]));
+    const userMap = new Map(user.map(users => [users.id, `${users.firstname} ${users.lastname}`]));
+    const driverMap = new Map(driver.map(drivers => [drivers.id, `${drivers.firstname} ${drivers.lastname}`]));
 
     const newSortedData = data.map(route => ({
       ...route,
-      userName: UserMap.get(route.userId) || route.userId,
-      driverName: DriverMap.get(route.driverId) || route.driverId,
+      userName: userMap.get(route.userId) || route.userId,
+      driverName: driverMap.get(route.driverId) || route.driverId,
     }));
 
     setSortedData(newSortedData);
