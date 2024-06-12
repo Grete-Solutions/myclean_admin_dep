@@ -1,13 +1,11 @@
 'use client';
-
 import React, { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ComboboxForm } from './Comoboxcountry';
-import { CountriesIsoData } from '../countryisocode';
-import { useToast } from '@/components/ui/use-toast'; // Import useToast
+import { useToast } from '@/components/ui/use-toast';
 
 type Data = {
   id: string;
@@ -35,7 +33,7 @@ const EditPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get('id') as string;
-  const { toast } = useToast(); // Initialize toast
+  const { toast } = useToast();
 
   const handleCountrySelect = (selectedCountryISOCode: string) => {
     setCountryISOCode(selectedCountryISOCode);
@@ -60,12 +58,12 @@ const EditPageContent = () => {
       } catch (error: any) {
         console.error('Error fetching vehicle data:', error);
         setError(error.message);
-        toast({ title: 'Error', description: error.message }); // Display error toast
+        toast({ title: 'Error', description: error.message });
       } finally {
         setLoading(false);
       }
     };
-
+    
     getLocationById();
   }, [id]);
 
@@ -99,19 +97,13 @@ const EditPageContent = () => {
         }
       }
       
-      console.log('Request Body:', { city, price, countryISOCode });
-      toast({ title: 'Success', description: 'Location updated successfully!' }); // Display success toast
+      toast({ title: 'Success', description: 'Location updated successfully!' });
       router.push('/serviceLocations');
     } catch (error: any) {
       console.error('Error updating vehicle data:', error);
       setError(error.message);
-      toast({ title: 'Error', description: error.message }); // Display error toast
+      toast({ title: 'Error', description: error.message });
     }
-  };
-
-  const getCountryName = (isoCode: string) => {
-    const country = CountriesIsoData.find((c) => c.code === isoCode);
-    return country ? country.name : 'Unknown Country';
   };
 
   if (loading) {
@@ -134,7 +126,6 @@ const EditPageContent = () => {
           <div className="grid grid-cols-1 items-center gap-4">
             <Label htmlFor="country" className="text-left">Country</Label>
             <ComboboxForm onCountrySelect={handleCountrySelect} selectedCountryISOCode={countryISOCode} />
-            <div>{getCountryName(countryISOCode)}</div>
           </div>
           <div className="grid grid-cols-1 items-center gap-4">
             <Label htmlFor="city" className="text-left">City</Label>

@@ -1,7 +1,7 @@
 'use client';
 import { Suspense } from 'react';
 import { Input } from '@/components/ui/input';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useRef, useCallback, useState, useEffect } from 'react';
 
 const OtpPage = () => {
@@ -10,7 +10,7 @@ const OtpPage = () => {
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const param = useSearchParams();
   const emailFromParams = param.get('email');
-  
+  const router = useRouter()
   useEffect(() => {
     if (emailFromParams) {
       setEmail(emailFromParams);
@@ -31,7 +31,7 @@ const OtpPage = () => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
+      router.push('/')
       const data = await response.json();
       console.log('Data received:', data);
     } catch (error) {

@@ -6,6 +6,7 @@ import PageWrapper from '@/components/pagewrapper';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Metadata } from 'next';
 import { Toaster } from "@/components/ui/toaster"
+import Provider from '../context/Provider';
 
 
 const karla = Karla({
@@ -31,7 +32,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={karla.className + ' h-screen overflow-hidden'}>
+    <Provider>  
+       <body className={karla.className + ' h-screen overflow-hidden'}>
+       
         <ThemeProvider
           themes={['dark', 'custom', 'light']}
           defaultTheme='light'
@@ -48,7 +51,7 @@ export default function RootLayout({
             </div>
           </>
         </ThemeProvider>
-      </body>
+      </body></Provider>
     </html>
   )
 }

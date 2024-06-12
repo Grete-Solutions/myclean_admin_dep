@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,22 +18,25 @@ import { CountriesIsoData, CountryDataType } from "../countryisocode";
 
 interface ComboboxFormProps {
   onCountrySelect: (countryISOCode: string) => void;
-  selectedCountryISOCode?: string;
+  selectedCountryISOCode: string;
 }
+
+// Create a mapping of country ISO codes to country names
+const countryIsoCodes: { [code: string]: string } = {};
+CountriesIsoData.forEach(country => {
+  countryIsoCodes[country.code] = country.name;
+});
 
 export function ComboboxForm({ onCountrySelect, selectedCountryISOCode }: ComboboxFormProps) {
   const [open, setOpen] = React.useState(false);
   const [selectedCountry, setSelectedCountry] = React.useState<CountryDataType | null>(
-    selectedCountryISOCode
-      ? CountriesIsoData.find((country) => country.code === selectedCountryISOCode) || null
-      : null
+    CountriesIsoData.find((country) => country.code === selectedCountryISOCode) || null
   );
 
   const handleCountrySelect = (countryISOCode: string) => {
-    const country = CountriesIsoData.find((country) => country.code === countryISOCode) || null;
-    setSelectedCountry(country);
+    setSelectedCountry(CountriesIsoData.find((country) => country.code === countryISOCode) || null);
     setOpen(false);
-    onCountrySelect(countryISOCode);
+    onCountrySelect(countryISOCode); // Call the callback function with the ISO code of the selected country
   };
 
   return (
@@ -41,7 +44,7 @@ export function ComboboxForm({ onCountrySelect, selectedCountryISOCode }: Combob
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" className="w-full justify-start">
-            {selectedCountry ? selectedCountry.name : "Set Country"}
+            {selectedCountry ? <>{selectedCountry.name}</> : <>Set Country</>}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="p-0 z-[99999]" side="top" align="start">

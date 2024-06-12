@@ -40,7 +40,7 @@ import {
 } from "@/components/ui/table";
 
 interface Payment {
-  userId: string;
+  userFullName: string;
   driverId: string;
   actualAmount: number;
 }
@@ -118,7 +118,7 @@ export const columns: ColumnDef<(Payment & { userFullName: string; driverFullNam
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.userId)}
+              onClick={() => navigator.clipboard.writeText(payment.userFullName)}
             >
               Copy User ID
             </DropdownMenuItem>
@@ -186,7 +186,7 @@ export function DataTableDemo() {
 
     const newSortedData = data.map(route => ({
       ...route,
-      userFullName: userMap.get(route.userId) || route.userId,
+      userFullName: userMap.get(route.userFullName) || route.userFullName,
       driverFullName: driverMap.get(route.driverId) || route.driverId,
     }));
 
@@ -224,10 +224,10 @@ export function DataTableDemo() {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter user IDs..."
-          value={(table.getColumn("userId")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter userFullName..."
+          value={(table.getColumn("userFullName")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("userId")?.setFilterValue(event.target.value)
+            table.getColumn("userFullName")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

@@ -3,14 +3,34 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   if (req.method === 'POST') {
     try {
-      const {name,password,email,role,} = await req.json();
+      const {
+        name,
+        password,
+        email,
+        role,
+        address,
+        country,
+        state,
+        postalCode,
+        phone,
+        city
+      } = await req.json();
       console.log(password);
       const response = await fetch(`${process.env.URLB}/admin/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({name,password,email,role,}),
+        body: JSON.stringify({ name,
+          password,
+          email,
+          role,
+          address,
+          country,
+          state,
+          postalCode,
+          phone,
+        city}),
       });
 
       const data = await response.json();

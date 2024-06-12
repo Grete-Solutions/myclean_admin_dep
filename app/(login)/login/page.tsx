@@ -16,19 +16,35 @@ function Login({}: Props) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setError(''); // Reset error state
 
-    const result = await signIn('credentials', {
-      redirect: false,
-      email,
-      password,
-    });
+    try {
+      const res = await fetch('/lib/POST/postlogin', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+        headers: { "Content-Type": "application/json" }
+      });
 
-    if (result?.ok) {
-      router.push(`/login/OTP?email=${email}`);
-    } else {
-      setError('Invalid email or password.');
+      if (res.ok) {
+        const result = await signIn('credentials', {
+          redirect: false,
+          email,
+          password,
+        });
+
+        if (result?.ok) {
+          router.push(`/login/OTP?email=${email}`);
+        } else {
+          setError('Invalid email or password.');
+        }
+      } else {
+        setError('Invalid email or password.');
+      }
+    } catch (error: any) {
+      console.error('Error:', error);
+      setError('Failed to sign in.');
     }
-  };
+  }
 
   return (
     <>
@@ -45,7 +61,7 @@ function Login({}: Props) {
             {error && <div className="text-red-500 text-center">{error}</div>}
             <div>
               <label htmlFor="email" className="block text-sm font-medium leading-6">
-                Username
+                Email
               </label>
               <div className="mt-2">
                 <Input

@@ -40,18 +40,16 @@ import VehicleMakeSheet from '@/app/components/Sheetpop/MasterDataPop/VehicleMak
 import { Actionbutton } from './Action';
 import ServiceLocation from '@/app/components/Sheetpop/serviceLocations/serviceLocationsSheet';
 import { CountriesIsoData } from './countryisocode';
-
 interface Data {
-    id: string;
-    srNodata: string;
-    countryISOCode: string;
-    price: number;
-    city: string;
-    status: number;
-    action: ReactNode;
-    isDelete:number
+  id: string;
+  srNodata: string;
+  countryISOCode: string;
+  price: number;
+  city: string;
+  status: number;
+  action: React.ReactNode;
+  isDelete: number;
 }
-
 
 export function Location() {
   const [data, setData] = useState<Data[]>([]);
@@ -81,66 +79,64 @@ export function Location() {
   const handleAddSuccess = () => {
     getLocation();
   };
-const countryIsoCodes: { [name: string]: string } = {};
+
+  const countryIsoCodes: { [code: string]: string } = {};
   CountriesIsoData.forEach(country => {
     countryIsoCodes[country.code] = country.name;
   });
 
-const columns: ColumnDef<Data>[] = [
-  {
-    accessorKey: "Sno",
-    header: "Sr No",
-    cell: ({ row }) => <div>{row.index + 1}</div>, // Use row index as Sno value
-  },
-  {
-    accessorKey: "countryISOCode",
-    header: "Country",
-    cell: ({ row }) => {
-      // const countryCode = row.getValue("countryISOCode") as string; // Assert type
-      // return <div>{countryIsoCodes[countryCode]}</div>;
-      return <div> {row.getValue("countryISOCode")}</div>;
+  const columns: ColumnDef<Data>[] = [
+    {
+      accessorKey: "Sno",
+      header: "Sr No",
+      cell: ({ row }) => <div>{row.index + 1}</div>, // Use row index as Sno value
     },
-  },
-  {
-    accessorKey: "city",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        City
-        <CaretSortIcon className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <div>{row.getValue("city")}</div>
-    ),
-  },
-  {
-    accessorKey: "price",
-    header: "Price",
-    cell: ({ row }) => (
-      <div>{row.getValue("price")}</div>
-    ),
-  },
-
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className={`${row.getValue("status") === 1 ? 'text-green-500' : 'text-red-500 file'} font-semibold`}>
-        {row.getValue("status") === 1 ? 'Active' : 'Inactive'}</div>
-    ),
-  },
-  {
-    accessorKey: "action",
-    header: "Action",
-    cell: ({ row }) => (
-      <div className="text-center text-[#0A8791]">
-<Actionbutton onDelete={row.original.isDelete} id={row.original.id} status={row.getValue("status")} refreshData={getLocation} />     </div>
-    ),
-  },
-];
+    {
+      accessorKey: "countryISOCode",
+      header: "Country",
+      cell: ({ row }) => {
+        const countryCode = row.getValue("countryISOCode") as string; // Assert type
+        return <div>{countryIsoCodes[countryCode]}</div>; // Convert ISO code to country name
+      },
+    },
+    {
+      accessorKey: "city",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          City
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => <div>{row.getValue("city")}</div>,
+    },
+    {
+      accessorKey: "price",
+      header: "Price",
+      cell: ({ row }) => <div>{row.getValue("price")}</div>,
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => (
+        <div className={`${row.getValue("status") === 1 ? 'text-green-500' : 'text-red-500'} font-semibold`}>
+          {row.getValue("status") === 1 ? 'Active' : 'Inactive'}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "action",
+      header: "Action",
+      cell: ({ row }) => (
+        <div className="text-center text-[#0A8791]">
+          <Actionbutton onDelete={row.original.isDelete} id={row.original.id} status={row.getValue("status")} refreshData={getLocation} />
+        </div>
+      ),
+    },
+  ];
+  
   const table = useReactTable({
     data,
     columns,

@@ -1,12 +1,20 @@
-import React from 'react'
-import Home from '../Dashboard'
+'use client'
+import React from 'react';
+import Home from '../Dashboard';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
-type Props = {}
+export default function Page() {
+  const { data: session, status } = useSession();
+  console.log(session)
+  const router = useRouter()
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
 
-export default function page({}: Props) {
   return (
     <div>
-      <Home/>
+      <Home />
     </div>
-  )
+  );
 }

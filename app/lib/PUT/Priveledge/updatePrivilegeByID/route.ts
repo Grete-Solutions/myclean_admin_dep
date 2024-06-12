@@ -1,45 +1,43 @@
 export async function PATCH(request: Request) {
     try {
       const data = await request.json();
-      const { id, status, key } = data;
+      const { id, value, privilege } = data;
   
-      if (!id || !key || status === undefined) {
-        console.error('ID, key, or status parameter is missing');
-        return new Response('ID, key, or status parameter is missing', { status: 400 });
+      // if ( !value ) {
+      //   console.error('ID, privilege, or value parameter is missing');
+      //   return new Response('ID, privilege, or value parameter is missing', { status: 400 });
+      // }
+  
+      // Ensure that the value value is either 0 or 1
+      if (value !== 0 && value !== 1) {
+        console.error(`Invalid value value. Must be either 0 or 1: ${value}`);
+        return new Response('Invalid value value. Must be either 0 or 1', { status: 400 });
       }
   
-      console.log(`Received request to update ${key} for ID ${id} to ${status}`);
+      console.log(`Received request to update ${privilege} for ID ${id} to ${value}`);
   
-      console.log(`Sending request to ${process.env.URLB}/privileges/updatePriv/${id}`);
+      console.log(`Sending request to ${process.env.URLB}/privileges/updateOnePriv/${id}`);
       
-      const res = await fetch(`${process.env.URLB}/privileges/updatePriv/${id}`, { 
+      const res = await fetch(`${process.env.URLB}/privileges/updateOnePriv/${id}`, { 
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ key,id,status }), 
+        body: JSON.stringify({ privilege, value,id}),
       });
   
       console.log(`Request sent. Awaiting response...`);
       
-      const text = await res.text();
-      console.log(`Response received: ${text}`);
+      const responseBody = await res.json();
+      console.log(`Response received: ${JSON.stringify(responseBody)}`);
   
       if (!res.ok) {
-        console.error(`Failed to update data with status ${res.status}: ${text}`);
-        return new Response(`Failed to update data: ${text}`, { status: res.status });
+        console.error(`Failed to update data with status ${res.status}: ${JSON.stringify(responseBody)}`);
+        return new Response(`Failed to update data: ${JSON.stringify(responseBody)}`, { status: res.status });
       }
   
-      let updatedProduct;
-      try {
-        updatedProduct = JSON.parse(text);
-      } catch (error) {
-        console.error('Failed to parse response JSON:', text);
-        return new Response('Failed to parse response JSON', { status: 500 });
-      }
-  
-      console.log(`Result: ${updatedProduct}`);
-      return new Response(JSON.stringify({ product: updatedProduct }), {
+      console.log(`Result: ${JSON.stringify(responseBody)}`);
+      return new Response(JSON.stringify(responseBody), {
         status: 200,
         headers: {
           'Content-Type': 'application/json',

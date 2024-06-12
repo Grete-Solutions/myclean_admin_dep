@@ -2,7 +2,7 @@ import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 const authOptions: NextAuthOptions = {
-    secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt"
   },
@@ -13,49 +13,62 @@ const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: { label: "email", type: "text", placeholder: "Enter email" },
+        email: { label: "Email", type: "text", placeholder: "Enter email" },
         password: { label: "Password", type: "password" }
       },
-      async authorize(credentials) {
-        try {
-          const res = await fetch(`/lib/POST/postlogin`, {
-            method: 'POST',
-            body: JSON.stringify(credentials),
-            headers: { "Content-Type": "application/json" }
-          });
+     async authorize(credentials) {
+  if (!credentials) {
+    throw new Error('No credentials provided');
+  }
 
-          if (res.ok) {
-            const data = await res.json();
-            if (data.user) {
-              return { ...data.user, email: data.user.email }; // Ensure email is set for the session
-            }
-            console.log('userdata',data.user)
-          }
-        } catch (error) {
-          console.error('Error during authorization:', error);
-        }
-        
-        return null;
+  try {
+    const res = await fetch(`http://localhost:3000/lib/GET/Admin/getallAdmins`, {
+      method: 'GET',
+      headers: { "Content-Type": "application/json" }
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      const user = data.product.find((user:any) => user.email === credentials.email);
+      if (user && !user.isDeactivated && !user.isSuspended) {
+        return user; 
       }
+    } else {
+      console.error('Failed to fetch user data:', res.status);
+    }
+  } catch (error) {
+    console.error('Error during authorization:', error);
+  }
+
+  return null;
+}
     })
   ],
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.email = user.email; // Ensure email is set in the token
+        token.email = user.email;
+        token.name = user.name;
+        token.role = user.role;
+        token.displayName = user.displayName;
       }
+      console.log('this is the token',token)
       return token;
     },
     async session({ session, token }) {
-return{ 
-    ...session,
-user:{
-    ...session.user,
-username: token.email
-}}
+      session.user = {
+        ...session.user,
+        id: token.id as string,
+        email: token.email as string,
+        name: token.name as string,
+        role: token.role as string,
+        displayName: token.displayName as string,
+      };      console.log('this is the session',session)
+
+      return session;
     }
-  }
+  },
 };
 
 export default authOptions;

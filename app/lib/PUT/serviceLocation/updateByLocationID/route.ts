@@ -14,7 +14,7 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ message: 'ID parameter is missing' }, { status: 400 });
     }
 
-    console.log(`Received request to update vehicle data for ID ${id}`);
+    console.log(`Received request to update Location data for ID ${id} ${countryISOCode}`);
 
     const response = await fetch(`${process.env.URLB}/setPrice/updateCity/${id}`, {
       method: 'PATCH',
@@ -31,7 +31,7 @@ export async function PATCH(req: Request) {
     }
 
     const updatedProduct = await response.json();
-    console.log(`Successfully updated vehicle data for ID ${id}`);
+    console.log(`Successfully updated Location data for ID ${id}`);
     return NextResponse.json({ product: updatedProduct });
   } catch (error) {
     console.error('Error updating data:', error);

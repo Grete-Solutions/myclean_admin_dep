@@ -153,8 +153,8 @@ type Data = {
           },
           body: JSON.stringify({
             id: privilegeId,
-            status: updatedPrivilege,
-            key: privilegeKey,
+            value: updatedPrivilege,
+            privilege: privilegeKey,
           }),
         });
   

@@ -27,7 +27,7 @@ export function ComboboxForm({ onCountrySelect }: ComboboxFormProps) {
   const handleCountrySelect = (countryISOCode: string) => {
     setSelectedCountry(CountriesIsoData.find((country) => country.code === countryISOCode) || null);
     setOpen(false);
-    onCountrySelect(countryISOCode); // Call the callback function with the ISO code of the selected country
+    onCountrySelect(countryISOCode);
   };
 
   return (

@@ -7,6 +7,7 @@ import { Overview } from './components/overview';
 import { DataTableDemo } from './components/recent-cleaning';
 import PieChartBox from './components/Piechart';
 import Earnings from './components/Earnings';
+import { useSession } from 'next-auth/react';
 
 interface Data{
   Current_Month_Users:number
@@ -58,11 +59,13 @@ export default function Home() {
 
     fetchData();
   }, []);
+  const {data:session , status}= useSession()
 
   return (
     <>
       <h2 className="text-3xl font-bold tracking-tight my-4">Dashboard</h2>
 
+      <h1>{session?.user.name}</h1>
       <div className="flex-1 space-y-4 overflow-x-auto">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
