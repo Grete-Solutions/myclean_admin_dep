@@ -30,7 +30,7 @@ export function Actionbutton({ id, status, onDelete, refreshData }: ActionButton
           throw new Error('Failed to fetch data');
         }
         const result = await response.json();
-        setIsAuthorized(result.product === 1);
+        setIsAuthorized(session?.user.role === 'Super Admin'|| session?.user.role === 'Super Admin'|| result.product === 1  );
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -38,14 +38,14 @@ export function Actionbutton({ id, status, onDelete, refreshData }: ActionButton
     const fetchDeletePermission = async () => {
         if (!session) return; 
         const id = session.user.role;
-        const field_name = 'delete_vehicle_make';
+        const field_name = 'delete_roles';
         try {
           const response = await fetch(`/lib/GET/Priveledges/getPrivelegesByIDandFieldName?id=${id}&field_name=${field_name}`);
           if (!response.ok) {
             throw new Error('Failed to fetch data');
           }
           const result = await response.json();
-          setIsdeleteAuthorized(result.product === 1);
+          setIsdeleteAuthorized(session?.user.role === 'Super Admin'|| session?.user.role === 'Super Admin'|| result.product === 1  );
         } catch (error) {
           console.error('Error fetching data:', error);
         }
@@ -113,21 +113,21 @@ export function Actionbutton({ id, status, onDelete, refreshData }: ActionButton
                 <PenBox className="hover:cursor-pointer" />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-fit">
-                <DropdownMenuItem className="hover:cursor-pointer hover:bg-gray-50" onClick={handleEdit}>
-                {isAuthorized && (
+                {isAuthorized && (  <DropdownMenuItem className="hover:cursor-pointer hover:bg-gray-50" onClick={handleEdit}>
+              
           <Button>
                                  Edit
           </Button>
-      )}                </DropdownMenuItem>
+                  </DropdownMenuItem>  )}  
                 <DropdownMenuItem onClick={handleChangeStatus} className="hover:cursor-pointer hover:bg-gray-50">
                     Set to {otherStatusLabel}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleDelete} className="text-red-600 hover:bg-gray-50 hover:cursor-pointer font-semibold">
-                {isdeleteAuthorized && (
+                              {isdeleteAuthorized && (
+  <DropdownMenuItem onClick={handleDelete} className="text-red-600 hover:bg-gray-50 hover:cursor-pointer font-semibold">
           <Button>
                                  Delete
           </Button>
-      )}                    </DropdownMenuItem>
+                       </DropdownMenuItem>  )} 
             </DropdownMenuContent>
         </DropdownMenu>
     );

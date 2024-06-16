@@ -42,7 +42,7 @@ function ServiceLocation({ onAddSuccess }: { onAddSuccess: () => void }) {
         throw new Error('Failed to fetch data');
       }
       const result = await response.json();
-      setIsAuthorized(result.product === 1);
+      setIsAuthorized(session?.user.role === 'Super Admin'|| result.product === 1 );
     } catch (error) {
       console.error('Error fetching data:', error);
     }

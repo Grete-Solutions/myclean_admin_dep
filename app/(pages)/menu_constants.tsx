@@ -81,7 +81,7 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                 submenu: true,
                 subMenuItems: [
                     {title: 'Approved Drivers', path: '/manageDrivers/ApprovedDrivers' },
-                    {title: 'Approve Pending Drivers', path: '/manageDrivers/ApprovePendingDrivers' },
+                    {title: 'Pending Drivers', path: '/manageDrivers/PendingDrivers' },
                     {title: 'Driver Ratings', path: '/manageDrivers/DriverRatings' },
                     {title: 'Negative Balance Drivers', path: '/manageDrivers/NegativeBalanceDrivers' },
                ],

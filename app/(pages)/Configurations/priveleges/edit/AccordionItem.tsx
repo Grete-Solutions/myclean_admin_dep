@@ -50,6 +50,15 @@ export const accordionItems: AccordionItemData[] = [
                 Edit Roles
             </label>
         </div>
+        <div className="flex items-center space-x-2">
+            <Checkbox id="edit-roles" />
+            <label
+                htmlFor="edit-roles"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+                Delete Roles
+            </label>
+        </div>
         
         <div className="flex items-center space-x-2">
             <Checkbox id="create-roles" />

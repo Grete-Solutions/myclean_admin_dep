@@ -94,6 +94,11 @@ type Data = {
   delete_user: number;
   add_service_location: number;
   add_users: number;
+  delete_roles:number;
+  add_promocode:number;
+  delete_promocode:number;
+  delete_priviledge:number;
+  edit_promocode:number;
 };
 
   interface AccordionItemData {
@@ -219,6 +224,24 @@ type Data = {
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Create Roles
+              </label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox id="create-roles" checked={privilegedData?.delete_roles === 1} onCheckedChange={() => handleToggle('delete_roles')} />
+              <label
+                htmlFor="create-roles"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Delete Roles
+              </label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox id="delete_priviledge" checked={privilegedData?.delete_priviledge === 1} onCheckedChange={() => handleToggle('delete_priviledge')} />
+              <label
+                htmlFor="delete_priviledge"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Delete Priveledges 
               </label>
             </div>
             <div className="flex items-center space-x-2">
@@ -1076,7 +1099,44 @@ type Data = {
                 </div>
             </div>
   )
-}
+},
+{
+    value: "item-15",
+    triggerText: "Promo Code",
+    content: (
+        <div className='flex flex-col space-y-2'>
+            <div className="flex items-center space-x-2">
+                <Checkbox id="add_promocode" checked={privilegedData?.add_promocode === 1} onCheckedChange={() => handleToggle('add_promocode')} />
+                <label
+                    htmlFor="add_promocode"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                    Add Promo Code
+                </label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+                <Checkbox id="delete_promocode" checked={privilegedData?.delete_promocode === 1} onCheckedChange={() => handleToggle('delete_promocode')} />
+                <label
+                    htmlFor="delete_promocode"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                    Delete Promo Code
+                </label>
+            </div>
+
+            <div className="flex items-center space-x-2">
+                <Checkbox id="edit_promocode" checked={privilegedData?.edit_promocode === 1} onCheckedChange={() => handleToggle('edit_promocode')} />
+                <label
+                    htmlFor="edit_promocode"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                    Edit Promo Code
+                </label>
+            </div>
+            
+            </div>
+)}
 
   
   ];

@@ -17,25 +17,42 @@ export function Actionbutton({ id, status, onDelete, refreshData }: ActionButton
    const { toast } = useToast();
    const router = useRouter();
    const [isAuthorized, setIsAuthorized] = useState(false);
+   const [isdeleteAuthorized, setIsDeleteAuthorized] = useState(false); 
    const {data:session}= useSession()
  
    const fetchPermission = async () => {
      if (!session) return; 
      const id = session.user.role;
-     const field_name = 'add_vehicle_make';
+     const field_name = 'add_promocode';
      try {
        const response = await fetch(`/lib/GET/Priveledges/getPrivelegesByIDandFieldName?id=${id}&field_name=${field_name}`);
        if (!response.ok) {
          throw new Error('Failed to fetch data');
        }
        const result = await response.json();
-       setIsAuthorized(result.product === 1);
+       setIsAuthorized(session?.user.role === 'Super Admin'|| result.product === 1 );
      } catch (error) {
        console.error('Error fetching data:', error);
      }
    };
+   const fetchDeletePermission = async () => {
+    if (!session) return; 
+    const id = session.user.role;
+    const field_name = 'delete_roles';
+    try {
+      const response = await fetch(`/lib/GET/Priveledges/getPrivelegesByIDandFieldName?id=${id}&field_name=${field_name}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const result = await response.json();
+      setIsDeleteAuthorized(session?.user.role === 'Super Admin'|| session?.user.role === 'Super Admin'|| result.product === 1  );
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
  
    useEffect(() => {
+    fetchDeletePermission()
      fetchPermission();
    }, [session]); 
 
@@ -97,18 +114,21 @@ export function Actionbutton({ id, status, onDelete, refreshData }: ActionButton
                 <PenBox className="hover:cursor-pointer" />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-fit">
-                <DropdownMenuItem className="hover:cursor-pointer hover:bg-gray-50" onClick={handleEdit}>
-                {isAuthorized && (
+                               {isAuthorized && (
+ <DropdownMenuItem className="hover:cursor-pointer hover:bg-gray-50" onClick={handleEdit}>
           <div>
                                  Edit
           </div>
-      )}                         </DropdownMenuItem>
+                            </DropdownMenuItem>  )} 
                 <DropdownMenuItem onClick={handleChangeStatus} className="hover:cursor-pointer hover:bg-gray-50">
                     Set to {otherStatusLabel}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleDelete} className="text-red-600 hover:bg-gray-50 hover:cursor-pointer font-semibold">
-                    Delete
-                </DropdownMenuItem>
+                             {isdeleteAuthorized && (
+   <DropdownMenuItem onClick={handleDelete} className="text-red-600 hover:bg-gray-50 hover:cursor-pointer font-semibold">
+          <div>
+                                 Delete
+          </div>
+                       </DropdownMenuItem>)}  
             </DropdownMenuContent>
         </DropdownMenu>
     );

@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/tabs';
 
 type Props = {};
+//USE FOCUS TO SEND TO API FROM TEXT TO TEXTBOX
 
 type Settings = {
   [key: string]: string;
