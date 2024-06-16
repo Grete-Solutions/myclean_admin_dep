@@ -57,14 +57,13 @@ const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      session.user = {
-        ...session.user,
-        id: token.id as string,
-        email: token.email as string,
-        name: token.name as string,
-        role: token.role as string,
-        displayName: token.displayName as string,
-      };      console.log('this is the session',session)
+   if(token){
+    session.user.id= token.id
+    session.user.email= token.email
+    session.user.name=token.name
+    session.user.role=token.role
+   }
+      ;      console.log('this is the session',session)
 
       return session;
     }
