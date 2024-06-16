@@ -2,7 +2,8 @@ import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 const authOptions: NextAuthOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET, 
+   debug: process.env.NODE_ENV === "production",
   session: {
     strategy: "jwt"
   },
@@ -22,7 +23,7 @@ const authOptions: NextAuthOptions = {
   }
 
   try {
-    const res = await fetch(`https://mycleanapp.netlify.app/lib/GET/Admin/getallAdmins`, {
+    const res = await fetch(`/lib/GET/Admin/getallAdmins`, {
       method: 'GET',
       headers: { "Content-Type": "application/json" }
     });
@@ -39,8 +40,6 @@ const authOptions: NextAuthOptions = {
   } catch (error) {
     console.error('Error during authorization:', error);
   }
-
-  return null;
 }
     })
   ],
