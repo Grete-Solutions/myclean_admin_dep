@@ -5,7 +5,7 @@ export default withAuth({
   },
 })
 export const config = {  matcher: [
-    "/",
+    // "/",
     "/Configurations",
     "/Configurations/priveleges",
     "/Configurations/system-settings",
