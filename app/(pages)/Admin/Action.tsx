@@ -3,8 +3,8 @@ import { PenBox, Trash } from "lucide-react";
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
 
 interface ActionButtonProps {
     id: string; 
@@ -17,14 +17,13 @@ export function Actionbutton({ id, status, onDelete, refreshData }: ActionButton
     const { toast } = useToast();
     const router = useRouter();
     const [isAuthorized, setIsAuthorized] = useState(false);
-    const [isToggleAuthorized, setIsToggleAuthorized] = useState(false);
     const [isdeleteAuthorized, setIsdeleteAuthorized] = useState(false);
     const {data:session}= useSession()
   
     const fetchPermission = async () => {
       if (!session) return; 
       const id = session.user.role;
-      const field_name = 'edit_vehicle_make';
+      const field_name = 'edit_roles';
       try {
         const response = await fetch(`/lib/GET/Priveledges/getPrivelegesByIDandFieldName?id=${id}&field_name=${field_name}`);
         if (!response.ok) {
@@ -51,36 +50,18 @@ export function Actionbutton({ id, status, onDelete, refreshData }: ActionButton
           console.error('Error fetching data:', error);
         }
       };
-      const fetchTogglePermission = async () => {
-        if (!session) return; 
-        const id = session.user.role;
-        const field_name = 'toggle_vehicle_make';
-        try {
-          const response = await fetch(`/lib/GET/Priveledges/getPrivelegesByIDandFieldName?id=${id}&field_name=${field_name}`);
-          if (!response.ok) {
-            throw new Error('Failed to fetch data');
-          }
-          const result = await response.json();
-          setIsdeleteAuthorized(result.product === 1);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      };
-  
   
     useEffect(() => {
       fetchPermission();
-      fetchTogglePermission()
       fetchDeletePermission();
     }, [session]); 
-
     const handleEdit = () => {
-        router.push(`VehicleMake/edit?id=${id}`);
+        router.push(`priveleges/edit?id=${id}`);
     };
 
     const handleChangeStatus = async () => {
         try {
-            const response = await fetch(`/lib/PUT/VehicleMake/updateStatusByID?id=${id}`, {
+            const response = await fetch(`/lib/PUT/Priveledge/updateStatusByID?id=${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -103,7 +84,7 @@ export function Actionbutton({ id, status, onDelete, refreshData }: ActionButton
     const handleDelete = async () => {
         try {
             const newDel = onDelete === 0 ? 1 : 0;
-            const response = await fetch(`/lib/DELETE/VehicleMake/deleteByID?id=${id}`, {
+            const response = await fetch(`/lib/DELETE/Priveledge/deleteByID?id=${id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -128,38 +109,26 @@ export function Actionbutton({ id, status, onDelete, refreshData }: ActionButton
 
     return (
         <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-            <PenBox className="hover:cursor-pointer" />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-fit">
-                  {isAuthorized && (  <DropdownMenuItem className="hover:cursor-pointer hover:bg-gray-50" onClick={handleEdit}>
-    
-      <div>
-                             Edit
-      </div>
-           </DropdownMenuItem>   )}    
-       {isToggleAuthorized && (    
-         <DropdownMenuItem onClick={handleChangeStatus} className="hover:cursor-pointer hover:bg-gray-50">
-      <div>
-                                                 Set to {otherStatusLabel}
-
-      </div>
-                   </DropdownMenuItem>)} 
-       {isdeleteAuthorized && (      
-          <DropdownMenuItem onClick={handleDelete} className="text-red-600 hover:bg-gray-50 hover:cursor-pointer font-semibold">
-         
-      <div>
-                             Delete
-      </div>
-                </DropdownMenuItem>     )} 
-      <DropdownMenuItem>
-    {!isAuthorized&& !isToggleAuthorized && !isToggleAuthorized&&(
-        <button disabled className="text-red-600 font-semibold">
-       No Permission Allowed
-        </button>
-    )}
-  </DropdownMenuItem>
-        </DropdownMenuContent>
-    </DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <PenBox className="hover:cursor-pointer" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-fit">
+                <DropdownMenuItem className="hover:cursor-pointer hover:bg-gray-50" onClick={handleEdit}>
+                {isAuthorized && (
+          <Button>
+                                 Edit
+          </Button>
+      )}                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleChangeStatus} className="hover:cursor-pointer hover:bg-gray-50">
+                    Set to {otherStatusLabel}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleDelete} className="text-red-600 hover:bg-gray-50 hover:cursor-pointer font-semibold">
+                {isdeleteAuthorized && (
+          <Button>
+                                 Delete
+          </Button>
+      )}                    </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
     );
 }
