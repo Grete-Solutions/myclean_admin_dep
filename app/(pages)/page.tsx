@@ -14,11 +14,17 @@ export default function Page() {
     }
   }, [status, router]);
 
+  useEffect(() => {
+    if (status === 'authenticated' && session.user.role !== 'authenticated') {
+      router.replace('/login');
+    }
+  }, [status, session, router]);
+
   if (status === 'loading') {
     return <div>Loading...</div>;
   }
 
-  if (status === 'authenticated') {
+  if (status === 'authenticated' && session.user.role === 'authenticated') {
     return (
       <div>
         <Home />
@@ -26,5 +32,5 @@ export default function Page() {
     );
   }
 
-
+  return null;
 }
