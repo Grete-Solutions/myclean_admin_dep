@@ -13,7 +13,7 @@ declare module "next-auth" {
       id: string;
       role: string;
       displayName: string;
-    } & DefaultSession["Super Admin"];
+    } & DefaultSession["user"];
   }
 
   interface JWT {
