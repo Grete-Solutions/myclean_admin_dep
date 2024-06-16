@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { Button } from "./ui/button";
 import { Avatar,  AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
@@ -98,7 +97,6 @@ export function UserNav() {
                         <button onClick={(e) => {
                             e.preventDefault();
                             signOut();
-                            router.push('/login');
                         }}>
                             Log out
                         </button>

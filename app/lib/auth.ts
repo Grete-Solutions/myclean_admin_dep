@@ -1,6 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-
+import bcrypt from 'bcrypt'
 // Log the NEXTAUTH_URL environment variable
 console.log('NEXTAUTH_URL:', process.env.NEXTAUTH_URL);
 
@@ -35,7 +35,10 @@ const authOptions: NextAuthOptions = {
             const data = await res.json();
             const user = data.product.find((user:any) => user.email === credentials.email);
             if (user && !user.isDeactivated && !user.isSuspended) {
-              return user; 
+              const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+              if (isPasswordValid) {
+                return user;
+              }
             }
           } else {
             console.error('Failed to fetch user data:', res.status);
