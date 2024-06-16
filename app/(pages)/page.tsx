@@ -7,25 +7,22 @@ import { useRouter } from 'next/navigation';
 export default function Page() {
   const { data: session, status } = useSession();
   const router = useRouter();
+
+  useEffect(() => {
     console.log('Session status:', status);
     console.log('Session data:', session);
-  // useEffect(() => {
 
+    // if (status !== 'authenticated') {
+    //   router.replace('/login');
+    // }
 
-  //   if (status === 'unauthenticated') {
-  //     router.replace('/login');
-  //   }
-
-  //   if (status === 'authenticated' && session?.user?.role !== 'authenticated') {
-  //     router.replace('/login');
-  //   }
-  // }, [status, session, router]);
+  }, [status, session, router]);
 
   if (status === 'loading') {
     return <div>Loading...</div>;
   }
 
-  // if (status === 'authenticated' && session?.user?.role === 'authenticated') {
+  if (status === 'authenticated') {
     return (
       <div>
         <Home />
@@ -33,4 +30,5 @@ export default function Page() {
     );
   }
 
-// }
+  return null;
+}
