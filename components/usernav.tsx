@@ -95,7 +95,6 @@ export function UserNav() {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>
-                    <Link href="">
                         <button onClick={(e) => {
                             e.preventDefault();
                             signOut();
@@ -103,7 +102,6 @@ export function UserNav() {
                         }}>
                             Log out
                         </button>
-                    </Link>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
