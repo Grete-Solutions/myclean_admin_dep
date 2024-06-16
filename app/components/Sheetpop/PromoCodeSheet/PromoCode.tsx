@@ -1,5 +1,5 @@
 'use client'
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,10 +13,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { CirclePlusIcon } from 'lucide-react';
+import { CirclePlusIcon, PlusCircle } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { PromoCalendarForm } from './Calendar';
+import { useSession } from 'next-auth/react';
+import { useToast } from '@/components/ui/use-toast';
 
 interface Promocode {
   coupon_type: string,
@@ -34,12 +36,39 @@ function PromoCodeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
   const [expiredAt, setExpiredAt] = React.useState<Date | null>(null);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const {data:session}= useSession()
+  const {toast}= useToast()
+
+  const fetchPermission = async () => {
+    if (!session) return; 
+    const id = session.user.role;
+    const field_name = 'add_vehicle_make';
+    try {
+      const response = await fetch(`/lib/GET/Priveledges/getPrivelegesByIDandFieldName?id=${id}&field_name=${field_name}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const result = await response.json();
+      setIsAuthorized(result.product === 1);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPermission();
+  }, [session]); 
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if ( !userType || !couponType || !count || !expiredAt) {
       setError('All fields are required.');
+      return;
+    }
+    if (!isAuthorized) {
+      toast({ title: "Error", description: "You are Not Authorized ",variant: "destructive" });
       return;
     }
     let userTypeValue: number;
@@ -90,11 +119,13 @@ function PromoCodeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
 
   return (
     <Sheet>
+    {isAuthorized && (
       <SheetTrigger className='flex items-center'>
         <Button className='text-[12px] bg-[#0A8791] py-2 h-fit'>
-          <CirclePlusIcon className='mr-1' size={12} /> Add Code
+          <PlusCircle className='mr-1' size={12}/> Add
         </Button>
       </SheetTrigger>
+    )}
       <SheetContent className='z-[9999]'>
         <ScrollArea className="h-full w-[350px]">
           <SheetHeader>

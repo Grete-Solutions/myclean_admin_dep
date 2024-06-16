@@ -22,7 +22,7 @@ const authOptions: NextAuthOptions = {
   }
 
   try {
-    const res = await fetch(`http://localhost:3000/lib/GET/Admin/getallAdmins`, {
+    const res = await fetch(`/lib/GET/Admin/getallAdmins`, {
       method: 'GET',
       headers: { "Content-Type": "application/json" }
     });

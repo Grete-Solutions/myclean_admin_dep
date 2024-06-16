@@ -12,3 +12,15 @@ export async function GET(request: Request) {
    
     return Response.json({ product })
   }
+  // const fetchNotificationPermission = async () => {
+//   try {
+//     const response = await fetch('/lib/GET/Priveledges/getPrivelegesByIDandFieldName');
+//     if (!response.ok) {
+//       throw new Error('Failed to fetch data');
+//     }
+//     const result = await response.json();
+//     setData(Array.isArray(result.product) ? result.product : []);
+//   } catch (error) {
+//     console.error('Error fetching data:', error);
+//   }
+// };

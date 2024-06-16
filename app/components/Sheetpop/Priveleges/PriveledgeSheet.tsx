@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +16,8 @@ import {
 import { PlusCircle } from 'lucide-react';
 import { ComboboxForm } from '@/app/(pages)/Configurations/priveleges/Comoboxcountry';
 import { CountryDataType } from '@/app/components/countryConstants';
+import { useSession } from 'next-auth/react';
+import { useToast } from '@/components/ui/use-toast';
 
 type Props = {};
 
@@ -27,12 +29,37 @@ function PriveledgeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
   const [city, setCity] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const {data:session}= useSession()
+const {toast}= useToast()
+  const fetchPermission = async () => {
+    if (!session) return; 
+    const id = session.user.role;
+    const field_name = 'create_role';
+    try {
+      const response = await fetch(`/lib/GET/Priveledges/getPrivelegesByIDandFieldName?id=${id}&field_name=${field_name}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const result = await response.json();
+      setIsAuthorized(result.product === 1);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
+  useEffect(() => {
+    fetchPermission();
+  }, [session]); 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!slug || !name || !description || !country || !city) {
       setError('All fields are required.');
+      return;
+    }
+    if (!isAuthorized) {
+      toast({ title: "Error", description: "You are Not Authorized ",variant: "destructive" });
       return;
     }
 
@@ -51,6 +78,7 @@ function PriveledgeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+      
 
       const data = await response.json();
       console.log('Data received:', data);
@@ -66,11 +94,13 @@ function PriveledgeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
 
   return (
     <Sheet>
+    {!isAuthorized && (
       <SheetTrigger className='flex items-center'>
         <Button className='text-[12px] bg-[#0A8791] py-2 h-fit'>
-          <PlusCircle className='mr-1' size={12} /> Add
+          <PlusCircle className='mr-1' size={12}/> Add
         </Button>
       </SheetTrigger>
+    )}
       <SheetContent className='z-[999]'>
         <SheetHeader>
           <SheetTitle>Add Privilege</SheetTitle>

@@ -1,8 +1,10 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { PenBox, Trash } from "lucide-react"; 
 import { useRouter } from 'next/navigation';
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast"
+import { useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
 
 interface ActionButtonProps {
     id: string; 
@@ -14,6 +16,28 @@ interface ActionButtonProps {
 export function Actionbutton({ id, status, onDelete, refreshData }: ActionButtonProps) {
    const { toast } = useToast();
    const router = useRouter();
+   const [isAuthorized, setIsAuthorized] = useState(false);
+   const {data:session}= useSession()
+ 
+   const fetchPermission = async () => {
+     if (!session) return; 
+     const id = session.user.role;
+     const field_name = 'add_vehicle_make';
+     try {
+       const response = await fetch(`/lib/GET/Priveledges/getPrivelegesByIDandFieldName?id=${id}&field_name=${field_name}`);
+       if (!response.ok) {
+         throw new Error('Failed to fetch data');
+       }
+       const result = await response.json();
+       setIsAuthorized(result.product === 1);
+     } catch (error) {
+       console.error('Error fetching data:', error);
+     }
+   };
+ 
+   useEffect(() => {
+     fetchPermission();
+   }, [session]); 
 
     const handleEdit = () => {
         router.push(`PromoCode/edit?id=${id}`);
@@ -74,8 +98,11 @@ export function Actionbutton({ id, status, onDelete, refreshData }: ActionButton
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-fit">
                 <DropdownMenuItem className="hover:cursor-pointer hover:bg-gray-50" onClick={handleEdit}>
-                    Edit
-                </DropdownMenuItem>
+                {isAuthorized && (
+          <div>
+                                 Edit
+          </div>
+      )}                         </DropdownMenuItem>
                 <DropdownMenuItem onClick={handleChangeStatus} className="hover:cursor-pointer hover:bg-gray-50">
                     Set to {otherStatusLabel}
                 </DropdownMenuItem>
