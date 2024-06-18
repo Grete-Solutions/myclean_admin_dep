@@ -4,7 +4,6 @@ export async function POST(req: Request) {
   if (req.method === 'POST') {
     try {
       const newCode = await req.json();
-      console.log(newCode);
       const response = await fetch(`${process.env.URLB}/coupons/createCoupon`, {
         method: 'POST',
         headers: {
@@ -14,7 +13,6 @@ export async function POST(req: Request) {
       });
 
       const data = await response.json();
-      console.log(data)
       return NextResponse.json(data);
     } catch (error:any) {
   console.error('Error:', error);

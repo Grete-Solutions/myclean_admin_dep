@@ -1,4 +1,5 @@
 "use client"
+
 import React, { useState, useEffect } from 'react';
 import {
   Table,
@@ -12,7 +13,7 @@ import {
 import {
   CaretSortIcon,
   ChevronDownIcon,
-} from "@radix-ui/react-icons"
+} from "@radix-ui/react-icons";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -25,7 +26,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -34,10 +34,10 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import VehicleMakeSheet from '@/app/components/Sheetpop/MasterDataPop/VehicleMakeSheet';
 import { Actionbutton } from './Action';
 import { useSession } from 'next-auth/react';
+import Custom404 from '../../Custom404/page';
 
 interface Data {
   id: string;
@@ -54,6 +54,7 @@ interface Data {
 
 export function VehicleMakeDataTable() {
   const [data, setData] = useState<Data[]>([]);
+  const [loading, setLoading] = useState(true);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -83,30 +84,25 @@ export function VehicleMakeDataTable() {
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       ),
-      cell: ({ row }) => (
-        <div>{row.getValue("model")}</div>
-      ),
+      cell: ({ row }) => <div>{row.getValue("model")}</div>,
     },
     {
       accessorKey: "year",
       header: "Year",
-      cell: ({ row }) => (
-        <div>{row.getValue("year")}</div>
-      ),
+      cell: ({ row }) => <div>{row.getValue("year")}</div>,
     },
     {
       accessorKey: "capacity",
       header: "Capacity",
-      cell: ({ row }) => (
-        <div>{row.getValue("capacity")}</div>
-      ),
+      cell: ({ row }) => <div>{row.getValue("capacity")}</div>,
     },
     {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => (
-        <div className={`${row.getValue("status") === 1 ? 'text-green-500' : 'text-red-500 file'} font-semibold`}>
-          {row.getValue("status") === 1 ? 'Active' : 'Inactive'}</div>
+        <div className={`${row.getValue("status") === 1 ? 'text-green-500' : 'text-red-500'} font-semibold`}>
+          {row.getValue("status") === 1 ? 'Active' : 'Inactive'}
+        </div>
       ),
     },
     {
@@ -121,6 +117,7 @@ export function VehicleMakeDataTable() {
   ];
 
   const getVehicle = async () => {
+    setLoading(true);
     try {
       const response = await fetch('/lib/GET/VehicleMake/getallVehicle');
       if (!response.ok) {
@@ -131,11 +128,13 @@ export function VehicleMakeDataTable() {
     } catch (error) {
       console.error('Error fetching data:', error);
       // Handle error, e.g., set a default state or show an error message
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchPermission = async () => {
-    if (!session) return; 
+    if (!session) return;
     const id = session.user.role;
     const field_name = 'manage_vehicle_make';
     try {
@@ -144,7 +143,7 @@ export function VehicleMakeDataTable() {
         throw new Error('Failed to fetch data');
       }
       const result = await response.json();
-      setIsAuthorized(session?.user.role === 'Super Admin'|| result.product === 1 );
+      setIsAuthorized(session?.user.role === 'Super Admin' || result.product === 1);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -152,10 +151,12 @@ export function VehicleMakeDataTable() {
 
   useEffect(() => {
     fetchPermission();
-  }, [session]); 
+  }, [session]);
 
   useEffect(() => {
-    getVehicle();
+    if (isAuthorized) {
+      getVehicle();
+    }
   }, [isAuthorized]); // Trigger getVehicle when authorization changes
 
   const handleAddSuccess = () => {
@@ -183,9 +184,7 @@ export function VehicleMakeDataTable() {
 
   return (
     <div>
-      {!isAuthorized ? (
-        <p>You cannot view this page since you are not authorized.</p>
-      ) : (
+      {isAuthorized ? (
         <div>
           <VehicleMakeSheet onAddSuccess={handleAddSuccess} />
           <div className="w-full">
@@ -220,59 +219,68 @@ export function VehicleMakeDataTable() {
                         >
                           {column.id}
                         </DropdownMenuCheckboxItem>
-                      )
+                      );
                     })}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <div className="rounded-md border">
-              <Table>
-                <TableCaption>A list of your privileges.</TableCaption>
-                <TableHeader>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id}>
-                      {headerGroup.headers.map((header) => {
-                        return (
-                          <TableHead key={header.id}>
-                            {header.isPlaceholder
-                              ? null
-                              : flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext()
-                                )}
-                          </TableHead>
-                        )
-                      })}
-                    </TableRow>
-                  ))}
-                </TableHeader>
-                <TableBody>
-                  {table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map((row) => (
-                      <TableRow
-                        key={row.id}
-                        data-state={row.getIsSelected() && "selected"}
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <TableCell key={cell.id}>
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </TableCell>
-                        ))}
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <svg className="animate-spin h-8 w-8 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+              </div>
+            ) : (
+              <div className="rounded-md border">
+                <Table>
+                  <TableCaption>A list of your privileges.</TableCaption>
+                  <TableHeader>
+                    {table.getHeaderGroups().map((headerGroup) => (
+                      <TableRow key={headerGroup.id}>
+                        {headerGroup.headers.map((header) => {
+                          return (
+                            <TableHead key={header.id}>
+                              {header.isPlaceholder
+                                ? null
+                                : flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext()
+                                  )}
+                            </TableHead>
+                          );
+                        })}
                       </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={columns.length} className="h-24 text-center">
-                        No results.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
+                    ))}
+                  </TableHeader>
+                  <TableBody>
+                    {table.getRowModel().rows?.length ? (
+                      table.getRowModel().rows.map((row) => (
+                        <TableRow
+                          key={row.id}
+                          data-state={row.getIsSelected() && "selected"}
+                        >
+                          {row.getVisibleCells().map((cell) => (
+                            <TableCell key={cell.id}>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              )}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={columns.length} className="h-24 text-center">
+                          No results.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
             <div className="flex items-center justify-end space-x-2 py-4">
               <div className="flex-1 text-sm text-muted-foreground">
                 {table.getFilteredSelectedRowModel().rows.length} of{" "}
@@ -299,6 +307,8 @@ export function VehicleMakeDataTable() {
             </div>
           </div>
         </div>
+      ) : (
+        <Custom404 />
       )}
     </div>
   );

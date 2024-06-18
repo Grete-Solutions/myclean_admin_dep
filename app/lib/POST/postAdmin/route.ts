@@ -15,7 +15,6 @@ export async function POST(req: Request) {
         phone,
         city
       } = await req.json();
-      console.log(password);
       const response = await fetch(`${process.env.URLB}/admin/register`, {
         method: 'POST',
         headers: {
@@ -34,7 +33,6 @@ export async function POST(req: Request) {
       });
 
       const data = await response.json();
-      console.log(data)
       return NextResponse.json(data);
     } catch (error:any) {
   console.error('Error:', error);

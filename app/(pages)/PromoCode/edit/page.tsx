@@ -69,7 +69,6 @@ const EditPageContent = () => {
         }
 
         const data = await response.json();
-        console.log(data);
         setPromoData(data.product);
         setUserType(data.product.user_type.toString());
         setCouponType(data.product.coupon_type.toString());
@@ -122,7 +121,6 @@ const EditPageContent = () => {
       expired_at: expiredAt.toISOString(),
     };
 
-    console.log('Request Body:', requestBody); // Log the request body for debugging
 
     try {
       const response = await fetch(`/lib/PUT/PromoCode/updateByCouponID?id=${id}`, {

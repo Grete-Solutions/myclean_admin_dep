@@ -4,7 +4,6 @@ export async function POST(req: Request) {
   if (req.method === 'POST') {
     try {
       const {countryISOCode,city,price} = await req.json();
-      console.log('Received new location:', {countryISOCode,city,price});
 
       const response = await fetch(`${process.env.URLB}/setPrice/createCity`, {
         method: 'POST',
@@ -15,7 +14,6 @@ export async function POST(req: Request) {
       });
 
       const data = await response.json();
-      console.log('Response from backend:', data);
 
       if (!response.ok) {
         throw new Error(`Backend error: ${data.message || 'Unknown error'}`);
@@ -24,7 +22,6 @@ export async function POST(req: Request) {
       return NextResponse.json(data);
     } catch (error:any) {
       console.error('Error:', error);
-      // Log additional error details
       if (error.response) {
         console.error('Response status:', error.response.status);
         console.error('Response data:', error.response.data);

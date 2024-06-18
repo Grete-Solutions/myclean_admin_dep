@@ -10,7 +10,6 @@ export async function PUT(req: Request) {
       return NextResponse.json({ message: 'ID parameter is missing' }, { status: 400 });
     }
 
-    console.log(`Received request to update promo code data for ID ${id}`);
 
     const response = await fetch(`${process.env.URLB}/coupons/updateCoupon/${id}`, {
       method: 'PUT',
@@ -35,7 +34,6 @@ export async function PUT(req: Request) {
       return NextResponse.json({ message: 'Failed to parse response JSON' }, { status: 500 });
     }
 
-    console.log(`Successfully updated promo code data for ID ${id}`);
     return NextResponse.json({ product: updatedProduct });
   } catch (error: any) {
     console.error('Error updating data:', error);

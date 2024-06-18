@@ -39,6 +39,7 @@ import {
 } from "@/components/ui/table";
 import { CountryDataType, Countrydata as data } from "./countryConstants";
 import { useSession } from 'next-auth/react';
+import Custom404 from "../(pages)/Custom404/page";
 
 function generateAscendingSno(data: string) {
   return Array.from({ length: data.length }, (_, index) => index + 1);
@@ -171,10 +172,8 @@ export function CountryDataTable() {
 
   return (
     <div className="w-full">
-      {!isAuthorized ? (
-        <p>You cannot view this page since you are not authorized.</p>
-      ) : (
-        <div>
+      {isAuthorized ? (
+              <div>
           <div className="flex items-center py-4">
             <Input
               placeholder="Filter Names..."
@@ -282,7 +281,9 @@ export function CountryDataTable() {
               </Button>
             </div>
           </div>
-        </div>
+        </div> 
+      ) : (
+        <Custom404/>
       )}
     </div>
   );

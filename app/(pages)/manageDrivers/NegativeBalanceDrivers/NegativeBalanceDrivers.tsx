@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/table"
 import ApprovedDriversSheet from "../../../components/Sheetpop/ManageDRIVERS/ApprovedDriverSheet"
 import { useSession } from 'next-auth/react'
+import Custom404 from "../../Custom404/page"
 
 type ApprovedData = {
   firstName: string;
@@ -196,7 +197,7 @@ export function NegativeBalanceDriversDataTable() {
   return (
     <div>
       {!isAuthorized ? (
-        <p>You cannot view this page since you are not authorized.</p>
+        <Custom404/>
       ) : (
         <div>
           <div className="w-full">

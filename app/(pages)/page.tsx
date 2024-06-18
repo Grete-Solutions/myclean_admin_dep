@@ -8,17 +8,6 @@ export default function Page() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  useEffect(() => {
-    console.log('Session status:', status);
-    console.log('Session data:', session);
-    
-
-
-    // if (!session?.user ) {
-    //   router.replace('/login');
-    // }
-  }, [status, session, router]);
-
   if (status === 'loading') {
     return <div>Loading...</div>;
   }

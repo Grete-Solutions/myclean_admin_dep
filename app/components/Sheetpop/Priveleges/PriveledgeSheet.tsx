@@ -81,7 +81,6 @@ const {toast}= useToast()
       
 
       const data = await response.json();
-      console.log('Data received:', data);
       onAddSuccess();
       alert('Privilege added successfully!');
     } catch (error) {

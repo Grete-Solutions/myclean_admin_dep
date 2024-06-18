@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import NotificationSheet from '@/app/components/Sheetpop/Notification/Notification';
 import { useSession } from 'next-auth/react';
+import Custom404 from '../Custom404/page';
 
 interface Data {
   registrationToken: string;
@@ -136,10 +137,8 @@ export function NotificationDataTable() {
 
   return (
     <div>
-      {!isAuthorized ? (
-        <p>You cannot view this page since you are not authorized.</p>
-      ) : (
-        <div>
+      {isAuthorized ? (
+             <div>
           <NotificationSheet onAddSuccess={handleAddSuccess} />
           <div className="w-full">
             <div className="flex items-center py-4">
@@ -228,7 +227,9 @@ export function NotificationDataTable() {
               </div>
             </div>
           </div>
-        </div>
+        </div>   
+      ) : (
+<Custom404/>
       )}
     </div>
   );

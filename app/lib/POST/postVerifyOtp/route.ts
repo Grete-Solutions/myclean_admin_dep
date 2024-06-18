@@ -4,7 +4,6 @@ export async function POST(req: Request) {
   if (req.method === 'POST') {
     try {
       const {email,otp} = await req.json();
-      console.log('Received new location:', {email,otp});
 
       const response = await fetch(`${process.env.URLB}/admin/verifyOTP`, {
         method: 'POST',

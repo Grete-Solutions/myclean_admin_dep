@@ -122,7 +122,6 @@ function AddAdminSheet (){
       }
 
       const responseData = await response.json();
-      console.log('Data received:', responseData);
     } catch (error) {
       console.error('Error:', error);
     }

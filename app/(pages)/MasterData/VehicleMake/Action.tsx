@@ -91,11 +91,9 @@ export function Actionbutton({ id, status, onDelete, refreshData }: ActionButton
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            console.log(`Successfully changed status for ID ${id}`);
             toast({ title: "Success", description: "Status changed successfully" });
             refreshData(); 
         } catch (error) {
-            console.error('Failed to change status:', error);
             toast({ title: "Error", description: "Failed to change status" });
         }
     };
@@ -115,7 +113,6 @@ export function Actionbutton({ id, status, onDelete, refreshData }: ActionButton
                 throw new Error('Network response was not ok');
             }
 
-            console.log(`Successfully deleted item with ID ${id}`);
             toast({ title: "Success", description: "Item deleted successfully" });
             refreshData(); 
         } catch (error) {

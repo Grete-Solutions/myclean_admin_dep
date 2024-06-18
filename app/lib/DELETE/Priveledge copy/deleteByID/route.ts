@@ -8,7 +8,6 @@ export async function DELETE(request: Request) {
             return new Response('ID parameter is missing', { status: 400 });
         }
 
-        console.log(`Received request to delete item with ID ${id}`);
 
         // Toggle the onDelete status
         const newOnDelete = onDelete === 0 ? 1 : 0;
@@ -27,7 +26,6 @@ export async function DELETE(request: Request) {
             return new Response('Failed to delete data', { status: res.status });
         }
 
-        console.log(`Successfully deleted item with ID ${id}`);
         return new Response('Item deleted successfully', {
             status: 200,
             headers: {

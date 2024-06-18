@@ -8,7 +8,6 @@ export async function PATCH(request: Request) {
           return new Response('ID parameter is missing', { status: 400 });
       }
 
-      console.log(`Received request to update status for ID ${id} to ${status}`);
 
       const res = await fetch(`${process.env.URLB}/vehicleMake/updateStatus/${id}`, {
         method: 'PATCH',
@@ -35,7 +34,6 @@ export async function PATCH(request: Request) {
         }
 
 
-      console.log(`Successfully updated status for ID ${id} to ${status}`);
       return new Response(JSON.stringify({ product: updatedProduct }), {
           status: 200,
           headers: {

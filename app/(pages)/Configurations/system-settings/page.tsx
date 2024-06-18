@@ -1,37 +1,51 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Tabs as BaseTabs,
-  TabsContent as BaseTabsContent,
-  TabsList as BaseTabsList,
-  TabsTrigger as BaseTabsTrigger,
-} from '@/components/ui/tabs';
+import { Tabs as BaseTabs, TabsContent as BaseTabsContent, TabsList as BaseTabsList, TabsTrigger as BaseTabsTrigger } from '@/components/ui/tabs';
+import { useToast } from '@/components/ui/use-toast';
+import { title } from 'process';
 
 type Props = {};
-//USE FOCUS TO SEND TO API FROM TEXT TO TEXTBOX
 
 type Settings = {
-  [key: string]: string;
+  driverWalletMinAmount?: string;
+  userWalletMinAmount?: string;
+  driverSearchRadius?: string;
+  userScheduleRideMinutes?: string;
+  minTimeForScheduledRides?: string;
+  maxTimeForRegularRides?: string;
+  driverAcceptRejectDuration?: string;
+  driverEnableRouteBooking?: string;
+  navbarColor?: string;
+  sideBarColor?: string;
+  sideBarTextColor?: string;
+  appName?: string;
+  currencyCode?: string;
+  currencySymbol?: string;
+  defaultCountryCode?: string;
+  contactUsMobile?: string;
+  contactUsLink?: string;
+  showWalletFeature?: string;
+  userReferralCommission?: string;
+  driverReferralCommission?: string;
+  googleMapKeyWeb?: string;
+  googleMapKeyDistance?: string;
+  googleSheetId?: string;
+  defaultLatitude?: string;
+  defaultLongitude?: string;
+  enableVASEMap?: string;
 };
 
 export default function Tabs({}: Props) {
-  const [walletSettings, setWalletSettings] = useState({
+  const [walletSettings, setWalletSettings] = useState<Settings>({
     driverWalletMinAmount: '',
     userWalletMinAmount: '',
   });
 
-  const [tripSettings, setTripSettings] = useState({
+  const [tripSettings, setTripSettings] = useState<Settings>({
     driverSearchRadius: '',
     userScheduleRideMinutes: '',
     minTimeForScheduledRides: '',
@@ -40,7 +54,7 @@ export default function Tabs({}: Props) {
     driverEnableRouteBooking: '',
   });
 
-  const [appSettings, setAppSettings] = useState({
+  const [appSettings, setAppSettings] = useState<Settings>({
     navbarColor: '',
     sideBarColor: '',
     sideBarTextColor: '',
@@ -53,12 +67,12 @@ export default function Tabs({}: Props) {
     showWalletFeature: '',
   });
 
-  const [referralSettings, setReferralSettings] = useState({
+  const [referralSettings, setReferralSettings] = useState<Settings>({
     userReferralCommission: '',
     driverReferralCommission: '',
   });
 
-  const [mapSettings, setMapSettings] = useState({
+  const [mapSettings, setMapSettings] = useState<Settings>({
     googleMapKeyWeb: '',
     googleMapKeyDistance: '',
     googleSheetId: '',
@@ -67,34 +81,59 @@ export default function Tabs({}: Props) {
     enableVASEMap: '',
   });
 
-  const prepareSettingsData = (settings: Settings, type: string) => {
-    return Object.keys(settings).map(key => ({
-      settingName: key,
-      settingValue: settings[key],
-      settingType: type,
-    }));
-  };
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const {toast}= useToast()
+  const handleSave = async (settingName: string, settingValue: number, settingType: string) => {
+    const settingData = {
+      settingName,
+      settingValue,
+      settingType,
+    };
 
-  const handleSubmit = async (settings: Settings, apiRoute: string, type: string) => {
-    const settingsData = prepareSettingsData(settings, type);
     try {
-      const response = await fetch(apiRoute, {
+      const response = await fetch('/lib/POST/postsystemsettings', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(settingsData),
+        body: JSON.stringify(settingData),
       });
 
       if (!response.ok) {
         throw new Error('Failed to save changes');
       }
-
-      alert('Changes saved successfully');
-    } catch (error) {
+        toast({title:'Success', description:'Sucessfully saved changes'});
+          } catch (error) {
       console.error('Error saving changes:', error);
       alert('Error saving changes');
     }
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    settings: Settings,
+    setSettings: React.Dispatch<React.SetStateAction<Settings>>,
+  ) => {
+    const { id, value } = e.target;
+    const numericValue = Number(value);
+
+    if (isNaN(numericValue)) {
+      alert('Please enter a valid number');
+      return;
+    }
+
+    setSettings(prevSettings => ({
+      ...prevSettings,
+      [id]: numericValue.toString(), // Store as string for controlled input component
+    }));
+
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    debounceTimeout.current = setTimeout(() => {
+      handleSave(id, numericValue, 'number');
+    }, 500);
   };
 
   return (
@@ -123,7 +162,7 @@ export default function Tabs({}: Props) {
                 id="driverWalletMinAmount"
                 placeholder="1"
                 value={walletSettings.driverWalletMinAmount}
-                onChange={(e) => setWalletSettings({ ...walletSettings, driverWalletMinAmount: e.target.value })}
+                onChange={(e) => handleInputChange(e, walletSettings, setWalletSettings)}
               />
             </div>
             <div className="space-y-1">
@@ -132,13 +171,10 @@ export default function Tabs({}: Props) {
                 id="userWalletMinAmount"
                 placeholder="1"
                 value={walletSettings.userWalletMinAmount}
-                onChange={(e) => setWalletSettings({ ...walletSettings, userWalletMinAmount: e.target.value })}
+                onChange={(e) => handleInputChange(e, walletSettings, setWalletSettings)}
               />
             </div>
           </CardContent>
-          <CardFooter>
-            <Button onClick={() => handleSubmit(walletSettings, '/api/walletSettings', 'walletSettings')}>Save changes</Button>
-          </CardFooter>
         </Card>
       </BaseTabsContent>
 
@@ -158,7 +194,7 @@ export default function Tabs({}: Props) {
                 id="driverSearchRadius"
                 placeholder="0"
                 value={tripSettings.driverSearchRadius}
-                onChange={(e) => setTripSettings({ ...tripSettings, driverSearchRadius: e.target.value })}
+                onChange={(e) => handleInputChange(e, tripSettings, setTripSettings)}
               />
             </div>
             <div className="space-y-1">
@@ -167,7 +203,7 @@ export default function Tabs({}: Props) {
                 id="userScheduleRideMinutes"
                 placeholder="1"
                 value={tripSettings.userScheduleRideMinutes}
-                onChange={(e) => setTripSettings({ ...tripSettings, userScheduleRideMinutes: e.target.value })}
+                onChange={(e) => handleInputChange(e, tripSettings, setTripSettings)}
               />
             </div>
             <div className="space-y-1">
@@ -176,7 +212,7 @@ export default function Tabs({}: Props) {
                 id="minTimeForScheduledRides"
                 placeholder="1"
                 value={tripSettings.minTimeForScheduledRides}
-                onChange={(e) => setTripSettings({ ...tripSettings, minTimeForScheduledRides: e.target.value })}
+                onChange={(e) => handleInputChange(e, tripSettings, setTripSettings)}
               />
             </div>
             <div className="space-y-1">
@@ -185,31 +221,28 @@ export default function Tabs({}: Props) {
                 id="maxTimeForRegularRides"
                 placeholder="1"
                 value={tripSettings.maxTimeForRegularRides}
-                onChange={(e) => setTripSettings({ ...tripSettings, maxTimeForRegularRides: e.target.value })}
+                onChange={(e) => handleInputChange(e, tripSettings, setTripSettings)}
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="driverAcceptRejectDuration">Trip Accept/Reject Duration For Driver in Seconds</Label>
+              <Label htmlFor="driverAcceptRejectDuration">Trip Accept/Reject Duration For Driver in seconds</Label>
               <Input
                 id="driverAcceptRejectDuration"
                 placeholder="1"
                 value={tripSettings.driverAcceptRejectDuration}
-                onChange={(e) => setTripSettings({ ...tripSettings, driverAcceptRejectDuration: e.target.value })}
+                onChange={(e) => handleInputChange(e, tripSettings, setTripSettings)}
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="driverEnableRouteBooking">How Many Times A Driver Can Enable My Route Booking Per Day</Label>
+              <Label htmlFor="driverEnableRouteBooking">Driver Enable Route Booking</Label>
               <Input
                 id="driverEnableRouteBooking"
                 placeholder="1"
                 value={tripSettings.driverEnableRouteBooking}
-                onChange={(e) => setTripSettings({ ...tripSettings, driverEnableRouteBooking: e.target.value })}
+                onChange={(e) => handleInputChange(e, tripSettings, setTripSettings)}
               />
             </div>
           </CardContent>
-          <CardFooter>
-            <Button onClick={() => handleSubmit(tripSettings, '/api/tripSettings', 'tripSettings')}>Save changes</Button>
-          </CardFooter>
         </Card>
       </BaseTabsContent>
 
@@ -219,104 +252,101 @@ export default function Tabs({}: Props) {
           <CardHeader>
             <CardTitle>App Settings</CardTitle>
             <CardDescription>
-              Make changes to your app here. Click save when you*&re done.
+              Make changes to your app here. Click save when you&apos;re done.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="space-y-1">
-              <Label htmlFor="navbarColor">Navbar Color</Label>
+              <Label htmlFor="navbarColor">NavBar Color</Label>
               <Input
                 id="navbarColor"
-                placeholder="0"
+                placeholder="#f7f7f7"
                 value={appSettings.navbarColor}
-                onChange={(e) => setAppSettings({ ...appSettings, navbarColor: e.target.value })}
+                onChange={(e) => handleInputChange(e, appSettings, setAppSettings)}
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="sideBarColor">Side Bar Color</Label>
+              <Label htmlFor="sideBarColor">SideBar Color</Label>
               <Input
                 id="sideBarColor"
-                placeholder="1"
+                placeholder="#f7f7f7"
                 value={appSettings.sideBarColor}
-                onChange={(e) => setAppSettings({ ...appSettings, sideBarColor: e.target.value })}
+                onChange={(e) => handleInputChange(e, appSettings, setAppSettings)}
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="sideBarTextColor">Side Bar Text Color</Label>
+              <Label htmlFor="sideBarTextColor">SideBar Text Color</Label>
               <Input
                 id="sideBarTextColor"
-                placeholder="1"
+                placeholder="#f7f7f7"
                 value={appSettings.sideBarTextColor}
-                onChange={(e) => setAppSettings({ ...appSettings, sideBarTextColor: e.target.value })}
+                onChange={(e) => handleInputChange(e, appSettings, setAppSettings)}
               />
             </div>
             <div className="space-y-1">
               <Label htmlFor="appName">App Name</Label>
               <Input
                 id="appName"
-                placeholder="1"
+                placeholder="App Name"
                 value={appSettings.appName}
-                onChange={(e) => setAppSettings({ ...appSettings, appName: e.target.value })}
+                onChange={(e) => handleInputChange(e, appSettings, setAppSettings)}
               />
             </div>
             <div className="space-y-1">
               <Label htmlFor="currencyCode">Currency Code</Label>
               <Input
                 id="currencyCode"
-                placeholder="1"
+                placeholder="USD"
                 value={appSettings.currencyCode}
-                onChange={(e) => setAppSettings({ ...appSettings, currencyCode: e.target.value })}
+                onChange={(e) => handleInputChange(e, appSettings, setAppSettings)}
               />
             </div>
             <div className="space-y-1">
               <Label htmlFor="currencySymbol">Currency Symbol</Label>
               <Input
                 id="currencySymbol"
-                placeholder="1"
+                placeholder="$"
                 value={appSettings.currencySymbol}
-                onChange={(e) => setAppSettings({ ...appSettings, currencySymbol: e.target.value })}
+                onChange={(e) => handleInputChange(e, appSettings, setAppSettings)}
               />
             </div>
             <div className="space-y-1">
               <Label htmlFor="defaultCountryCode">Default Country Code</Label>
               <Input
                 id="defaultCountryCode"
-                placeholder="1"
+                placeholder="US"
                 value={appSettings.defaultCountryCode}
-                onChange={(e) => setAppSettings({ ...appSettings, defaultCountryCode: e.target.value })}
+                onChange={(e) => handleInputChange(e, appSettings, setAppSettings)}
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="contactUsMobile">Contact Us Mobile</Label>
+              <Label htmlFor="contactUsMobile">Contact Us Mobile Number</Label>
               <Input
                 id="contactUsMobile"
-                placeholder="1"
+                placeholder="123456789"
                 value={appSettings.contactUsMobile}
-                onChange={(e) => setAppSettings({ ...appSettings, contactUsMobile: e.target.value })}
+                onChange={(e) => handleInputChange(e, appSettings, setAppSettings)}
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="contactUsLink">Contact Us Link</Label>
+              <Label htmlFor="contactUsLink">Contact Us Page Link</Label>
               <Input
                 id="contactUsLink"
-                placeholder="1"
+                placeholder="http://contact.us"
                 value={appSettings.contactUsLink}
-                onChange={(e) => setAppSettings({ ...appSettings, contactUsLink: e.target.value })}
+                onChange={(e) => handleInputChange(e, appSettings, setAppSettings)}
               />
             </div>
             <div className="space-y-1">
               <Label htmlFor="showWalletFeature">Show Wallet Feature</Label>
               <Input
                 id="showWalletFeature"
-                placeholder="1"
+                placeholder="yes"
                 value={appSettings.showWalletFeature}
-                onChange={(e) => setAppSettings({ ...appSettings, showWalletFeature: e.target.value })}
+                onChange={(e) => handleInputChange(e, appSettings, setAppSettings)}
               />
             </div>
           </CardContent>
-          <CardFooter>
-            <Button onClick={() => handleSubmit(appSettings, '/api/appSettings', 'appSettings')}>Save changes</Button>
-          </CardFooter>
         </Card>
       </BaseTabsContent>
 
@@ -326,32 +356,29 @@ export default function Tabs({}: Props) {
           <CardHeader>
             <CardTitle>Referral Settings</CardTitle>
             <CardDescription>
-              Make changes to your Referral here. Click save when you&apos;re done.
+              Make changes to your referral here. Click save when you&apos;re done.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="space-y-1">
-              <Label htmlFor="userReferralCommission">User Referral Commission</Label>
+              <Label htmlFor="userReferralCommission">User Referral Commission (in percentage)</Label>
               <Input
                 id="userReferralCommission"
-                placeholder="0"
+                placeholder="1"
                 value={referralSettings.userReferralCommission}
-                onChange={(e) => setReferralSettings({ ...referralSettings, userReferralCommission: e.target.value })}
+                onChange={(e) => handleInputChange(e, referralSettings, setReferralSettings)}
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="driverReferralCommission">Driver Referral Commission</Label>
+              <Label htmlFor="driverReferralCommission">Driver Referral Commission (in percentage)</Label>
               <Input
                 id="driverReferralCommission"
                 placeholder="1"
                 value={referralSettings.driverReferralCommission}
-                onChange={(e) => setReferralSettings({ ...referralSettings, driverReferralCommission: e.target.value })}
+                onChange={(e) => handleInputChange(e, referralSettings, setReferralSettings)}
               />
             </div>
           </CardContent>
-          <CardFooter>
-            <Button onClick={() => handleSubmit(referralSettings, '/api/referralSettings', 'referralSettings')}>Save changes</Button>
-          </CardFooter>
         </Card>
       </BaseTabsContent>
 
@@ -361,68 +388,65 @@ export default function Tabs({}: Props) {
           <CardHeader>
             <CardTitle>Map Settings</CardTitle>
             <CardDescription>
-              Make changes to your Map here. Click save when you&apos;re done.
+              Make changes to your map here. Click save when you&apos;re done.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             <div className="space-y-1">
-              <Label htmlFor="googleMapKeyWeb">Google Map Key For Web</Label>
+              <Label htmlFor="googleMapKeyWeb">Google Map Key (web)</Label>
               <Input
                 id="googleMapKeyWeb"
-                placeholder="0"
+                placeholder="key"
                 value={mapSettings.googleMapKeyWeb}
-                onChange={(e) => setMapSettings({ ...mapSettings, googleMapKeyWeb: e.target.value })}
+                onChange={(e) => handleInputChange(e, mapSettings, setMapSettings)}
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="googleMapKeyDistance">Google Map Key For Distance Matrix API</Label>
+              <Label htmlFor="googleMapKeyDistance">Google Map Key (distance)</Label>
               <Input
                 id="googleMapKeyDistance"
-                placeholder="1"
+                placeholder="key"
                 value={mapSettings.googleMapKeyDistance}
-                onChange={(e) => setMapSettings({ ...mapSettings, googleMapKeyDistance: e.target.value })}
+                onChange={(e) => handleInputChange(e, mapSettings, setMapSettings)}
               />
             </div>
             <div className="space-y-1">
               <Label htmlFor="googleSheetId">Google Sheet ID</Label>
               <Input
                 id="googleSheetId"
-                placeholder="1"
+                placeholder="id"
                 value={mapSettings.googleSheetId}
-                onChange={(e) => setMapSettings({ ...mapSettings, googleSheetId: e.target.value })}
+                onChange={(e) => handleInputChange(e, mapSettings, setMapSettings)}
               />
             </div>
             <div className="space-y-1">
               <Label htmlFor="defaultLatitude">Default Latitude</Label>
               <Input
                 id="defaultLatitude"
-                placeholder="1"
+                placeholder="0.0"
                 value={mapSettings.defaultLatitude}
-                onChange={(e) => setMapSettings({ ...mapSettings, defaultLatitude: e.target.value })}
+                onChange={(e) => handleInputChange(e, mapSettings, setMapSettings)}
               />
             </div>
             <div className="space-y-1">
               <Label htmlFor="defaultLongitude">Default Longitude</Label>
               <Input
                 id="defaultLongitude"
-                placeholder="1"
+                placeholder="0.0"
                 value={mapSettings.defaultLongitude}
-                onChange={(e) => setMapSettings({ ...mapSettings, defaultLongitude: e.target.value })}
+                onChange={(e) => handleInputChange(e, mapSettings, setMapSettings)}
               />
             </div>
             <div className="space-y-1">
               <Label htmlFor="enableVASEMap">Enable VASE Map</Label>
               <Input
                 id="enableVASEMap"
-                placeholder="1"
+                placeholder="yes"
                 value={mapSettings.enableVASEMap}
-                onChange={(e) => setMapSettings({ ...mapSettings, enableVASEMap: e.target.value })}
+                onChange={(e) => handleInputChange(e, mapSettings, setMapSettings)}
               />
             </div>
           </CardContent>
-          <CardFooter>
-            <Button onClick={() => handleSubmit(mapSettings, '/api/mapSettings', 'mapSettings')}>Save changes</Button>
-          </CardFooter>
         </Card>
       </BaseTabsContent>
     </BaseTabs>

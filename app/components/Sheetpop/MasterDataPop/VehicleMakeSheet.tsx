@@ -77,7 +77,6 @@ function VehicleMakeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
       }
   
       const data = await response.json();
-      console.log('Data received:', data);
       onAddSuccess();
       alert('Vehicle added successfully!');
     } catch (error) {

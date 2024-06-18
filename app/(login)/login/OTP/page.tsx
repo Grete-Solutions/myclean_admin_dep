@@ -33,7 +33,6 @@ const OtpPage = () => {
       }
       router.push('/')
       const data = await response.json();
-      console.log('Data received:', data);
     } catch (error) {
       console.error('Error:', error);
     }

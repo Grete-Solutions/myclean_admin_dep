@@ -11,7 +11,6 @@ export async function PUT(req: Request) {
         return NextResponse.json({ message: 'ID parameter is missing' }, { status: 400 });
       }
 
-      console.log(`Received request to update vehicle data for ID ${id}`);
 
       const response = await fetch(`${process.env.URLB}/vehicleMake/setVehicleById/${id}`, {
         method: 'PUT',
@@ -28,7 +27,6 @@ export async function PUT(req: Request) {
       }
 
       const updatedProduct = await response.json();
-      console.log(`Successfully updated vehicle data for ID ${id}`);
       return NextResponse.json({ product: updatedProduct });
     } catch (error) {
       console.error('Error updating data:', error);

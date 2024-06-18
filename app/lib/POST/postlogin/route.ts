@@ -11,7 +11,6 @@ export async function POST(req: Request) {
         },
         body: JSON.stringify({email,password}),
       });
-console.log(`email: ${email} and password: ${password}`);
       const data = await response.json();
       return NextResponse.json(data);
     } catch (error:any) {

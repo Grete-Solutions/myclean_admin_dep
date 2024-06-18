@@ -14,7 +14,6 @@ export async function PATCH(request: Request) {
         return new Response('Invalid value value. Must be either 0 or 1', { status: 400 });
       }
   
-      console.log(`Received request to update ${privilege} for ID ${id} to ${value}`);
   
       console.log(`Sending request to ${process.env.URLB}/privileges/updateOnePriv/${id}`);
       
@@ -26,17 +25,14 @@ export async function PATCH(request: Request) {
         body: JSON.stringify({ privilege, value,id}),
       });
   
-      console.log(`Request sent. Awaiting response...`);
       
       const responseBody = await res.json();
-      console.log(`Response received: ${JSON.stringify(responseBody)}`);
   
       if (!res.ok) {
         console.error(`Failed to update data with status ${res.status}: ${JSON.stringify(responseBody)}`);
         return new Response(`Failed to update data: ${JSON.stringify(responseBody)}`, { status: res.status });
       }
   
-      console.log(`Result: ${JSON.stringify(responseBody)}`);
       return new Response(JSON.stringify(responseBody), {
         status: 200,
         headers: {

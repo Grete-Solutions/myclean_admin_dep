@@ -79,7 +79,6 @@ function ServiceLocation({ onAddSuccess }: { onAddSuccess: () => void }) {
       }
 
       const data = await response.json();
-      console.log('Data received:', data);
       onAddSuccess();
       alert('Service location added successfully!');
     } catch (error) {

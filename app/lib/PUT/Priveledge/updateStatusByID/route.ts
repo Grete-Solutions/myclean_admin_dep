@@ -8,7 +8,6 @@ export async function PATCH(request: Request) {
         return new Response('ID parameter is missing', { status: 400 });
     }
 
-    console.log(`Received request to update status for ID ${id} to ${status}`);
 
     const res = await fetch(`${process.env.URLB}/privileges/updateStatus/${id}`, {
         method: 'PATCH',
@@ -19,7 +18,6 @@ export async function PATCH(request: Request) {
     });
 
     const text = await res.text();
-    console.log(text);
 
     if (!res.ok) {
         console.error(`Failed to update data with status ${res.status}: ${text}`);
@@ -34,7 +32,6 @@ export async function PATCH(request: Request) {
         return new Response('Failed to parse response JSON', { status: 500 });
     }
 
-    console.log(`Result: ${status}`);
     return new Response(JSON.stringify({ product: updatedProduct }), {
         status: 200,
         headers: {

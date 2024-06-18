@@ -4,7 +4,6 @@ export async function POST(req: Request) {
   if (req.method === 'POST') {
     try {
       const newVehicle = await req.json();
-      console.log(newVehicle);
       const response = await fetch(`${process.env.URLB}/vehicleMake/createVehicle`, {
         method: 'POST',
         headers: {
@@ -17,7 +16,6 @@ export async function POST(req: Request) {
       return NextResponse.json(data);
     } catch (error:any) {
   console.error('Error:', error);
-  // Log additional error details
   if (error.response) {
     console.error('Response status:', error.response.status);
     console.error('Response data:', error.response.data);

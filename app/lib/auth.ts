@@ -1,8 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from 'bcrypt'
-// Log the NEXTAUTH_URL environment variable
-console.log('NEXTAUTH_URL:', process.env.NEXTAUTH_URL);
+
 
 const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET, 
@@ -59,7 +58,6 @@ const authOptions: NextAuthOptions = {
         token.role = user.role;
         token.displayName = user.displayName;
       }
-      console.log('this is the token', token);
       return token;
     },
     async session({ session, token }) {
@@ -71,7 +69,6 @@ const authOptions: NextAuthOptions = {
         role: token.role as string,
         displayName: token.displayName as string,
       };
-      console.log('this is the session', session);
       return session;
     }
   },
