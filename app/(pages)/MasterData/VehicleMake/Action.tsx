@@ -61,7 +61,7 @@ export function Actionbutton({ id, status, onDelete, refreshData }: ActionButton
             throw new Error('Failed to fetch data');
           }
           const result = await response.json();
-          setIsdeleteAuthorized(session?.user.role === 'Super Admin'|| result.product === 1 );
+          setIsToggleAuthorized(session?.user.role === 'Super Admin'|| result.product === 1 );
         } catch (error) {
           console.error('Error fetching data:', error);
         }

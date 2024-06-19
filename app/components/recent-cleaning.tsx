@@ -40,9 +40,9 @@ import {
 } from "@/components/ui/table";
 
 interface Payment {
-  userFullName: string;
+  userId: string;
   driverId: string;
-  actualAmount: number;
+  netPrice: number;
 }
 
 interface User {
@@ -57,7 +57,6 @@ interface Driver {
   firstname: string;
 }
 
-// Update columns definition to combine first and last names
 export const columns: ColumnDef<(Payment & { userFullName: string; driverFullName: string; })>[] = [
   {
     id: "select",
@@ -83,20 +82,20 @@ export const columns: ColumnDef<(Payment & { userFullName: string; driverFullNam
   },
   {
     accessorKey: "userFullName",
-    header: "User Name",
+    header: "User",
   },
   {
     accessorKey: "driverFullName",
-    header: "Driver Name",
+    header: "Driver",
   },
   {
-    accessorKey: "actualAmount",
+    accessorKey: "netPrice",
     header: () => <div className="text-right">Amount</div>,
     cell: ({ row }) => {
-      const amount = row.getValue("actualAmount");
+      const amount = row.getValue("netPrice");
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
-        currency: "USD",
+        currency: "GHS",
       }).format(amount as number);
       return <div className="text-right font-medium">{formatted}</div>;
     },
@@ -186,7 +185,7 @@ export function DataTableDemo() {
 
     const newSortedData = data.map(route => ({
       ...route,
-      userFullName: userMap.get(route.userFullName) || route.userFullName,
+      userFullName: userMap.get(route.userId) || route.userId,
       driverFullName: driverMap.get(route.driverId) || route.driverId,
     }));
 

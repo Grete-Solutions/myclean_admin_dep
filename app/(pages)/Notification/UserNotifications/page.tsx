@@ -13,12 +13,12 @@ interface Users {
   id: string;
   firstname: string;
   lastname: string;
+  email:string
 }
 
 function NotificationPage() {
     const [registrationToken, setRegistrationToken] = useState<string>('');
     const [title, setTitle] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
     const [message, setMessage] = useState<string>('');
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -62,7 +62,7 @@ function NotificationPage() {
   
   
     const selectAllUsers = () => {
-      const userOptions = users.map(user => ({ value: user.id, label: `${user.firstname} ${user.lastname}` }));
+      const userOptions = users.map(user => ({ value: user.email, label: `${user.firstname} ${user.lastname}` }));
       setSelectedUsers(userOptions);
     };
   
@@ -88,11 +88,9 @@ function NotificationPage() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            registrationToken,
             title,
             message,
-            email,
-            // users: selectedUsers.map(u => u.value),
+            email: selectedUsers.map(u => u.value),
           }),
         });
   
@@ -110,8 +108,9 @@ function NotificationPage() {
       }
     };
   
-    const userOptions = users.map(user => ({ value: user.id, label: `${user.firstname} ${user.lastname}` }));
+    const userOptions = users.map(user => ({ value: user.email, label: `${user.firstname} ${user.lastname}` }));
   
+    console.log(userOptions)
 
   return (
     <div className="container mx-auto p-4">
@@ -129,23 +128,11 @@ function NotificationPage() {
                 value={selectedUsers}
                 className="w-full"
               />
-
-
           <div className="grid grid-cols-1 items-center gap-4">
-            <Label htmlFor="pushTitle" className="text-left">Push Title</Label>
+            <Label htmlFor="title" className="text-left"> Title</Label>
             <input
-              id="pushTitle"
-              placeholder='Title'
-              className="border border-gray-300 p-2 rounded-md w-full"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-          <div className="grid grid-cols-1 items-center gap-4">
-            <Label htmlFor="email" className="text-left">Push Title</Label>
-            <input
-              id="email"
-              placeholder='Enter Email'
+              id="title"
+              placeholder='Enter Title'
               className="border border-gray-300 p-2 rounded-md w-full"
               value={title}
               onChange={(e) => setTitle(e.target.value)}

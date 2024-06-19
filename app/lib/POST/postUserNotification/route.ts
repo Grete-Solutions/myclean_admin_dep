@@ -6,19 +6,17 @@ export async function POST(req: Request) {
   // users
   if (req.method === 'POST') {
     try {
-      const { registrationToken, title, message, email,  } = await req.json();
-      
+      const { title, message, email,  } = await req.json();
+      console.log(title, message, email,)
       const response = await fetch(`${process.env.URLB}/notification/sendNotificationToUsers`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          registrationToken,
           title,
           message,
           email,
-          // users,
         }),
       });
 

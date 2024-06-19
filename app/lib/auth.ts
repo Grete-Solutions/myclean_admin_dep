@@ -29,7 +29,7 @@ const authOptions: NextAuthOptions = {
             method: 'GET',
             headers: { "Content-Type": "application/json" }
           });
-
+///check status and isdelete from priviledges if 1 or 0  stat=1 allowed is del=1 not allowed
           if (res.ok) {
             const data = await res.json();
             const user = data.product.find((user:any) => user.email === credentials.email);

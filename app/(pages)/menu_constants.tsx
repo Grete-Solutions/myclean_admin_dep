@@ -93,7 +93,7 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                 submenu: true,
                 subMenuItems: [
                     {title: 'Approved Users', path: '/manageUsers/ApprovedUsers' },
-                    {title: 'Approve Pending Users', path: '/manageUsers/ApprovePendingUsers' },
+                    {title: 'Pending Users', path: '/manageUsers/PendingUsers' },
                     {title: 'Suspended Users', path: '/manageUsers/SuspendedUsers' },
                     {title: 'Deactivated Users', path: '/manageUsers/DeactivatedUsers' },
                     {title: 'Deleted Users', path: '/manageUsers/DeletedUsers' },
