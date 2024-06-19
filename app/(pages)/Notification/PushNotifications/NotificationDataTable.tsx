@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import NotificationSheet from '@/app/components/Sheetpop/Notification/Notification';
 import { useSession } from 'next-auth/react';
-import Custom404 from '../Custom404/page';
+import Custom404 from '../../Custom404/page';
 
 interface Data {
   registrationToken: string;

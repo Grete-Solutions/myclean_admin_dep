@@ -119,10 +119,16 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                 path: '/Chat',
                 icon: <BsChat size={20} />,
             },
+
             {
                 title: 'Notification',
                 path: '/Notification',
                 icon: <Speaker size={20} />,
+                submenu: true,
+                subMenuItems: [
+                    { title: 'Push Notifications', path: '/Notification/PushNotifications' },
+                    { title: 'User Notifications', path: '/Notification/UserNotifications' },
+                ],
             },
             {
                 title: 'Promo Code',
