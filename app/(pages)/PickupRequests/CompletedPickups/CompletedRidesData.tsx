@@ -119,7 +119,6 @@ export const columns: ColumnDef<RideData & { driverName: string; userName: strin
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const ride = row.original;
 
       return (
         <DropdownMenu>
@@ -131,11 +130,10 @@ export const columns: ColumnDef<RideData & { driverName: string; userName: strin
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(ride.id)}>
-              Copy Ride ID
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(row.original.bookingId)}>
+              Copy Request ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

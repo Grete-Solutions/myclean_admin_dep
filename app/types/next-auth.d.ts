@@ -1,4 +1,3 @@
-// next-auth.d.ts
 import NextAuth, { DefaultSession, DefaultUser } from "next-auth";
 
 declare module "next-auth" {
@@ -13,6 +12,7 @@ declare module "next-auth" {
       id: string;
       role: string;
       displayName: string;
+      otpVerified: boolean;
     } & DefaultSession["user"];
   }
 
@@ -20,5 +20,6 @@ declare module "next-auth" {
     id: string;
     role: string;
     displayName: string;
+    otpVerified: boolean;
   }
 }

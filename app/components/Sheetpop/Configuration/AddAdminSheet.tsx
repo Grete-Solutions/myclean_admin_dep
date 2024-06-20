@@ -79,7 +79,7 @@ function AddAdminSheet (){
   // Fetch admin privileges data on component mount
   React.useEffect(() => {
     async function fetchData() {
-      const priveledgeData = await fetch('/lib/GET/Priveledges/getallPriveledges');
+      const priveledgeData = await fetch('/lib/GET/Priveledges/getActivePriveledges');
       const priveledge = await priveledgeData.json(); 
       setAdminPriv(priveledge.product);
     }

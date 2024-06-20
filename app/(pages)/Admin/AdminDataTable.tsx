@@ -39,6 +39,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import AddAdminSheet from '@/app/components/Sheetpop/Configuration/AddAdminSheet';
+import { Actionbutton } from './Action';
 
 interface AdminData {
   id: string;
@@ -65,94 +66,20 @@ interface AdminData {
   };
 }
 
-interface PriviledgeData {
-    id: string;
-    country: string;
-    city: string;
-    isDelete: number;
-    name: string;
-    description: string;
-    slug: string;
-    status: number;
-    createdAt: {
-      _seconds: number;
-      _nanoseconds: number;
-    };
-  }
-
-const columns: ColumnDef<(AdminData & { privilegeName: string;})>[]= [
-  {
-    accessorKey: "Sno",
-    header: "Sno",
-    cell: ({ row }) => <div>{row.index + 1}</div>,
-  },
-  {
-    accessorKey: "displayName",
-    header: " Name",
-    cell: ({ row }) => <div>{row.getValue("displayName")}</div>,
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-    cell: ({ row }) => <div>{row.getValue("email")}</div>,
-  },
-  {
-    accessorKey: "phone",
-    header: "Phone",
-    cell: ({ row }) => <div>{row.getValue("phone")}</div>,
-  },
-  {
-    accessorKey: "privilegeName",
-    header: "Role",
-    cell: ({ row }) => <div>{row.getValue("privilegeName")}</div>,
-  },
-{
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => {
-      const isSuspended = row.getValue("isSuspended") === 1;
-      const isDeactivated = row.getValue("isDeactivated") === 1;
-      const status = isSuspended ? "Suspended" : (isDeactivated ? "Deactivated" : "Active");
-      const textColor = isSuspended || isDeactivated ? "text-red-500" : "text-green-500";
-  
-      return (
-        <div className={`font-semibold ${textColor}`}>
-          {status}
-        </div>
-      );
-    }
-  },
-  {
-    header: "Actions",
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const user = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="h-8 w-8 p-0 bg-[#0A8791]">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(user.email)}>
-              Copy Email
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(user.phone)}>
-              Copy Phone
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
+interface PrivilegeData {
+  id: string;
+  country: string;
+  city: string;
+  isDelete: number;
+  name: string;
+  description: string;
+  slug: string;
+  status: number;
+  createdAt: {
+    _seconds: number;
+    _nanoseconds: number;
+  };
+}
 
 export function AdminDataTable() {
   const [data, setData] = useState<AdminData[]>([]);
@@ -160,9 +87,8 @@ export function AdminDataTable() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [privilege, setPrivilege]=useState<PriviledgeData[]>([])
-  const [sortedData, setSortedData] = useState<(AdminData & { privilegeName: string;})[]>([]);
-
+  const [privilege, setPrivilege] = useState<PrivilegeData[]>([]);
+  const [sortedData, setSortedData] = useState<(AdminData & { privilegeName: string })[]>([]);
 
   const fetchAdminData = useCallback(async () => {
     try {
@@ -175,25 +101,26 @@ export function AdminDataTable() {
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-  },
-  []);
-  const fetchPrivilegeData=useCallback(async () => {
+  }, []);
+
+  const fetchPrivilegeData = useCallback(async () => {
     try {
-      const response = await fetch('/lib/GET/Priveledges/getallPriveledges');
+      const response = await fetch('/lib/GET/Privileges/getallPrivileges');
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
       const data = await response.json();
-      setPrivilege(Array.isArray(data.product)? data.product : []);
+      setPrivilege(Array.isArray(data.product) ? data.product : []);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-  },[]);
+  }, []);
 
   useEffect(() => {
     fetchAdminData();
     fetchPrivilegeData();
-  }, [fetchAdminData,fetchPrivilegeData]);
+  }, [fetchAdminData, fetchPrivilegeData]);
+
   useEffect(() => {
     const privilegeMap = new Map(privilege.map(priv => [priv.id, priv.name]));
     const newSortedData = data.map(admin => ({
@@ -203,8 +130,63 @@ export function AdminDataTable() {
     setSortedData(newSortedData);
   }, [data, privilege]);
 
+  const columns: ColumnDef<(AdminData & { privilegeName: string })>[] = [
+    {
+      accessorKey: "Sno",
+      header: "Sno",
+      cell: ({ row }) => <div>{row.index + 1}</div>,
+    },
+    {
+      accessorKey: "name",
+      header: "Name",
+      cell: ({ row }) => <div>{row.getValue("name")}</div>,
+    },
+    {
+      accessorKey: "email",
+      header: "Email",
+      cell: ({ row }) => <div>{row.getValue("email")}</div>,
+    },
+    {
+      accessorKey: "phone",
+      header: "Phone",
+      cell: ({ row }) => <div>{row.getValue("phone")}</div>,
+    },
+    {
+      accessorKey: "privilegeName",
+      header: "Role",
+      cell: ({ row }) => <div>{row.getValue("privilegeName")}</div>,
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => {
+        const isSuspended = row.getValue("isSuspended") === 1;
+        const isDeactivated = row.getValue("isDeactivated") === 1;
+        const status = isSuspended ? "Suspended" : (isDeactivated ? "Deactivated" : "Active");
+        const textColor = isSuspended || isDeactivated ? "text-red-500" : "text-green-500";
+
+        return (
+          <div className={`font-semibold ${textColor}`}>
+            {status}
+          </div>
+        );
+      }
+    },
+    {
+      header: "Actions",
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const isSuspended = row.getValue("isSuspended") === 1;
+        const isDeactivated = row.getValue("isDeactivated") === 1;
+        const status = isSuspended ? 1 : (isDeactivated ? 1 : 1);
+        return <Actionbutton onDelete={row.original.isDeactivated} status={status} id={row.original.id} refreshData={fetchAdminData} />;
+      },
+    },
+  ];
+
   const table = useReactTable({
-    data:sortedData,
+    data: sortedData,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -224,7 +206,7 @@ export function AdminDataTable() {
 
   return (
     <div className="w-full">
-        <AddAdminSheet/>
+      <AddAdminSheet />
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter Display Name..."
