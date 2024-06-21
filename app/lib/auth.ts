@@ -10,7 +10,8 @@ const authOptions: NextAuthOptions = {
     maxAge: 600,
   },
   pages: {
-    signIn: '/login'
+    signIn: '/login',
+    verifyRequest: '/login/OTP' // Redirect to OTP verification page
   },
   providers: [
     CredentialsProvider({
@@ -26,7 +27,7 @@ const authOptions: NextAuthOptions = {
 
         try {
           // Fetch active privileges
-          const resPrivileges = await fetch(`https://mycleanapp.netlify.app/lib/GET/Priveledges/getActivePriveledges`, {
+          const resPrivileges = await fetch(`https://mycleanapp.netlify.app/lib/GET/Priveledges/getActivePrivileges`, {
             method: 'GET',
             headers: { "Content-Type": "application/json" }
           });
@@ -59,11 +60,22 @@ const authOptions: NextAuthOptions = {
             if (isPasswordValid) {
               // Check if user has active privileges
               const hasActivePrivileges = activePrivileges.some((privilege: any) => {
-                return privilege.id === user.id && privilege.status === 1 && privilege.isDelete === 0;
+                return privilege.status === 1;
               });
 
               if (hasActivePrivileges) {
-                return user;
+                // Generate and send OTP to user's email
+                const otp = Math.floor(100000 + Math.random() * 900000).toString();
+                await fetch('https://mycleanapp.netlify.app/lib/POST/postVerifyOtp', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ email: user.email, otp })
+                });
+
+                // Save OTP in user's session
+                return { ...user, otp };
               } else {
                 console.error('User does not have active privileges.');
               }
@@ -86,6 +98,7 @@ const authOptions: NextAuthOptions = {
         token.name = user.name;
         token.role = user.role;
         token.displayName = user.displayName;
+        token.otpVerified = false; 
       }
       return token;
     },
@@ -97,6 +110,7 @@ const authOptions: NextAuthOptions = {
         name: token.name as string,
         role: token.role as string,
         displayName: token.displayName as string,
+        otpVerified: token.otpVerified as boolean
       };
       return session;
     }

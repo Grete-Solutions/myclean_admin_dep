@@ -3,14 +3,17 @@ import { Suspense } from 'react';
 import { Input } from '@/components/ui/input';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useRef, useCallback, useState, useEffect } from 'react';
+import { useToast } from '@/components/ui/use-toast';
 
 const OtpPage = () => {
+  const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [Otp, setOtp] = useState(new Array(6).fill(''));
   const inputRefs = useRef<HTMLInputElement[]>([]);
   const param = useSearchParams();
   const emailFromParams = param.get('email');
-  const router = useRouter()
+  const router = useRouter();
+
   useEffect(() => {
     if (emailFromParams) {
       setEmail(emailFromParams);
@@ -19,6 +22,7 @@ const OtpPage = () => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+  
     try {
       const response = await fetch('/lib/POST/postVerifyOtp', {
         method: 'POST',
@@ -27,16 +31,22 @@ const OtpPage = () => {
         },
         body: JSON.stringify({ email, otp: Otp.join('') })
       });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      router.push('/')
+  
       const data = await response.json();
-    } catch (error) {
+  
+      if (!response.ok || data=='OTP verification failed') {
+        throw new Error(data.message || 'Failed to verify OTP');
+      }
+  
+      toast({ title: "Success", variant: 'success', description: "OTP verified successfully!" });
+      router.push('/'); 
+  
+    } catch (error:any) {
       console.error('Error:', error);
+      toast({ title: "Error", variant: "destructive", description: error.message || "Failed to verify OTP. Please try again." });
     }
   };
+  
 
   const handleInputChange = useCallback(
     (index: number, event: React.ChangeEvent<HTMLInputElement>) => {

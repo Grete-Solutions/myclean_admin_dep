@@ -77,7 +77,7 @@ const EditPageContent = () => {
         setExpiredAt(new Date(data.product.expired_at._seconds * 1000));
       } catch (error: any) {
         setError(error.message);
-        toast({ title: "Error", description: error.message });
+        toast({title: "Error",variant: "destructive", description: error.message });
       } finally {
         setLoading(false);
       }
@@ -91,7 +91,7 @@ const EditPageContent = () => {
 
     if (!userType || !couponType || !count || !expiredAt || !value) {
       setError('All fields are required.');
-      toast({ title: "Error", description: "All fields are required." });
+      toast({title: "Error",variant: "destructive", description: "All fields are required." });
       return;
     }
 
@@ -136,12 +136,12 @@ const EditPageContent = () => {
       }
 
       const data = await response.json();
-      toast({ title: "Success", description: "Promo Code updated successfully!" });
-      router.push('/PromoCode'); // Redirect after successful update
+      toast({ title: "Success",variant:'success', description: "Promo Code updated successfully!" });
+      router.push('/PromoCode');
     } catch (error) {
       console.error('Error:', error);
       setError('Failed to update promo code.');
-      toast({ title: "Error", description: "Failed to update promo code." });
+      toast({title: "Error",variant: "destructive", description: "Failed to update promo code." });
     } finally {
       setIsSubmitting(false);
     }

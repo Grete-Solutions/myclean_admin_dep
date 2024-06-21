@@ -19,7 +19,7 @@ export async function POST(req: Request) {
       if (!response.ok) {
         throw new Error(`Backend error: ${data.message || 'Unknown error'}`);
       }
-
+      
       return NextResponse.json(data);
     } catch (error:any) {
       console.error('Error:', error);

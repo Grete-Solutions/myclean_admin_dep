@@ -124,7 +124,7 @@ export default function Tabs({}: Props) {
 
     setSettings(prevSettings => ({
       ...prevSettings,
-      [id]: numericValue.toString(), // Store as string for controlled input component
+      [id]: numericValue.toString(), 
     }));
 
     if (debounceTimeout.current) {

@@ -88,7 +88,7 @@ export function NotificationDataTable() {
   };
 
   const fetchPermission = async () => {
-    if (!session) return; // Ensure session is available before making the fetch request
+    if (!session) return; 
     const id = session.user.role;
     const field_name = 'notifications';
     try {

@@ -60,7 +60,7 @@ const EditPageContent = () => {
       } catch (error: any) {
         setError(error.message);
         setLoading(false);
-        toast({ title: "Error", description: error.message });
+        toast({title: "Error",variant: "destructive", description: error.message });
       }
     };
 
@@ -89,11 +89,11 @@ const EditPageContent = () => {
         throw new Error('Failed to update vehicle data');
       }
 
-      toast({ title: "Success", description: "Vehicle data updated successfully" });
+      toast({ title: "Success",variant:'success', description: "Vehicle data updated successfully" });
       router.push('/MasterData/VehicleMake');
     } catch (error: any) {
       setError(error.message);
-      toast({ title: "Error", description: error.message });
+      toast({title: "Error",variant: "destructive", description: error.message });
     } finally {
       setLoading(false);
     }

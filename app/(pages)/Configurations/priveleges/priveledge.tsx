@@ -120,7 +120,7 @@ export function Priveleges() {
     {
       accessorKey: "Sno",
       header: "Sr No",
-      cell: ({ row }) => <div>{row.index + 1}</div>, // Use row index as Sno value
+      cell: ({ row }) => <div>{row.index + 1}</div>, 
     },
     {
       accessorKey: "slug",

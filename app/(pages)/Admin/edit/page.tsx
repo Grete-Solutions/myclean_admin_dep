@@ -72,7 +72,7 @@ const EditPageContent = () => {
         setCity(data.product.city);
       } catch (error: any) {
         setError(error.message);
-        toast({ title: "Error", description: error.message });
+        toast({title: "Error",variant: "destructive", description: error.message });
       } finally {
         setLoading(false);
       }
@@ -116,11 +116,11 @@ const EditPageContent = () => {
       if (!response.ok) throw new Error('Network response was not ok');
 
       await response.json();
-      toast({ title: "Success", description: "Admin data updated successfully!" });
+      toast({ title: "Success",variant:'success', description: "Admin data updated successfully!" });
       router.push('/Admin');
     } catch (error: any) {
       setError('Failed to update admin data.product.');
-      toast({ title: "Error", description: "Failed to update admin data.product." });
+      toast({title: "Error",variant: "destructive", description: "Failed to update admin data.product." });
     } finally {
       setLoading(false);
     }

@@ -229,7 +229,7 @@ export default function Home() {
         
           <Card className="lg:col-span-4">
             <CardHeader>
-              <CardTitle>Overview</CardTitle>
+              <CardTitle>User Overview</CardTitle>
             </CardHeader>
             <CardContent className="pl-2">
               <Overview />
@@ -240,7 +240,7 @@ export default function Home() {
             <CardHeader>
               <CardTitle>Recent Pickup</CardTitle>
               <CardDescription>
-                You made 265 pickups this month.
+                You made {pickupCount} pickups this month.
               </CardDescription>
             </CardHeader>
             <CardContent>

@@ -68,7 +68,7 @@ function PromoCodeSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
       return;
     }
     if (!isAuthorized) {
-      toast({ title: "Error", description: "You are Not Authorized ",variant: "destructive" });
+      toast({title: "Error",variant: "destructive", description: "You are Not Authorized ",variant: "destructive" });
       return;
     }
     let userTypeValue: number;

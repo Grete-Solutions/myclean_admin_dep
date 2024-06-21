@@ -57,12 +57,12 @@ type ApprovedData = {
   status: string;
 };
 
-// Define table columns
+
 const columns: ColumnDef<ApprovedData>[] = [
   {
     accessorKey: "Sno",
     header: "Sno",
-    cell: ({ row }) => <div>{row.index + 1}</div>, // Use row index as Sno value
+    cell: ({ row }) => <div>{row.index + 1}</div>, 
   },
   {
     accessorKey: "firstName",

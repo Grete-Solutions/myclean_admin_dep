@@ -172,7 +172,7 @@ type Data = {
           ...prevData,
           [privilegeKey]: updatedPrivilege,
         }));
-        toast({ title: "Success", description: "Privilege changed successfully" });
+        toast({ title: "Success",variant:'success', description: "Privilege changed successfully" });
   
       } catch (error: any) {
         setError(error.message);

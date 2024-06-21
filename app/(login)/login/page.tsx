@@ -16,7 +16,7 @@ function Login({}: Props) {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError(''); // Reset error state
+    setError(''); 
 
     try {
       const res = await fetch('/lib/POST/postlogin', {

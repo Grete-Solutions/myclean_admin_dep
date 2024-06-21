@@ -170,7 +170,7 @@ function NotificationSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
 
       const data = await response.json();
       onAddSuccess();
-      toast({ title: "Success", description: "Notification Sent successfully" });
+      toast({ title: "Success",variant:'success', description: "Notification Sent successfully" });
     } catch (error) {
       console.error('Error submitting notification:', error);
       setError('Failed to send notification.');

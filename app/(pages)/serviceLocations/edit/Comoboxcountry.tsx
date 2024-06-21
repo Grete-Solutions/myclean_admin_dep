@@ -21,7 +21,6 @@ interface ComboboxFormProps {
   selectedCountryISOCode: string;
 }
 
-// Create a mapping of country ISO codes to country names
 const countryIsoCodes: { [code: string]: string } = {};
 CountriesIsoData.forEach(country => {
   countryIsoCodes[country.code] = country.name;

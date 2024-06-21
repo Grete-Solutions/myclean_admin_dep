@@ -59,7 +59,7 @@ function AddAdminSheet (){
   const fetchPermission = async () => {
     if (!session) return; 
     const id = session.user.role;
-    const field_name = 'add_vehicle_make';
+    const field_name = 'add_admin';
     try {
       const response = await fetch(`/lib/GET/Priveledges/getPrivelegesByIDandFieldName?id=${id}&field_name=${field_name}`);
       if (!response.ok) {
@@ -79,9 +79,14 @@ function AddAdminSheet (){
   // Fetch admin privileges data on component mount
   React.useEffect(() => {
     async function fetchData() {
-      const priveledgeData = await fetch('/lib/GET/Priveledges/getActivePriveledges');
+      const priveledgeData = await fetch('/lib/GET/Priveledges/getActivePrivileges');
       const priveledge = await priveledgeData.json(); 
-      setAdminPriv(priveledge.product);
+      if (priveledge.length > 0) { 
+        setAdminPriv(priveledge.product);
+       }
+      else {
+        setAdminPriv([]);
+      }
     }
 
     fetchData();
@@ -117,7 +122,7 @@ function AddAdminSheet (){
         throw new Error('Network response was not ok');
       }
       if (!isAuthorized) {
-        toast({ title: "Error", description: "You are Not Authorized ",variant: "destructive" });
+        toast({title: "Error",variant: "destructive", description: "You are Not Authorized ",});
         return;
       }
 
@@ -167,7 +172,8 @@ function AddAdminSheet (){
                 </SelectTrigger>
                 <SelectContent className='z-[99999]'>
                   <SelectItem value='Super Admin'>Super Admin</SelectItem>
-                  {adminpriv.map((item:any) => (
+                  {
+                  adminpriv.map((item:any) => (
                     <SelectItem key={item.id} value={item.id}>
                       {item.name}
                     </SelectItem>

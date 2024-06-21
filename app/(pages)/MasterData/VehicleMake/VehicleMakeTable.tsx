@@ -66,7 +66,7 @@ export function VehicleMakeDataTable() {
     {
       accessorKey: "Sno",
       header: "Sr No",
-      cell: ({ row }) => <div>{row.index + 1}</div>, // Use row index as Sno value
+      cell: ({ row }) => <div>{row.index + 1}</div>, 
     },
     {
       accessorKey: "make",
@@ -127,7 +127,6 @@ export function VehicleMakeDataTable() {
       setData(Array.isArray(data.product) ? data.product : []);
     } catch (error) {
       console.error('Error fetching data:', error);
-      // Handle error, e.g., set a default state or show an error message
     } finally {
       setLoading(false);
     }
@@ -157,7 +156,7 @@ export function VehicleMakeDataTable() {
     if (isAuthorized) {
       getVehicle();
     }
-  }, [isAuthorized]); // Trigger getVehicle when authorization changes
+  }, [isAuthorized]);
 
   const handleAddSuccess = () => {
     getVehicle();

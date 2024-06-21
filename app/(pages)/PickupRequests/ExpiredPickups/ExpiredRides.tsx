@@ -42,8 +42,10 @@ interface RideData {
   id: string;
   bookingId: string;
   driverId: string;
-  pickupLocation: string;
-  userId: string;
+ pickupLocation: {
+    _latitude: number,
+    _longitude: number
+  };  userId: string;
   createdAt: {
     _seconds: number;
     _nanoseconds: number;
@@ -74,9 +76,16 @@ export const columns: ColumnDef<RideData & { driverName: string; userName: strin
     cell: ({ row }) => <div>{row.index + 1}</div>,
   },
   {
-    accessorKey: "bookingId",
-    header: "Request ID",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("bookingId")}</div>,
+    accessorKey: "pickupLocation",
+    header: "Pickup Location",
+    cell: ({ row }) => {
+      const location = row.getValue("pickupLocation") as { _latitude: number, _longitude: number };
+      return (
+        <div>
+          {location._latitude}, {location._longitude}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "userName",
@@ -131,11 +140,10 @@ export const columns: ColumnDef<RideData & { driverName: string; userName: strin
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(ride.id)}>
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(ride.bookingId)}>
               Copy Ride ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
