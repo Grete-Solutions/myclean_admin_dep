@@ -59,7 +59,7 @@ const {toast}= useToast()
       return;
     }
     if (!isAuthorized) {
-      toast({title: "Error",variant: "destructive", description: "You are Not Authorized ",variant: "destructive" });
+      toast({title: "Error",variant: "destructive", description: "You are Not Authorized " });
       return;
     }
 
