@@ -31,6 +31,7 @@ function ServiceLocation({ onAddSuccess }: { onAddSuccess: () => void }) {
   const [isAuthorized, setIsAuthorized] = useState(false);
   const {data:session}= useSession()
   const {toast} = useToast()
+  const [commission, setCommission] = React.useState('');
 
   const fetchPermission = async () => {
     if (!session) return; 
@@ -67,6 +68,7 @@ function ServiceLocation({ onAddSuccess }: { onAddSuccess: () => void }) {
           countryISOCode,
           city,
           price: parseFloat(price), 
+          commission: parseFloat(commission)
         })
       });
 
@@ -115,6 +117,10 @@ function ServiceLocation({ onAddSuccess }: { onAddSuccess: () => void }) {
             <div className="grid grid-cols-1 items-center gap-4">
               <Label htmlFor="Price" className="text-left">Price</Label>
               <Input type='number' id="Price" value={price} onChange={(e)=>setPrice(e.target.value)} placeholder="Price" className="col-span-3" />
+            </div>
+            <div className="grid grid-cols-1 items-center gap-4">
+              <Label htmlFor="commission" className="text-left">Commission</Label>
+              <Input type='number' id="commission" value={price} onChange={(e)=>setCommission(e.target.value)} placeholder="Enter Commission" className="col-span-3" />
             </div>
           </div>
           <SheetFooter>

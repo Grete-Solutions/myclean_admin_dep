@@ -34,12 +34,12 @@ const OtpPage = () => {
   
       const data = await response.json();
   
-      if (!response.ok || data=='OTP verification failed') {
+      if (!response.ok || data=='OTP verification failed'|| data==='Null value entered') {
         throw new Error(data.message || 'Failed to verify OTP');
       }
   
       toast({ title: "Success", variant: 'success', description: "OTP verified successfully!" });
-      router.push('/'); 
+      router.replace('/'); 
   
     } catch (error:any) {
       console.error('Error:', error);

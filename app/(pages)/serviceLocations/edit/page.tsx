@@ -12,6 +12,7 @@ type Data = {
   countryISOCode: string;
   price: number;
   city: string;
+  commission:number;
 };
 
 export default function EditPage() {
@@ -29,6 +30,7 @@ const EditPageContent = () => {
   const [countryISOCode, setCountryISOCode] = useState<string>('');
   const [city, setCity] = useState<string>('');
   const [price, setPrice] = useState<string>('');
+  const [commission, setCommission] = useState<string>('');
   
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -55,6 +57,7 @@ const EditPageContent = () => {
         setCountryISOCode(data.product.countryISOCode);
         setCity(data.product.city);
         setPrice(data.product.price.toString());
+        setCommission(data.product.commission.toString());
       } catch (error: any) {
         console.error('Error fetching vehicle data:', error);
         setError(error.message);
@@ -83,6 +86,7 @@ const EditPageContent = () => {
           countryISOCode,
           city,
           price: parseFloat(price),
+          commission: parseFloat(commission),
         }),
       });
 
@@ -134,6 +138,10 @@ const EditPageContent = () => {
           <div className="grid grid-cols-1 items-center gap-4">
             <Label htmlFor="price" className="text-left">Price</Label>
             <Input type="number" id="price" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="Price" className="col-span-3" />
+          </div>
+          <div className="grid grid-cols-1 items-center gap-4">
+            <Label htmlFor="commission" className="text-left">Price</Label>
+            <Input type="number" id="commission" value={commission} onChange={(e) => setCommission(e.target.value)} placeholder="Enter Commission" className="col-span-3" />
           </div>
         </div>
         <div>

@@ -48,6 +48,7 @@ interface Data {
   city: string;
   status: number;
   action: React.ReactNode;
+  commission:number;
   isDelete: number;
 }
 
@@ -115,6 +116,11 @@ export function Location() {
       accessorKey: "price",
       header: "Price",
       cell: ({ row }) => <div>{row.getValue("price")}</div>,
+    },
+    {
+      accessorKey: "commission",
+      header: "Commission",
+      cell: ({ row }) => <div>{row.getValue("commission")}</div>,
     },
     {
       accessorKey: "status",
