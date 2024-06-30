@@ -39,7 +39,7 @@ const OtpPage = () => {
       }
   
       toast({ title: "Success", variant: 'success', description: "OTP verified successfully!" });
-      router.replace('../'); 
+      router.replace('/'); 
   
     } catch (error:any) {
       console.error('Error:', error);

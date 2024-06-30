@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import CountUp from 'react-countup'; // Import CountUp component
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Overview } from './components/overview';
-import { DataTableDemo } from './components/recent-cleaning';
-import PieChartBox from './components/Piechart';
-import Earnings from './components/Earnings';
+import { Overview } from '../components/overview';
+import { DataTableDemo } from '../components/recent-cleaning';
+import PieChartBox from '../components/Piechart';
+import Earnings from '../components/Earnings';
 import { useSession } from 'next-auth/react';
 
 interface Data{

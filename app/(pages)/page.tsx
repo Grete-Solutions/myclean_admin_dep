@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect } from 'react';
-import Home from '../Dashboard';
+import Home from './Dashboard';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
