@@ -46,7 +46,6 @@ const OtpPage = () => {
       toast({ title: "Error", variant: "destructive", description: error.message || "Failed to verify OTP. Please try again." });
     }
   };
-  
 
   const handleInputChange = useCallback(
     (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,9 +58,34 @@ const OtpPage = () => {
         if (value.length === 1 && index < 5) {
           inputRefs.current[index + 1].focus();
         }
+
+        if (newOtp.every((digit) => digit !== '')) {
+          setTimeout(() => {
+            document.getElementById('otp-form')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+          }, 100);
+        }
       }
     },
     [Otp]
+  );
+
+  const handlePaste = useCallback(
+    (event: React.ClipboardEvent<HTMLInputElement>) => {
+      const pasteData = event.clipboardData.getData('text');
+      if (/^\d{6}$/.test(pasteData)) {
+        const newOtp = pasteData.split('');
+        setOtp(newOtp);
+        newOtp.forEach((digit, index) => {
+          if (inputRefs.current[index]) {
+            inputRefs.current[index].value = digit;
+          }
+        });
+        setTimeout(() => {
+          document.getElementById('otp-form')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+        }, 100);
+      }
+    },
+    []
   );
 
   const handleKeyDown = useCallback(
@@ -89,7 +113,7 @@ const OtpPage = () => {
           </div>
 
           <div>
-            <form onSubmit={handleSubmit}>
+            <form id="otp-form" onSubmit={handleSubmit}>
               <div className="flex flex-col space-y-16">
                 <Input value={email} className="hidden" type="text" readOnly />
                 <div className="flex flex-row items-center justify-between mx-auto space-x-3 w-full">
@@ -107,6 +131,7 @@ const OtpPage = () => {
                         value={Otp[index]}
                         onChange={(event) => handleInputChange(index, event)}
                         onKeyDown={(event) => handleKeyDown(index, event)}
+                        onPaste={handlePaste}
                       />
                     </div>
                   ))}
