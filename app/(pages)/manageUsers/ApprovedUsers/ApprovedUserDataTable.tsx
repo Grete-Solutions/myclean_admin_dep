@@ -40,6 +40,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import ApprovedDriversSheet from "../../../components/Sheetpop/ManageDRIVERS/ApprovedDriverSheet"
+import { Actionbutton } from "./Action"
 
 
 
@@ -60,6 +61,7 @@ type ApprovedData = {
   deactivated: number;
   suspended: number;
   status: string;
+  id:string
 };
 
 
@@ -112,6 +114,15 @@ const columns: ColumnDef<ApprovedData>[] = [
     cell: ({ row }) => (
       <div className={`${row.getValue("status") === 1 ? 'text-green-500' : 'text-red-500 file'} font-semibold`}>
         {row.getValue("status") === 1 ? 'Active' : 'Inactive'}</div>
+    ),
+  },
+  {
+    accessorKey: "action",
+    header: "Action",
+    cell: ({ row }) => (
+      <div className="text-center text-[#0A8791]">
+        <Actionbutton id={row.original.id} />
+      </div>
     ),
   },
 ];

@@ -37,8 +37,10 @@ import {
 import ApprovedDriversSheet from "../../../components/Sheetpop/ManageDRIVERS/ApprovedDriverSheet"
 import { useSession } from 'next-auth/react'
 import Custom404 from "../../Custom404/page"
+import { Actionbutton } from "./Action"
 
 type ApprovedData = {
+  id:string
   firstName: string;
   lastName: string;
   phone: string;
@@ -55,6 +57,7 @@ type ApprovedData = {
   deactivated: number;
   suspended: number;
   status: string;
+  action:React.ReactNode
 };
 
 
@@ -114,8 +117,15 @@ const columns: ColumnDef<ApprovedData>[] = [
         {row.getValue("status") === 1 ? 'Active' : 'Inactive'}</div>
     ),
   },
-  // Add more columns as needed
-];
+  {
+    accessorKey: "action",
+    header: "Action",
+    cell: ({ row }) => (
+      <div className="text-center text-[#0A8791]">
+        <Actionbutton id={row.original.id} />
+      </div>
+    ),
+  },];
 
 export function NegativeBalanceDriversDataTable() {
   const { data: session, status: sessionStatus } = useSession();
