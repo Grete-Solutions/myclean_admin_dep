@@ -11,7 +11,9 @@ export default function Page() {
   if (status === 'loading') {
     return <div>Loading...</div>;
   }
-
+  if (!session?.user){
+    router.replace('/login');
+    return null; }
   if ( session?.user) {
     return (
       <div>
