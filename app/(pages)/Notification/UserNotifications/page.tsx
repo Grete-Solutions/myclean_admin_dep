@@ -82,7 +82,7 @@ function NotificationPage() {
     setError(null);
 
     try {
-      const sanitizedMessage = message.replace(/<\/?[^>]+(>|$)/g, "");
+      // const sanitizedMessage = message.replace(/<\/?[^>]+(>|$)/g, "");
 
       for (const user of selectedUsers) {
         const response = await fetch('/lib/POST/postUserNotification', {
@@ -92,7 +92,7 @@ function NotificationPage() {
           },
           body: JSON.stringify({
             title,
-            message: sanitizedMessage,
+            message,
             email: user.value, 
           }),
         });
