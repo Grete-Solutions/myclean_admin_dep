@@ -127,7 +127,7 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                 submenu: true,
                 subMenuItems: [
                     { title: 'Push Notifications', path: '/Notification/PushNotifications' },
-                    { title: 'User Notifications', path: '/Notification/UserNotifications' },
+                    { title: 'Email Notifications', path: '/Notification/UserNotifications' },
                 ],
             },
             {
