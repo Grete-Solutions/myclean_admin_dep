@@ -45,8 +45,8 @@ import { Actionbutton } from "./Action"
 
 
 type ApprovedData = {
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   phone: string;
   userType: number;
   email: string;
@@ -73,7 +73,7 @@ const columns: ColumnDef<ApprovedData>[] = [
     cell: ({ row }) => <div>{row.index + 1}</div>, 
   },
   {
-    accessorKey: "firstName",
+    accessorKey: "firstname",
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -84,14 +84,14 @@ const columns: ColumnDef<ApprovedData>[] = [
       </Button>
     ),
     cell: ({ row }) => (
-      <div className="uppercase">{row.getValue("firstName")}</div>
+      <div className="uppercase">{row.getValue("firstname")}</div>
     ),
   },
   {
-    accessorKey: "lastName",
+    accessorKey: "lastname",
     header: "Last Name",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("lastName")}</div>
+      <div className="capitalize">{row.getValue("lastname")}</div>
     ),
   },
   {
@@ -109,14 +109,7 @@ const columns: ColumnDef<ApprovedData>[] = [
     header: "Rating",
     // cell: ({ row }) => <div>{row.getValue("Rating")}</div>,
   },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className={`${row.getValue("status") === 1 ? 'text-green-500' : 'text-red-500 file'} font-semibold`}>
-        {row.getValue("status") === 1 ? 'Active' : 'Inactive'}</div>
-    ),
-  },
+
   {
     accessorKey: "action",
     header: "Action",
@@ -182,9 +175,9 @@ export function ApprovedDataTable() {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter Name..."
-          value={(table.getColumn("firstName")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("firstname")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("firstName")?.setFilterValue(event.target.value)
+            table.getColumn("firstname")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

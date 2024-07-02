@@ -8,31 +8,96 @@ import { useSession } from "next-auth/react";
 
 interface ActionButtonProps {
     id: string; 
+
 }
 
-export function Actionbutton({ id, }: ActionButtonProps) {
+export function Actionbutton({ id}: ActionButtonProps) {
     const { toast } = useToast();
     const router = useRouter();
     const [isAuthorized, setIsAuthorized] = useState(false);
     const [isToggleAuthorized, setIsToggleAuthorized] = useState(false);
     const [isdeleteAuthorized, setIsdeleteAuthorized] = useState(false);
     const {data:session}= useSession()
+  
+    const fetchPermission = async () => {
+      if (!session) return; 
+      const id = session.user.role;
+      const field_name = 'edit_vehicle_make';
+      try {
+        const response = await fetch(`/lib/GET/Priveledges/getPrivelegesByIDandFieldName?id=${id}&field_name=${field_name}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const result = await response.json();
+        setIsAuthorized(session?.user.role === 'Super Admin'|| result.product === 1  || result.product === 'Super Admin');
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    const fetchDeletePermission = async () => {
+        if (!session) return; 
+        const id = session.user.role;
+        const field_name = 'delete_priviledge';
+        try {
+          const response = await fetch(`/lib/GET/Priveledges/getPrivelegesByIDandFieldName?id=${id}&field_name=${field_name}`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch data');
+          }
+          const result = await response.json();
+          setIsToggleAuthorized(session?.user.role === 'Super Admin'|| session?.user.role === 'Super Admin'|| result.product === 1  );
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+      const fetchTogglePermission = async () => {
+        if (!session) return; 
+        const id = session.user.role;
+        const field_name = 'toggle_vehicle_make';
+        try {
+          const response = await fetch(`/lib/GET/Priveledges/getPrivelegesByIDandFieldName?id=${id}&field_name=${field_name}`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch data');
+          }
+          const result = await response.json();
+          setIsdeleteAuthorized(session?.user.role === 'Super Admin'|| result.product === 1 );
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+  
+  
+    useEffect(() => {
+      fetchPermission();
+      fetchTogglePermission()
+      fetchDeletePermission();
+    }, [session]); 
     const handleView = () => {
-      router.push(`ApprovedUsers/View?id=${id}`);
-  };
+        router.push(`ApprovedDrivers/View?id=${id}`);
+    };
+
+
+
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <PenBox className="hover:cursor-pointer" />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-fit">
-                      {isAuthorized && (  <DropdownMenuItem className="hover:cursor-pointer hover:bg-gray-50" onClick={handleView}>
+                   <DropdownMenuItem className="hover:cursor-pointer hover:bg-gray-50" onClick={handleView}>
         
           <div>
-                                 View
+                             View
           </div>
-               </DropdownMenuItem>   )}    
-        
+               </DropdownMenuItem>   
+          
+          {/* <DropdownMenuItem>
+        {!isAuthorized&& !isToggleAuthorized && !isToggleAuthorized&&(
+            <button disabled className="text-red-600 font-semibold">
+           No Permission Allowed
+            </button>
+        )}
+      </DropdownMenuItem> */}
             </DropdownMenuContent>
         </DropdownMenu>
     );

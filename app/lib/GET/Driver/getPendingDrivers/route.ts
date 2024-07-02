@@ -6,7 +6,6 @@ export async function GET(request: Request) {
     cache: 'no-cache',  
     headers: {
           'Content-Type': 'application/json',
-  
       },
   });
 

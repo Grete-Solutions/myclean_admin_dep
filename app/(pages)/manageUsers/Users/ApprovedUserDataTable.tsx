@@ -42,12 +42,9 @@ import {
 import ApprovedDriversSheet from "../../../components/Sheetpop/ManageDRIVERS/ApprovedDriverSheet"
 import { Actionbutton } from "./Action"
 
-
-
 type ApprovedData = {
-  id:string
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   phone: string;
   userType: number;
   email: string;
@@ -62,17 +59,17 @@ type ApprovedData = {
   deactivated: number;
   suspended: number;
   status: string;
+  id: string;
 };
-
 
 const columns: ColumnDef<ApprovedData>[] = [
   {
     accessorKey: "Sno",
     header: "Sno",
-    cell: ({ row }) => <div>{row.index + 1}</div>, 
+    cell: ({ row }) => <div>{row.index + 1}</div>,
   },
   {
-    accessorKey: "firstName",
+    accessorKey: "firstname",
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -83,14 +80,14 @@ const columns: ColumnDef<ApprovedData>[] = [
       </Button>
     ),
     cell: ({ row }) => (
-      <div className="uppercase">{row.getValue("firstName")}</div>
+      <div className="uppercase">{row.getValue("firstname")}</div>
     ),
   },
   {
-    accessorKey: "lastName",
+    accessorKey: "lastname",
     header: "Last Name",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("lastName")}</div>
+      <div className="capitalize">{row.getValue("lastname")}</div>
     ),
   },
   {
@@ -108,14 +105,7 @@ const columns: ColumnDef<ApprovedData>[] = [
     header: "Rating",
     // cell: ({ row }) => <div>{row.getValue("Rating")}</div>,
   },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className={`${row.getValue("status") === 1 ? 'text-green-500' : 'text-red-500 file'} font-semibold`}>
-        {row.getValue("status") === 1 ? 'Active' : 'Inactive'}</div>
-    ),
-  },
+
   {
     accessorKey: "action",
     header: "Action",
@@ -127,7 +117,7 @@ const columns: ColumnDef<ApprovedData>[] = [
   },
 ];
 
-export function ApprovedPendingUserDataTable() {
+export function ApproveUsersDataTable() {
   const [data, setData] = React.useState<ApprovedData[]>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -137,15 +127,15 @@ export function ApprovedPendingUserDataTable() {
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/lib/GET/User/getallPendingUsers');
+        const response = await fetch('/lib/GET/User/getallApprovedUsers');
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
         const data = await response.json();
-        if (Array.isArray(data.product)) {
-          setData(data.product);
+        if (Array.isArray(data.product.users)) {
+          setData(data.product.users);
         } else {
-          setData([]); 
+          setData([]);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -176,12 +166,13 @@ export function ApprovedPendingUserDataTable() {
 
   return (
     <div className="w-full">
+      <ApprovedDriversSheet />
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter Name..."
-          value={(table.getColumn("firstName")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("firstname")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("firstName")?.setFilterValue(event.target.value)
+            table.getColumn("firstname")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -195,20 +186,18 @@ export function ApprovedPendingUserDataTable() {
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                )
-              })}
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) =>
+                    column.toggleVisibility(!!value)
+                  }
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -217,18 +206,16 @@ export function ApprovedPendingUserDataTable() {
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  )
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
@@ -241,20 +228,14 @@ export function ApprovedPendingUserDataTable() {
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>
@@ -287,5 +268,5 @@ export function ApprovedPendingUserDataTable() {
         </div>
       </div>
     </div>
-  )
+  );
 }

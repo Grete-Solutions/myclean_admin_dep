@@ -41,10 +41,11 @@ import { Actionbutton } from "./Action"
 
 type ApprovedData = {
   id:string
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   phone: string;
   userType: number;
+  balance: number
   email: string;
   createdAt: {
     _seconds: number;
@@ -68,7 +69,7 @@ const columns: ColumnDef<ApprovedData>[] = [
     cell: ({ row }) => <div>{row.index + 1}</div>, 
   },
   {
-    accessorKey: "firstName",
+    accessorKey: "firstname",
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -79,14 +80,14 @@ const columns: ColumnDef<ApprovedData>[] = [
       </Button>
     ),
     cell: ({ row }) => (
-      <div className="uppercase">{row.getValue("firstName")}</div>
+      <div className="uppercase">{row.getValue("firstname")}</div>
     ),
   },
   {
-    accessorKey: "lastName",
+    accessorKey: "lastname",
     header: "Last Name",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("lastName")}</div>
+      <div className="capitalize">{row.getValue("lastname")}</div>
     ),
   },
   {
@@ -100,23 +101,12 @@ const columns: ColumnDef<ApprovedData>[] = [
     cell: ({ row }) => <div>{row.getValue("phone")}</div>,
   },
   {
-    accessorKey: "Rating",
+    accessorKey: "balance",
     header: "Wallet Balance",
-    // cell: ({ row }) => <div>{row.getValue("Rating")}</div>,
+    cell: ({ row }) => <div className="text-center"
+    >GH₵{row.getValue("balance")}</div>,
   },
-  {
-    accessorKey: "string",
-    header: "String",
-    cell: ({ row }) => <div>{row.getValue("string")}</div>,
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className={`${row.getValue("status") === 1 ? 'text-green-500' : 'text-red-500 file'} font-semibold`}>
-        {row.getValue("status") === 1 ? 'Active' : 'Inactive'}</div>
-    ),
-  },
+  
   {
     accessorKey: "action",
     header: "Action",
@@ -214,9 +204,9 @@ export function NegativeBalanceDriversDataTable() {
             <div className="flex items-center py-4">
               <Input
                 placeholder="Filter Name..."
-                value={(table.getColumn("firstName")?.getFilterValue() as string) ?? ""}
+                value={(table.getColumn("firstname")?.getFilterValue() as string) ?? ""}
                 onChange={(event) =>
-                  table.getColumn("firstName")?.setFilterValue(event.target.value)
+                  table.getColumn("firstname")?.setFilterValue(event.target.value)
                 }
                 className="max-w-sm"
               />
@@ -254,7 +244,7 @@ export function NegativeBalanceDriversDataTable() {
                     <TableRow key={headerGroup.id}>
                       {headerGroup.headers.map((header) => {
                         return (
-                          <TableHead key={header.id}>
+                          <TableHead key={header.id} className="text-center">
                             {header.isPlaceholder
                               ? null
                               : flexRender(
@@ -288,7 +278,7 @@ export function NegativeBalanceDriversDataTable() {
                         data-state={row.getIsSelected() && "selected"}
                       >
                         {row.getVisibleCells().map((cell) => (
-                          <TableCell key={cell.id}>
+                          <TableCell key={cell.id} className="text-center">
                             {flexRender(
                               cell.column.columnDef.cell,
                               cell.getContext()

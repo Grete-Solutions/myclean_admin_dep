@@ -46,8 +46,8 @@ import { Actionbutton } from "./Action"
 
 type ApprovedData = {
   id: string
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   phone: string;
   userType: number;
   email: string;
@@ -72,7 +72,7 @@ const columns: ColumnDef<ApprovedData>[] = [
     cell: ({ row }) => <div>{row.index + 1}</div>, 
   },
   {
-    accessorKey: "firstName",
+    accessorKey: "firstname",
     header: ({ column }) => (
       <Button
         variant="ghost"
@@ -83,14 +83,14 @@ const columns: ColumnDef<ApprovedData>[] = [
       </Button>
     ),
     cell: ({ row }) => (
-      <div className="uppercase">{row.getValue("firstName")}</div>
+      <div className="uppercase">{row.getValue("firstname")}</div>
     ),
   },
   {
-    accessorKey: "lastName",
+    accessorKey: "lastname",
     header: "Last Name",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("lastName")}</div>
+      <div className="capitalize">{row.getValue("lastname")}</div>
     ),
   },
   {
@@ -180,9 +180,9 @@ export function ApprovePendingDataTable() {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter Name..."
-          value={(table.getColumn("firstName")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("firstname")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("firstName")?.setFilterValue(event.target.value)
+            table.getColumn("firstname")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

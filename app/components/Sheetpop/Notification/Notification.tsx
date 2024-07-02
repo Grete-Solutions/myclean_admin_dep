@@ -29,6 +29,7 @@ interface Users {
   lastname: string;
   phone: string;
   userType: number;
+  fcmToken: string;
   email: string;
   createdAt: {
     _seconds: number;
@@ -49,6 +50,7 @@ interface Drivers {
   lastname: string;
   phone: string;
   userType: number;
+  fcmToken: string;
   email: string;
   createdAt: {
     _seconds: number;
@@ -75,7 +77,8 @@ function NotificationSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
   const [selectedUsers, setSelectedUsers] = useState<{ value: string; label: string }[]>([]);
   const [selectedDrivers, setSelectedDrivers] = useState<{ value: string; label: string }[]>([]);
 
-  const {toast}= useToast()
+  const { toast } = useToast();
+
   useEffect(() => {
     const fetchUsersAndDrivers = async () => {
       try {
@@ -120,7 +123,7 @@ function NotificationSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
   };
 
   const selectAllUsers = () => {
-    const userOptions = users.map(user => ({ value: user.id, label: `${user.firstname} ${user.lastname}` }));
+    const userOptions = users.map(user => ({ value: user.fcmToken, label: `${user.firstname} ${user.lastname}` }));
     setSelectedUsers(userOptions);
   };
 
@@ -129,7 +132,7 @@ function NotificationSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
   };
 
   const selectAllDrivers = () => {
-    const driverOptions = drivers.map(driver => ({ value: driver.id, label: `${driver.firstname} ${driver.lastname}` }));
+    const driverOptions = drivers.map(driver => ({ value: driver.fcmToken, label: `${driver.firstname} ${driver.lastname}` }));
     setSelectedDrivers(driverOptions);
   };
 
@@ -159,8 +162,6 @@ function NotificationSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
           title,
           body,
           priority,
-          // users: selectedUsers.map(u => u.value),
-          // drivers: selectedDrivers.map(d => d.value),
         }),
       });
 
@@ -170,7 +171,7 @@ function NotificationSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
 
       const data = await response.json();
       onAddSuccess();
-      toast({ title: "Success",variant:'success', description: "Notification Sent successfully" });
+      toast({ title: "Success", variant: 'success', description: "Notification Sent successfully" });
     } catch (error) {
       console.error('Error submitting notification:', error);
       setError('Failed to send notification.');
@@ -179,11 +180,8 @@ function NotificationSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
     }
   };
 
-  const userOptions = users.map(user => ({ value: user.id, label: `${user.firstname} ${user.lastname}` }));
-  const driverOptions = drivers.map(driver => ({ value: driver.id, label: `${driver.firstname} ${driver.lastname}` }));
-
-  console.log('User options:', userOptions);
-  console.log('Driver options:', driverOptions);
+  const userOptions = users.map(user => ({ value: user.fcmToken, label: `${user.firstname} ${user.lastname}` }));
+  const driverOptions = drivers.map(driver => ({ value: driver.fcmToken, label: `${driver.firstname} ${driver.lastname}` }));
 
   return (
     <Sheet>
@@ -193,78 +191,78 @@ function NotificationSheet({ onAddSuccess }: { onAddSuccess: () => void }) {
         </Button>
       </SheetTrigger>
       <SheetContent className='z-[999]'>
-        <ScrollArea  className='h-full'>
-        <SheetHeader>
-          <SheetTitle>Push Notification</SheetTitle>
-          <SheetDescription>Click save when you&apos;re done.</SheetDescription>
-        </SheetHeader>
-        <form onSubmit={handleSave}>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-1 items-center ">
-              <Label htmlFor="users" className="text-left">Users</Label>
-              <div className="flex gap-2">
-                <Button className='bg-transparent outline-none hover:bg-transparent hover:text-[#0a88914e]  text-[#0A8791] p-0 '  type="button" onClick={selectAllUsers}>Select All Users</Button>
-                <Button className='bg-transparent outline-none hover:bg-transparent hover:text-[#0a88914e]  text-[#0A8791] p-0 '  type="button" onClick={deselectAllUsers}>Deselect All Users</Button>
+        <ScrollArea className='h-full'>
+          <SheetHeader>
+            <SheetTitle>Push Notification</SheetTitle>
+            <SheetDescription>Click save when you&apos;re done.</SheetDescription>
+          </SheetHeader>
+          <form onSubmit={handleSave}>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-1 items-center ">
+                <Label htmlFor="users" className="text-left">Users</Label>
+                <div className="flex gap-2">
+                  <Button className='bg-transparent outline-none hover:bg-transparent hover:text-[#0a88914e]  text-[#0A8791] p-0 ' type="button" onClick={selectAllUsers}>Select All Users</Button>
+                  <Button className='bg-transparent outline-none hover:bg-transparent hover:text-[#0a88914e]  text-[#0A8791] p-0 ' type="button" onClick={deselectAllUsers}>Deselect All Users</Button>
+                </div>
+                <Select
+                  isMulti
+                  options={userOptions}
+                  onChange={handleUsersChange}
+                  value={selectedUsers}
+                  className="w-full"
+                />
               </div>
-              <Select
-                isMulti
-                options={userOptions}
-                onChange={handleUsersChange}
-                value={selectedUsers}
-                className="w-full"
-              />
-            </div>
-            <div className="grid grid-cols-1 items-center ">
-              <Label htmlFor="drivers" className="text-left">Drivers</Label>
-              <div className="flex gap-2">
-                <Button className='bg-transparent outline-none hover:bg-transparent hover:text-[#0a88914e] text-[#0A8791] p-0 '  type="button" onClick={selectAllDrivers}>Select All Drivers</Button>
-                <Button className='bg-transparent outline-none hover:bg-transparent hover:text-[#0a88914e]  text-[#0A8791] p-0 ' type="button" onClick={deselectAllDrivers}>Deselect All Drivers</Button>
+              <div className="grid grid-cols-1 items-center ">
+                <Label htmlFor="drivers" className="text-left">Drivers</Label>
+                <div className="flex gap-2">
+                  <Button className='bg-transparent outline-none hover:bg-transparent hover:text-[#0a88914e] text-[#0A8791] p-0 ' type="button" onClick={selectAllDrivers}>Select All Drivers</Button>
+                  <Button className='bg-transparent outline-none hover:bg-transparent hover:text-[#0a88914e]  text-[#0A8791] p-0 ' type="button" onClick={deselectAllDrivers}>Deselect All Drivers</Button>
+                </div>
+                <Select
+                  isMulti
+                  options={driverOptions}
+                  onChange={handleDriversChange}
+                  value={selectedDrivers}
+                  className="w-full"
+                />
               </div>
-              <Select
-                isMulti
-                options={driverOptions}
-                onChange={handleDriversChange}
-                value={selectedDrivers}
-                className="w-full"
-              />
+              <div className="grid grid-cols-1 items-center gap-4">
+                <Label htmlFor="pushTitle" className="text-left">Push Title</Label>
+                <Input
+                  id="pushTitle"
+                  placeholder='Title'
+                  className="col-span-3"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </div>
+              <div className="grid grid-cols-1 items-center gap-4">
+                <Label htmlFor="priority" className="text-left">Priority</Label>
+                <UISelect onValueChange={setPriority}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select a priority" />
+                  </SelectTrigger>
+                  <SelectContent className='z-[9999]'>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="normal">Low</SelectItem>
+                  </SelectContent>
+                </UISelect>
+              </div>
+              <div className="grid grid-cols-1 items-center gap-4">
+                <Label htmlFor="body" className="text-left">Body</Label>
+                <RichTextEditor theme="snow" value={body} onChange={setBody} />
+              </div>
             </div>
-            <div className="grid grid-cols-1 items-center gap-4">
-              <Label htmlFor="pushTitle" className="text-left">Push Title</Label>
-              <Input
-                id="pushTitle"
-                placeholder='Title'
-                className="col-span-3"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
-            <div className="grid grid-cols-1 items-center gap-4">
-              <Label htmlFor="priority" className="text-left">Priority</Label>
-              <UISelect value={priority} onValueChange={setPriority}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select Priority" />
-                </SelectTrigger>
-                <SelectContent className='z-[99999]'>
-                  <SelectItem value="high">High</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="low">Low</SelectItem>
-                </SelectContent>
-              </UISelect>
-            </div>
-            <div className="grid grid-cols-1 items-center gap-4">
-              <Label htmlFor="message" className="text-left">Message</Label>
-              <RichTextEditor value={body} onChange={setBody} />
-            </div>
-          </div>
-          {error && <p className="text-red-500">{error}</p>}
-          <SheetFooter>
-            <SheetClose asChild>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Saving...' : 'Save changes'}
-              </Button>
-            </SheetClose>
-          </SheetFooter>
-        </form></ScrollArea>
+            <SheetFooter>
+              <SheetClose asChild>
+                <Button type="submit" className='bg-[#0A8791]'>
+                  {isSubmitting ? 'Sending...' : 'Send Notification'}
+                </Button>
+              </SheetClose>
+            </SheetFooter>
+            {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+          </form>
+        </ScrollArea>
       </SheetContent>
     </Sheet>
   );

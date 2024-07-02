@@ -92,8 +92,7 @@ export const SIDENAV_ITEMS: SideNavItemGroup[] = [
                 icon: <BsPersonGear size={20} />,
                 submenu: true,
                 subMenuItems: [
-                    {title: 'Approved Users', path: '/manageUsers/ApprovedUsers' },
-                    {title: 'Pending Users', path: '/manageUsers/PendingUsers' },
+                    {title: ' Users', path: '/manageUsers/Users' },
                     {title: 'Suspended Users', path: '/manageUsers/SuspendedUsers' },
                     {title: 'Deactivated Users', path: '/manageUsers/DeactivatedUsers' },
                     {title: 'Deleted Users', path: '/manageUsers/DeletedUsers' },
