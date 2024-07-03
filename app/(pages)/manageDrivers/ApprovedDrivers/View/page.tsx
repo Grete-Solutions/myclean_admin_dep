@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useSearchParams } from "next/navigation";
 import * as React from "react";
-
+import { Suspense } from "react";
 type ApprovedData = {
   firstname: string;
   lastname: string;
@@ -38,7 +38,14 @@ type ReferralData = {
   userType: string;
 };
 
-export default function ApproveDriversDataPage() {
+export default function ViewDriverPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ApproveDriversDataPage />
+    </Suspense>
+  );
+}
+const ApproveDriversDataPage= () => {
   const [firstname, setFirstname] = React.useState('');
   const [lastname, setLastname] = React.useState('');
   const [phone, setPhone] = React.useState('');
@@ -117,7 +124,7 @@ export default function ApproveDriversDataPage() {
   }
 
   return (
-    <React.Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>Loading...</div>}>
     <div className="w-full h-full p-4">
       <div className="flex flex-col items-center gap-4">
         <h2 className="text-xl font-semibold text-gray-600">User Profile</h2>
@@ -226,6 +233,6 @@ export default function ApproveDriversDataPage() {
         </div>
       </div>
     </div>
-    </React.Suspense>
+    </Suspense>
   );
 }
