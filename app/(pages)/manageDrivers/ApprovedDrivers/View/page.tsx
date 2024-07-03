@@ -201,26 +201,33 @@ export default function ApproveDriversDataPage() {
           </div>
           <div className="w-full grid grid-cols-1 gap-4">
             <h2 className="text-xl font-semibold text-gray-600">Referred Members</h2>
-            {referrals.length > 0 ? (
-              referrals.map((referral, index) => (
-                <div key={index} className="flex flex-col">
-                  <Label htmlFor={`ReferralCode${index}`} className="text-left my-3">Member {index+1}</Label>
-                  <Label htmlFor={`ReferralFirstName${index}`} className="text-left">First Name</Label>
-                  <Input id={`ReferralFirstName${index}`} value={referral.firstname} className="w-full" readOnly />
-                  <Label htmlFor={`ReferralLastName${index}`} className="text-left">Last Name</Label>
-                  <Input id={`ReferralLastName${index}`} value={referral.lastname} className="w-full" readOnly />
-                  <Label htmlFor={`ReferralCreatedAt${index}`} className="text-left">Created At</Label>
-                  <Input
-                    id={`ReferralCreatedAt${index}`}
-                    value={referral.createdAt ? new Date(referral.createdAt._seconds * 1000).toLocaleString() : ''}
-                    className="w-full"
-                    readOnly
-                  />
-                </div>
-              ))
-            ) : (
-              <div>No referred members found</div>
-            )}
+            <React.Suspense fallback={  <div className="flex justify-center items-center h-64">
+                <svg className="animate-spin h-8 w-8 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+              </div>}>
+              {referrals.length > 0 ? (
+                referrals.map((referral, index) => (
+                  <div key={index} className="flex flex-col">
+                    <Label htmlFor={`ReferralCode${index}`} className="text-left my-3">Member {index+1}</Label>
+                    <Label htmlFor={`ReferralFirstName${index}`} className="text-left">First Name</Label>
+                    <Input id={`ReferralFirstName${index}`} value={referral.firstname} className="w-full" readOnly />
+                    <Label htmlFor={`ReferralLastName${index}`} className="text-left">Last Name</Label>
+                    <Input id={`ReferralLastName${index}`} value={referral.lastname} className="w-full" readOnly />
+                    <Label htmlFor={`ReferralCreatedAt${index}`} className="text-left">Created At</Label>
+                    <Input
+                      id={`ReferralCreatedAt${index}`}
+                      value={referral.createdAt ? new Date(referral.createdAt._seconds * 1000).toLocaleString() : ''}
+                      className="w-full"
+                      readOnly
+                    />
+                  </div>
+                ))
+              ) : (
+                <div>No referred members found</div>
+              )}
+            </React.Suspense>
           </div>
         </div>
       </div>
