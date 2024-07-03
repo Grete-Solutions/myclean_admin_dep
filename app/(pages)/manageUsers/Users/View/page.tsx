@@ -154,22 +154,26 @@ const ApproveUsersDataPage =()=> {
           </div>
           <div className="w-full grid grid-cols-1 gap-4">
             <h2 className="text-xl font-semibold text-gray-600">Referred Members</h2>
-            {referrals.map((referral, index) => (
-              <div key={index} className="flex flex-col">
-                <Label htmlFor={`ReferralCode${index}`} className="text-left my-3">Member {index+1}</Label>
-                <Label htmlFor={`ReferralFirstName${index}`} className="text-left">First Name</Label>
-                <Input id={`ReferralFirstName${index}`} value={referral.firstname} className="w-full" readOnly />
-                <Label htmlFor={`ReferralLastName${index}`} className="text-left">Last Name</Label>
-                <Input id={`ReferralLastName${index}`} value={referral.lastname} className="w-full" readOnly />
-                <Label htmlFor={`ReferralCreatedAt${index}`} className="text-left">Created At</Label>
-                <Input
-                  id={`ReferralCreatedAt${index}`}
-                  value={referral.createdAt ? new Date(referral.createdAt._seconds * 1000).toLocaleString() : ''}
-                  className="w-full"
-                  readOnly
-                />
-              </div>
-            ))}
+            {referrals.length > 0 ? (
+              referrals.map((referral, index) => (
+                <div key={index} className="flex flex-col">
+                  <Label htmlFor={`ReferralCode${index}`} className="text-left my-3">Member {index+1}</Label>
+                  <Label htmlFor={`ReferralFirstName${index}`} className="text-left">First Name</Label>
+                  <Input id={`ReferralFirstName${index}`} value={referral.firstname} className="w-full" readOnly />
+                  <Label htmlFor={`ReferralLastName${index}`} className="text-left">Last Name</Label>
+                  <Input id={`ReferralLastName${index}`} value={referral.lastname} className="w-full" readOnly />
+                  <Label htmlFor={`ReferralCreatedAt${index}`} className="text-left">Created At</Label>
+                  <Input
+                    id={`ReferralCreatedAt${index}`}
+                    value={referral.createdAt ? new Date(referral.createdAt._seconds * 1000).toLocaleString() : ''}
+                    className="w-full"
+                    readOnly
+                  />
+                </div>
+              ))
+            ) : (
+              <div>No referred members found</div>
+            )}
           </div>
         </div>
       </div>
