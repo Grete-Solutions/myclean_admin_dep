@@ -2,9 +2,8 @@
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import * as React from "react";
-import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import * as React from "react";
 
 type ApprovedData = {
   firstname: string;
@@ -39,17 +38,15 @@ export default function ApproveUsersDataPage() {
   const [profilePicture, setProfilePicture] = React.useState('');
   const [data, setData] = React.useState<ApprovedData | null>(null);
   const [referrals, setReferrals] = React.useState<ReferralData[]>([]);
-  
   const params = useSearchParams();
   const id = params.get('id');
 
   React.useEffect(() => {
     const fetchData = async () => {
       try {
-        if (!id) return; // Handle cases where id is not available
         const response = await fetch(`/lib/GET/User/getUserById?id=${id}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch user data');
+          throw new Error('Failed to fetch data');
         }
         const userData = await response.json();
         if (userData && userData.product) {
@@ -70,21 +67,27 @@ export default function ApproveUsersDataPage() {
             throw new Error('Failed to fetch referral data');
           }
           const referralData = await referralResponse.json();
+          if (referrals.length > 0) { 
+            setReferrals(referralData.product);
+           }
+          else {
+            setReferrals([]);
+          }
           if (referralData && referralData.product) {
             setReferrals(referralData.product);
-          } else {
-            setReferrals([]);
           }
         } else {
           setData(null);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
-        // Handle error state or display an error message to the user
       }
     };
 
-    fetchData();
+  
+    if (id) {
+      fetchData();
+    }
   }, [id]);
 
   if (!data) {
@@ -92,6 +95,7 @@ export default function ApproveUsersDataPage() {
   }
 
   return (
+    <React.Suspense>
     <div className="w-full p-4">
       <div className="flex flex-col items-center gap-4">
         <h2 className="text-xl font-semibold text-gray-600">User Profile</h2>
@@ -142,31 +146,25 @@ export default function ApproveUsersDataPage() {
           </div>
           <div className="w-full grid grid-cols-1 gap-4">
             <h2 className="text-xl font-semibold text-gray-600">Referred Members</h2>
-            <Suspense fallback={<div>Loading referred members...</div>}>
-              {referrals.length > 0 ? (
-                referrals.map((referral, index) => (
-                  <div key={index} className="flex flex-col">
-                    <Label htmlFor={`ReferralCode${index}`} className="text-left my-3">Member {index+1}</Label>
-                    <Label htmlFor={`ReferralFirstName${index}`} className="text-left">First Name</Label>
-                    <Input id={`ReferralFirstName${index}`} value={referral.firstname} className="w-full" readOnly />
-                    <Label htmlFor={`ReferralLastName${index}`} className="text-left">Last Name</Label>
-                    <Input id={`ReferralLastName${index}`} value={referral.lastname} className="w-full" readOnly />
-                    <Label htmlFor={`ReferralCreatedAt${index}`} className="text-left">Created At</Label>
-                    <Input
-                      id={`ReferralCreatedAt${index}`}
-                      value={referral.createdAt ? new Date(referral.createdAt._seconds * 1000).toLocaleString() : ''}
-                      className="w-full"
-                      readOnly
-                    />
-                  </div>
-                ))
-              ) : (
-                <div>No referred members found</div>
-              )}
-            </Suspense>
+            {referrals.map((referral, index) => (
+              <div key={index} className="flex flex-col">
+                <Label htmlFor={`ReferralCode${index}`} className="text-left my-3">Member {index+1}</Label>
+                <Label htmlFor={`ReferralFirstName${index}`} className="text-left">First Name</Label>
+                <Input id={`ReferralFirstName${index}`} value={referral.firstname} className="w-full" readOnly />
+                <Label htmlFor={`ReferralLastName${index}`} className="text-left">Last Name</Label>
+                <Input id={`ReferralLastName${index}`} value={referral.lastname} className="w-full" readOnly />
+                <Label htmlFor={`ReferralCreatedAt${index}`} className="text-left">Created At</Label>
+                <Input
+                  id={`ReferralCreatedAt${index}`}
+                  value={referral.createdAt ? new Date(referral.createdAt._seconds * 1000).toLocaleString() : ''}
+                  className="w-full"
+                  readOnly
+                />
+              </div>
+            ))}
           </div>
         </div>
       </div>
-    </div>
+    </div></React.Suspense>
   );
 }
