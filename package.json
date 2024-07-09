@@ -35,6 +35,7 @@
     "classnames": "^2.5.1",
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
+    "cors": "^2.8.5",
     "csv-parse": "^5.5.5",
     "date-fns": "^3.6.0",
     "firebase": "^10.12.0",
@@ -62,6 +63,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

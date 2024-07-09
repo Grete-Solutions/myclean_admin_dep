@@ -91,7 +91,8 @@ const ApproveUsersDataPage = () => {
         return data.display_name || 'Address not found';
       } catch (error) {
         console.error('Error fetching address:', error);
-        return 'Address not found';
+        // Return a string representation of latitude and longitude
+        return `(${latitude}, ${longitude})`;
       }
     };
 
@@ -135,10 +136,16 @@ const ApproveUsersDataPage = () => {
           if (bookingData && bookingData.product) {
             const bookingsWithAddress = await Promise.all(
               bookingData.product.map(async (booking: BookingData) => {
-                const address = await getAddressFromCoordinates(
-                  booking.pickupLocation._latitude,
-                  booking.pickupLocation._longitude
-                );
+                let address;
+                try {
+                  address = await getAddressFromCoordinates(
+                    booking.pickupLocation._latitude,
+                    booking.pickupLocation._longitude
+                  );
+                } catch (error) {
+                  console.error('Error fetching address for booking:', error);
+                  address = `(${booking.pickupLocation._latitude}, ${booking.pickupLocation._longitude})`;
+                }
                 return { ...booking, address };
               })
             );
@@ -245,7 +252,8 @@ const ApproveUsersDataPage = () => {
                           {referral.createdAt ? new Date(referral.createdAt._seconds * 1000).toLocaleString() : ''}
                         </TableCell>
                         <TableCell>
-                          {referral.userType === 0 ? 'User' : referral.userType === 1 ? 'Driver' : 'User'}
+                          {referral.userType === 0 ?
+                            "Member" : "Driver"}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -256,10 +264,10 @@ const ApproveUsersDataPage = () => {
               )}
             </div>
             <div className="w-full grid grid-cols-1 col-span-2 gap-4">
-              <h2 className="text-xl font-semibold text-gray-600">User Bookings ({count})</h2>
+              <h2 className="text-xl font-semibold text-gray-600">Bookings</h2>
               {bookings.length > 0 ? (
                 <Table className="w-full">
-                  <TableCaption>A list of Bookings</TableCaption>
+                  <TableCaption>A list of bookings.</TableCaption>
                   <TableHeader className="w-full">
                     <TableRow>
                       <TableHead>Driver</TableHead>
@@ -267,20 +275,20 @@ const ApproveUsersDataPage = () => {
                       <TableHead>Net Price</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Created At</TableHead>
-                      <TableHead>Pickup Address</TableHead>
+                      <TableHead>Address</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {bookings.map((book, index) => (
+                    {bookings.map((booking, index) => (
                       <TableRow key={index}>
-                        <TableCell>{book.driver}</TableCell>
-                        <TableCell>{book.actualPrice}</TableCell>
-                        <TableCell>{book.netPrice}</TableCell>
-                        <TableCell>{book.status}</TableCell>
+                        <TableCell>{booking.driver}</TableCell>
+                        <TableCell>{booking.actualPrice}</TableCell>
+                        <TableCell>{booking.netPrice}</TableCell>
+                        <TableCell>{booking.status}</TableCell>
                         <TableCell>
-                          {book.createdAt ? new Date(book.createdAt._seconds * 1000).toLocaleString() : ''}
+                          {booking.createdAt ? new Date(booking.createdAt._seconds * 1000).toLocaleString() : ''}
                         </TableCell>
-                        <TableCell>{book.address}</TableCell>
+                        <TableCell>{booking.address}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -295,3 +303,4 @@ const ApproveUsersDataPage = () => {
     </Suspense>
   );
 };
+

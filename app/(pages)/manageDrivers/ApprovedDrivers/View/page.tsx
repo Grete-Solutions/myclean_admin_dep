@@ -139,17 +139,23 @@ const ApproveDriversDataPage = () => {
 
           const bookingResponse = await fetch(`/lib/GET/Driver/getDriverBookingById?id=${id}`);
           if (!bookingResponse.ok) {
-            throw new Error('Failed to fetch referral data');
+            throw new Error('Failed to fetch booking data');
           }
           const bookingData = await bookingResponse.json();
           if (bookingData && bookingData.product) {
             // Fetch addresses for each booking
             const bookingsWithAddresses = await Promise.all(
               bookingData.product.map(async (booking: BookingData) => {
-                const address = await getAddressFromCoordinates(
-                  booking.pickupLocation._latitude,
-                  booking.pickupLocation._longitude
-                );
+                let address = '';
+                try {
+                  address = await getAddressFromCoordinates(
+                    booking.pickupLocation._latitude,
+                    booking.pickupLocation._longitude
+                  );
+                } catch (error) {
+                  console.error('Error fetching address:', error);
+                  address = `Lat: ${booking.pickupLocation._latitude}, Lon: ${booking.pickupLocation._longitude}`;
+                }
                 return { ...booking, address };
               })
             );
@@ -160,7 +166,7 @@ const ApproveDriversDataPage = () => {
 
           const countResponse = await fetch(`/lib/GET/Driver/getDriverBookingByCount?id=${id}`);
           if (!countResponse.ok) {
-            throw new Error('Failed to fetch referral data');
+            throw new Error('Failed to fetch count data');
           }
           const countData = await countResponse.json();
           if (countData && countData.product) {
@@ -180,10 +186,9 @@ const ApproveDriversDataPage = () => {
   }, [id]);
 
   const getAddressFromCoordinates = async (latitude: number, longitude: number) => {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
     try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-      );
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error('Failed to fetch address');
       }
@@ -191,7 +196,7 @@ const ApproveDriversDataPage = () => {
       return data.display_name;
     } catch (error) {
       console.error('Error fetching address:', error);
-      return '';
+      throw new Error('Failed to fetch address');
     }
   };
 
@@ -341,7 +346,7 @@ const ApproveDriversDataPage = () => {
                         <TableCell>
                           {book.createdAt ? new Date(book.createdAt._seconds * 1000).toLocaleString() : ''}
                         </TableCell>
-                        <TableCell>{book.address}</TableCell>
+                        <TableCell>{book.address || `Lat: ${book.pickupLocation._latitude}, Lon: ${book.pickupLocation._longitude}`}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
