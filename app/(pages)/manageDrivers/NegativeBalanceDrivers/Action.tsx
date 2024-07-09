@@ -72,7 +72,7 @@ export function Actionbutton({ id}: ActionButtonProps) {
       fetchDeletePermission();
     }, [session]); 
     const handleEdit = () => {
-        router.push(`Admin/edit?id=${id}`);
+        router.push(`NegativeBalanceDrivers/View?id=${id}`);
     };
 
 

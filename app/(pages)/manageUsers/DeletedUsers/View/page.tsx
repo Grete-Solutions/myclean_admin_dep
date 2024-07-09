@@ -10,7 +10,6 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -26,18 +25,6 @@ type ApprovedData = {
   referredBy: string;
   address: string;
   profilePicture: string;
-  vehicleDetails: {
-    vehicleColor: string;
-    vehicleLicenseNumber: string;
-    vehicleMake: string;
-  };
-  documents: {
-    driverPhoto: string;
-    idCard: string;
-    driverLicense: string;
-  };
-  balance: string;
-  city: string;
 };
 
 type ReferralData = {
@@ -51,7 +38,7 @@ type ReferralData = {
 };
 
 interface BookingData {
-  user: string;
+  driver: string;
   actualPrice: number;
   netPrice: number;
   status: string;
@@ -66,71 +53,70 @@ interface BookingData {
   address?: string; // Adding address field for display
 }
 
-export default function ViewDriverPage() {
+export default function ViewUserPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <ApproveDriversDataPage />
+      <ApproveUsersDataPage />
     </Suspense>
   );
 }
 
-const ApproveDriversDataPage = () => {
+const ApproveUsersDataPage = () => {
   const [firstname, setFirstname] = React.useState('');
   const [lastname, setLastname] = React.useState('');
   const [phone, setPhone] = React.useState('');
-  const [count, setCount] = React.useState('');
   const [email, setEmail] = React.useState('');
-  const [referralFname, setReferralFname] = React.useState('');
-  const [referralLname, setReferralLname] = React.useState('');
   const [referral, setReferral] = React.useState('');
-  const [referredBy, setReferredBy] = React.useState('');
+  const [referredBy, setReferredBy] = React.useState('')
+  const [count, setCount] = React.useState('');
   const [address, setAddress] = React.useState('');
   const [profilePicture, setProfilePicture] = React.useState('');
-  const [balance, setBalance] = React.useState('');
-  const [city, setCity] = React.useState('');
-  const [vehicleDetails, setVehicleDetails] = React.useState({
-    vehicleColor: '',
-    vehicleLicenseNumber: '',
-    vehicleMake: '',
-  });
-  const [documents, setDocuments] = React.useState({
-    driverPhoto: '',
-    idCard: '',
-    driverLicense: '',
-  });
   const [data, setData] = React.useState<ApprovedData | null>(null);
   const [referrals, setReferrals] = React.useState<ReferralData[]>([]);
-  const [bookings, setBookings] = React.useState<BookingData[]>([]);
   const params = useSearchParams();
-  const id = params.get('id');
-  const [userCount, setUserCount]= React.useState('');
+  const [bookings, setBookings] = React.useState<BookingData[]>([]);
 
+  const id = params.get('id');
 
   React.useEffect(() => {
+    const getAddressFromCoordinates = async (latitude: number, longitude: number) => {
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+        );
+        if (!response.ok) {
+          throw new Error('Failed to fetch address');
+        }
+        const data = await response.json();
+        return data.display_name || 'Address not found';
+      } catch (error) {
+        console.error('Error fetching address:', error);
+        // Return a string representation of latitude and longitude
+        return `(${latitude}, ${longitude})`;
+      }
+    };
+
     const fetchData = async () => {
       try {
-        const response = await fetch(`/lib/GET/Driver/getDriverById?id=${id}`);
+        const response = await fetch(`/lib/GET/User/getUserById?id=${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
-        const data = await response.json();
-        if (data && data.product) {
-          const driverData = data.product;
-          setData(driverData);
-          setEmail(driverData.email);
-          setFirstname(driverData.firstname);
-          setLastname(driverData.lastname);
-          setPhone(driverData.phone);
-          setAddress(driverData.pickup_address);
-          setReferredBy(driverData.referredBy);
-          setReferral(driverData.referral);
-          setCity(driverData.city);
-          setBalance(driverData.balance);
-          setProfilePicture(driverData.documents.driverPhoto);
-          setVehicleDetails(driverData.vehicleDetails);
-          setDocuments(driverData.documents);
+        const userData = await response.json();
+        if (userData && userData.product) {
+          const user = userData.product;
+          setData(user);
+          setEmail(user.email);
+          setFirstname(user.firstname);
+          setLastname(user.lastname);
+          setPhone(user.phone);
+          setAddress(user.address);
+          setReferredBy(user.referredBy);
+          setReferral(user.referral);
+          setProfilePicture(user.profilePicture);
 
-          const referralResponse = await fetch(`/lib/GET/Driver/getReferralByCode?code=${driverData.referral}`);
+          // Fetch referred members based on referral code
+          const referralResponse = await fetch(`/lib/GET/User/getReferralByCode?code=${user.referral}`);
           if (!referralResponse.ok) {
             throw new Error('Failed to fetch referral data');
           }
@@ -141,52 +127,37 @@ const ApproveDriversDataPage = () => {
             setReferrals([]);
           }
 
-          const namereferralResponse = await fetch(`/lib/GET/User/getUserByReferral?code=${driverData.referredBy}`);
-          if (!namereferralResponse.ok) {
-            throw new Error('Failed to fetch referral data');
-          }
-          const namereferralData = await namereferralResponse.json();
-          if (namereferralData && namereferralData.product) {
-            setReferralFname(namereferralData.product.firstname);
-            setReferralLname(namereferralData.product.lastname);
-          } else {
-            setReferrals([]);
-          }
-
-          const bookingResponse = await fetch(`/lib/GET/Driver/getDriverBookingById?id=${id}`);
+          // Fetch bookings
+          const bookingResponse = await fetch(`/lib/GET/User/getUserBookingById?id=${id}`);
           if (!bookingResponse.ok) {
-            throw new Error('Failed to fetch referral data');
+            throw new Error('Failed to fetch booking data');
           }
           const bookingData = await bookingResponse.json();
           if (bookingData && bookingData.product) {
-            // Fetch addresses for each booking
-            const bookingsWithAddresses = await Promise.all(
+            const bookingsWithAddress = await Promise.all(
               bookingData.product.map(async (booking: BookingData) => {
-                const address = await getAddressFromCoordinates(
-                  booking.pickupLocation._latitude,
-                  booking.pickupLocation._longitude
-                );
+                let address;
+                try {
+                  address = await getAddressFromCoordinates(
+                    booking.pickupLocation._latitude,
+                    booking.pickupLocation._longitude
+                  );
+                } catch (error) {
+                  console.error('Error fetching address for booking:', error);
+                  address = `(${booking.pickupLocation._latitude}, ${booking.pickupLocation._longitude})`;
+                }
                 return { ...booking, address };
               })
             );
-            setBookings(bookingsWithAddresses);
+            setBookings(bookingsWithAddress);
           } else {
             setBookings([]);
           }
 
-          
-          const usercountResponse = await fetch(`/lib/GET/User/getReferralByCount?code=${driverData.referral}`);
-          if (!usercountResponse.ok) {
-            throw new Error('Failed to fetch referral data');
-          }
-          const usercountData = await usercountResponse.json();
-          if (usercountData && usercountData.product.Downline) {
-            setUserCount(usercountData.product.Downline);
-          }
-
-          const countResponse = await fetch(`/lib/GET/Driver/getDriverBookingByCount?id=${id}`);
+          // Fetch booking count
+          const countResponse = await fetch(`/lib/GET/User/getUserBookingByCount?id=${id}`);
           if (!countResponse.ok) {
-            throw new Error('Failed to fetch referral data');
+            throw new Error('Failed to fetch booking count');
           }
           const countData = await countResponse.json();
           if (countData && countData.product) {
@@ -200,38 +171,18 @@ const ApproveDriversDataPage = () => {
       }
     };
 
-    
-
-    
-
     if (id) {
       fetchData();
     }
   }, [id]);
-
-  const getAddressFromCoordinates = async (latitude: number, longitude: number) => {
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-      );
-      if (!response.ok) {
-        throw new Error('Failed to fetch address');
-      }
-      const data = await response.json();
-      return data.display_name;
-    } catch (error) {
-      console.error('Error fetching address:', error);
-      return '';
-    }
-  };
 
   if (!data) {
     return <div>No data found</div>;
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <div className="w-full h-full p-4">
+    <Suspense>
+      <div className="w-full p-4">
         <div className="flex flex-col items-center gap-4">
           <h2 className="text-xl font-semibold text-gray-600">User Profile</h2>
           {profilePicture ? (
@@ -264,45 +215,11 @@ const ApproveDriversDataPage = () => {
               <Label htmlFor="Email" className="text-left">Email</Label>
               <Input id="Email" value={email} className="w-full" readOnly />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col sm:col-span-2">
               <Label htmlFor="Address" className="text-left">Address</Label>
               <Input id="Address" value={address} className="w-full" readOnly />
             </div>
-            <div className="flex flex-col">
-              <Label htmlFor="Balance" className="text-left">Balance</Label>
-              <Input id="Balance" value={balance} className="w-full" readOnly />
-            </div>
-            <div className="flex flex-col">
-              <Label htmlFor="City" className="text-left">City</Label>
-              <Input id="City" value={city} className="w-full" readOnly />
-            </div>
-            <div className="sm:col-span-2 grid gap-4">
-              <h2 className="text-xl font-semibold text-gray-600">Vehicle Details</h2>
-              <div className="flex flex-col">
-                <Label htmlFor="VehicleColor" className="text-left">Vehicle Color</Label>
-                <Input id="VehicleColor" value={vehicleDetails.vehicleColor} className="w-full" readOnly />
-              </div>
-              <div className="flex flex-col">
-                <Label htmlFor="VehicleLicenseNumber" className="text-left">Vehicle License Number</Label>
-                <Input id="VehicleLicenseNumber" value={vehicleDetails.vehicleLicenseNumber} className="w-full" readOnly />
-              </div>
-              <div className="flex flex-col">
-                <Label htmlFor="VehicleMake" className="text-left">Vehicle Make</Label>
-                <Input id="VehicleMake" value={vehicleDetails.vehicleMake} className="w-full" readOnly />
-              </div>
-            </div>
-            <div className="sm:col-span-2 grid-cols-1 sm:grid-cols-2">
-              <h2 className="text-xl font-semibold text-gray-600">Documents</h2>
-              <div className="flex flex-col m-4">
-                <Label htmlFor="IdCard" className="text-left">ID Card</Label>
-                <iframe src={documents.idCard} className="w-64 h-32" />
-              </div>
-              <div className="flex m-4 flex-col">
-                <Label htmlFor="DriverLicense" className="text-left">Driver License</Label>
-                <iframe id="DriverLicense" src={documents.driverLicense} className="w-64 h-32 border-none" />
-              </div>
-            </div>
-            <div className="sm:col-span-2 gap-4 grid-cols-1 sm:grid-cols-2">
+            <div className="sm:col-span-2 grid grid-cols-1 gap-4">
               <h2 className="text-xl font-semibold text-gray-600">Referral Details</h2>
               <div className="flex flex-col">
                 <Label htmlFor="Referral" className="text-left">Referral</Label>
@@ -310,11 +227,11 @@ const ApproveDriversDataPage = () => {
               </div>
               <div className="flex flex-col">
                 <Label htmlFor="ReferredBy" className="text-left">Referred By</Label>
-                <Input id="ReferredBy" value={referralFname} className="w-full" readOnly />
+                <Input id="ReferredBy" value={referredBy} className="w-full " readOnly />
               </div>
             </div>
             <div className="w-full grid grid-cols-1 col-span-2 gap-4">
-              <h2 className="text-xl font-semibold text-gray-600">Referred Users - {userCount}</h2>
+              <h2 className="text-xl font-semibold text-gray-600">Referred Members</h2>
               {referrals.length > 0 ? (
                 <Table className="w-full">
                   <TableCaption>A list of referred members.</TableCaption>
@@ -335,7 +252,8 @@ const ApproveDriversDataPage = () => {
                           {referral.createdAt ? new Date(referral.createdAt._seconds * 1000).toLocaleString() : ''}
                         </TableCell>
                         <TableCell>
-                          {referral.userType === 0 ? 'User' : referral.userType === 1 ? 'Driver' : ''}
+                          {referral.userType === 0 ?
+                            "Member" : "Driver"}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -345,33 +263,32 @@ const ApproveDriversDataPage = () => {
                 <div>No referred members found</div>
               )}
             </div>
-
             <div className="w-full grid grid-cols-1 col-span-2 gap-4">
-              <h2 className="text-xl font-semibold text-gray-600"> Booking History- {count}</h2>
+              <h2 className="text-xl font-semibold text-gray-600">Bookings</h2>
               {bookings.length > 0 ? (
                 <Table className="w-full">
-                  <TableCaption>A list of Bookings</TableCaption>
+                  <TableCaption>A list of bookings.</TableCaption>
                   <TableHeader className="w-full">
                     <TableRow>
-                      <TableHead>User</TableHead>
+                      <TableHead>Driver</TableHead>
                       <TableHead>Actual Price</TableHead>
                       <TableHead>Net Price</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Created At</TableHead>
-                      <TableHead>Pickup Location</TableHead>
+                      <TableHead>Address</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {bookings.map((book, index) => (
+                    {bookings.map((booking, index) => (
                       <TableRow key={index}>
-                        <TableCell>{book.user}</TableCell>
-                        <TableCell>{book.actualPrice}</TableCell>
-                        <TableCell>{book.netPrice}</TableCell>
-                        <TableCell>{book.status}</TableCell>
+                        <TableCell>{booking.driver}</TableCell>
+                        <TableCell>{booking.actualPrice}</TableCell>
+                        <TableCell>{booking.netPrice}</TableCell>
+                        <TableCell>{booking.status}</TableCell>
                         <TableCell>
-                          {book.createdAt ? new Date(book.createdAt._seconds * 1000).toLocaleString() : ''}
+                          {booking.createdAt ? new Date(booking.createdAt._seconds * 1000).toLocaleString() : ''}
                         </TableCell>
-                        <TableCell>{book.address}</TableCell>
+                        <TableCell>{booking.address}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -386,3 +303,4 @@ const ApproveDriversDataPage = () => {
     </Suspense>
   );
 };
+

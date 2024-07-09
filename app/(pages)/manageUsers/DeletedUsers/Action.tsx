@@ -72,7 +72,7 @@ export function Actionbutton({ id}: ActionButtonProps) {
       fetchDeletePermission();
     }, [session]); 
     const handleView = () => {
-        router.push(`Users/View?id=${id}`);
+        router.push(`DeletedUsers/View?id=${id}`);
     };
 
 
