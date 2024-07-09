@@ -10,7 +10,6 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -38,6 +37,22 @@ type ReferralData = {
   userType: number;
 };
 
+interface BookingData {
+  driver: string;
+  actualPrice: number;
+  netPrice: number;
+  status: string;
+  createdAt?: {
+    _seconds: number;
+    _nanoseconds: number;
+  };
+  pickupLocation: {
+    _latitude: number;
+    _longitude: number;
+  };
+  address?: string; // Adding address field for display
+}
+
 export default function ViewUserPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -52,15 +67,34 @@ const ApproveUsersDataPage = () => {
   const [phone, setPhone] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [referral, setReferral] = React.useState('');
-  const [referredBy, setReferredBy] = React.useState('');
+  const [referredBy, setReferredBy] = React.useState('')
+  const [count, setCount] = React.useState('');
   const [address, setAddress] = React.useState('');
   const [profilePicture, setProfilePicture] = React.useState('');
   const [data, setData] = React.useState<ApprovedData | null>(null);
   const [referrals, setReferrals] = React.useState<ReferralData[]>([]);
   const params = useSearchParams();
+  const [bookings, setBookings] = React.useState<BookingData[]>([]);
+
   const id = params.get('id');
 
   React.useEffect(() => {
+    const getAddressFromCoordinates = async (latitude: number, longitude: number) => {
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+        );
+        if (!response.ok) {
+          throw new Error('Failed to fetch address');
+        }
+        const data = await response.json();
+        return data.display_name || 'Address not found';
+      } catch (error) {
+        console.error('Error fetching address:', error);
+        return 'Address not found';
+      }
+    };
+
     const fetchData = async () => {
       try {
         const response = await fetch(`/lib/GET/User/getUserById?id=${id}`);
@@ -90,6 +124,37 @@ const ApproveUsersDataPage = () => {
             setReferrals(referralData.product);
           } else {
             setReferrals([]);
+          }
+
+          // Fetch bookings
+          const bookingResponse = await fetch(`/lib/GET/User/getUserBookingById?id=${id}`);
+          if (!bookingResponse.ok) {
+            throw new Error('Failed to fetch booking data');
+          }
+          const bookingData = await bookingResponse.json();
+          if (bookingData && bookingData.product) {
+            const bookingsWithAddress = await Promise.all(
+              bookingData.product.map(async (booking: BookingData) => {
+                const address = await getAddressFromCoordinates(
+                  booking.pickupLocation._latitude,
+                  booking.pickupLocation._longitude
+                );
+                return { ...booking, address };
+              })
+            );
+            setBookings(bookingsWithAddress);
+          } else {
+            setBookings([]);
+          }
+
+          // Fetch booking count
+          const countResponse = await fetch(`/lib/GET/User/getUserBookingByCount?id=${id}`);
+          if (!countResponse.ok) {
+            throw new Error('Failed to fetch booking count');
+          }
+          const countData = await countResponse.json();
+          if (countData && countData.product) {
+            setCount(countData.product.count);
           }
         } else {
           setData(null);
@@ -180,7 +245,7 @@ const ApproveUsersDataPage = () => {
                           {referral.createdAt ? new Date(referral.createdAt._seconds * 1000).toLocaleString() : ''}
                         </TableCell>
                         <TableCell>
-                          {referral.userType === 0 ? 'User' : referral.userType === 1 ? 'Driver' : ''}
+                          {referral.userType === 0 ? 'User' : referral.userType === 1 ? 'Driver' : 'User'}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -188,6 +253,40 @@ const ApproveUsersDataPage = () => {
                 </Table>
               ) : (
                 <div>No referred members found</div>
+              )}
+            </div>
+            <div className="w-full grid grid-cols-1 col-span-2 gap-4">
+              <h2 className="text-xl font-semibold text-gray-600">User Bookings ({count})</h2>
+              {bookings.length > 0 ? (
+                <Table className="w-full">
+                  <TableCaption>A list of Bookings</TableCaption>
+                  <TableHeader className="w-full">
+                    <TableRow>
+                      <TableHead>Driver</TableHead>
+                      <TableHead>Actual Price</TableHead>
+                      <TableHead>Net Price</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Created At</TableHead>
+                      <TableHead>Pickup Address</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {bookings.map((book, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{book.driver}</TableCell>
+                        <TableCell>{book.actualPrice}</TableCell>
+                        <TableCell>{book.netPrice}</TableCell>
+                        <TableCell>{book.status}</TableCell>
+                        <TableCell>
+                          {book.createdAt ? new Date(book.createdAt._seconds * 1000).toLocaleString() : ''}
+                        </TableCell>
+                        <TableCell>{book.address}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              ) : (
+                <div>No bookings found</div>
               )}
             </div>
           </div>

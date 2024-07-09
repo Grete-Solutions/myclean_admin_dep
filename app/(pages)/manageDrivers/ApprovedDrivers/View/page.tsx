@@ -50,6 +50,22 @@ type ReferralData = {
   userType: number;
 };
 
+interface BookingData {
+  user: string;
+  actualPrice: number;
+  netPrice: number;
+  status: string;
+  createdAt?: {
+    _seconds: number;
+    _nanoseconds: number;
+  };
+  pickupLocation: {
+    _latitude: number;
+    _longitude: number;
+  };
+  address?: string; // Adding address field for display
+}
+
 export default function ViewDriverPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -62,6 +78,7 @@ const ApproveDriversDataPage = () => {
   const [firstname, setFirstname] = React.useState('');
   const [lastname, setLastname] = React.useState('');
   const [phone, setPhone] = React.useState('');
+  const [count, setCount] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [referral, setReferral] = React.useState('');
   const [referredBy, setReferredBy] = React.useState('');
@@ -81,6 +98,7 @@ const ApproveDriversDataPage = () => {
   });
   const [data, setData] = React.useState<ApprovedData | null>(null);
   const [referrals, setReferrals] = React.useState<ReferralData[]>([]);
+  const [bookings, setBookings] = React.useState<BookingData[]>([]);
   const params = useSearchParams();
   const id = params.get('id');
 
@@ -108,7 +126,6 @@ const ApproveDriversDataPage = () => {
           setVehicleDetails(driverData.vehicleDetails);
           setDocuments(driverData.documents);
 
-          // Fetch referred members based on referral code
           const referralResponse = await fetch(`/lib/GET/Driver/getReferralByCode?code=${driverData.referral}`);
           if (!referralResponse.ok) {
             throw new Error('Failed to fetch referral data');
@@ -118,6 +135,36 @@ const ApproveDriversDataPage = () => {
             setReferrals(referralData.product);
           } else {
             setReferrals([]);
+          }
+
+          const bookingResponse = await fetch(`/lib/GET/Driver/getDriverBookingById?id=${id}`);
+          if (!bookingResponse.ok) {
+            throw new Error('Failed to fetch referral data');
+          }
+          const bookingData = await bookingResponse.json();
+          if (bookingData && bookingData.product) {
+            // Fetch addresses for each booking
+            const bookingsWithAddresses = await Promise.all(
+              bookingData.product.map(async (booking: BookingData) => {
+                const address = await getAddressFromCoordinates(
+                  booking.pickupLocation._latitude,
+                  booking.pickupLocation._longitude
+                );
+                return { ...booking, address };
+              })
+            );
+            setBookings(bookingsWithAddresses);
+          } else {
+            setBookings([]);
+          }
+
+          const countResponse = await fetch(`/lib/GET/Driver/getDriverBookingByCount?id=${id}`);
+          if (!countResponse.ok) {
+            throw new Error('Failed to fetch referral data');
+          }
+          const countData = await countResponse.json();
+          if (countData && countData.product) {
+            setCount(countData.product.count);
           }
         } else {
           setData(null);
@@ -131,6 +178,22 @@ const ApproveDriversDataPage = () => {
       fetchData();
     }
   }, [id]);
+
+  const getAddressFromCoordinates = async (latitude: number, longitude: number) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch address');
+      }
+      const data = await response.json();
+      return data.display_name;
+    } catch (error) {
+      console.error('Error fetching address:', error);
+      return '';
+    }
+  };
 
   if (!data) {
     return <div>No data found</div>;
@@ -250,6 +313,41 @@ const ApproveDriversDataPage = () => {
                 </Table>
               ) : (
                 <div>No referred members found</div>
+              )}
+            </div>
+
+            <div className="w-full grid grid-cols-1 col-span-2 gap-4">
+              <h2 className="text-xl font-semibold text-gray-600">Driver Bookings({count})</h2>
+              {bookings.length > 0 ? (
+                <Table className="w-full">
+                  <TableCaption>A list of Bookings</TableCaption>
+                  <TableHeader className="w-full">
+                    <TableRow>
+                      <TableHead>User</TableHead>
+                      <TableHead>Actual Price</TableHead>
+                      <TableHead>Net Price</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Created At</TableHead>
+                      <TableHead>Pickup Location</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {bookings.map((book, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{book.user}</TableCell>
+                        <TableCell>{book.actualPrice}</TableCell>
+                        <TableCell>{book.netPrice}</TableCell>
+                        <TableCell>{book.status}</TableCell>
+                        <TableCell>
+                          {book.createdAt ? new Date(book.createdAt._seconds * 1000).toLocaleString() : ''}
+                        </TableCell>
+                        <TableCell>{book.address}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              ) : (
+                <div>No bookings found</div>
               )}
             </div>
           </div>
