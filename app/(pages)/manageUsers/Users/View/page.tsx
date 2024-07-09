@@ -68,6 +68,9 @@ const ApproveUsersDataPage = () => {
   const [email, setEmail] = React.useState('');
   const [referral, setReferral] = React.useState('');
   const [referredBy, setReferredBy] = React.useState('')
+  const [referralFname, setReferralFname] = React.useState('');
+  const [referralLname, setReferralLname] = React.useState('');
+  const [userCount, setUserCount]= React.useState('');
   const [count, setCount] = React.useState('');
   const [address, setAddress] = React.useState('');
   const [profilePicture, setProfilePicture] = React.useState('');
@@ -127,6 +130,18 @@ const ApproveUsersDataPage = () => {
             setReferrals([]);
           }
 
+          const namereferralResponse = await fetch(`/lib/GET/User/getUserByReferral?code=${userData.referredBy}`);
+          if (!namereferralResponse.ok) {
+            throw new Error('Failed to fetch referral data');
+          }
+          const namereferralData = await namereferralResponse.json();
+          if (namereferralData && namereferralData.product) {
+            setReferralFname(namereferralData.product.firstname);
+            setReferralLname(namereferralData.product.lastname);
+          } else {
+            setReferrals([]);
+          }
+
           // Fetch bookings
           const bookingResponse = await fetch(`/lib/GET/User/getUserBookingById?id=${id}`);
           if (!bookingResponse.ok) {
@@ -153,7 +168,14 @@ const ApproveUsersDataPage = () => {
           } else {
             setBookings([]);
           }
-
+          const usercountResponse = await fetch(`/lib/GET/User/getReferralByCount?code=${userData.referral}`);
+          if (!usercountResponse.ok) {
+            throw new Error('Failed to fetch referral data');
+          }
+          const usercountData = await usercountResponse.json();
+          if (usercountData && usercountData.product.Downline) {
+            setUserCount(usercountData.product.Downline);
+          }
           // Fetch booking count
           const countResponse = await fetch(`/lib/GET/User/getUserBookingByCount?id=${id}`);
           if (!countResponse.ok) {
@@ -227,11 +249,11 @@ const ApproveUsersDataPage = () => {
               </div>
               <div className="flex flex-col">
                 <Label htmlFor="ReferredBy" className="text-left">Referred By</Label>
-                <Input id="ReferredBy" value={referredBy} className="w-full " readOnly />
+                <Input id="ReferredBy" value={referralFname} className="w-full " readOnly />
               </div>
             </div>
             <div className="w-full grid grid-cols-1 col-span-2 gap-4">
-              <h2 className="text-xl font-semibold text-gray-600">Referred Members</h2>
+              <h2 className="text-xl font-semibold text-gray-600">Referred Users - {userCount}</h2>
               {referrals.length > 0 ? (
                 <Table className="w-full">
                   <TableCaption>A list of referred members.</TableCaption>
@@ -264,7 +286,7 @@ const ApproveUsersDataPage = () => {
               )}
             </div>
             <div className="w-full grid grid-cols-1 col-span-2 gap-4">
-              <h2 className="text-xl font-semibold text-gray-600">Bookings</h2>
+              <h2 className="text-xl font-semibold text-gray-600">Booking History- {count}</h2>
               {bookings.length > 0 ? (
                 <Table className="w-full">
                   <TableCaption>A list of bookings.</TableCaption>
