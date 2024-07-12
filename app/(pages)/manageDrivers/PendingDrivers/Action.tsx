@@ -8,16 +8,41 @@ import { useSession } from "next-auth/react";
 
 interface ActionButtonProps {
     id: string; 
+    refreshData: () => void; 
+
 
 }
 
-export function Actionbutton({ id}: ActionButtonProps) {
+export function Actionbutton({ id, refreshData}: ActionButtonProps) {
     const { toast } = useToast();
     const router = useRouter();
     const [isAuthorized, setIsAuthorized] = useState(false);
     const [isToggleAuthorized, setIsToggleAuthorized] = useState(false);
     const [isdeleteAuthorized, setIsdeleteAuthorized] = useState(false);
     const {data:session}= useSession()
+
+    const handleChangeStatus = async () => {
+      try {
+          const response = await fetch(`/lib/PUT/Driver/updateDriverStatusById?id=${id}`, {
+              method: 'PATCH',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ id }),
+          });
+
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          toast({ title: "Success",variant:'success', description: "Approved successfully" });
+          refreshData(); 
+
+      } catch (error) {
+          console.error('Failed to change status:', error);
+          toast({title: "Error",variant: "destructive", description: "Failed to change status" });
+      }
+  };
+
   
     const fetchPermission = async () => {
       if (!session) return; 
@@ -90,6 +115,13 @@ export function Actionbutton({ id}: ActionButtonProps) {
                              View
           </div>
                </DropdownMenuItem>   
+
+               <DropdownMenuItem className="hover:cursor-pointer hover:bg-gray-50" onClick={handleChangeStatus}>
+        
+        <div>
+                           Approve
+        </div>
+             </DropdownMenuItem>   
           
           {/* <DropdownMenuItem>
         {!isAuthorized&& !isToggleAuthorized && !isToggleAuthorized&&(

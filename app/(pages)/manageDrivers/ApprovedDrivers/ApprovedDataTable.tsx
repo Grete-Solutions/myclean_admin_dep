@@ -104,11 +104,7 @@ const columns: ColumnDef<ApprovedData>[] = [
     header: "Mobile",
     cell: ({ row }) => <div>{row.getValue("phone")}</div>,
   },
-  {
-    accessorKey: "Rating",
-    header: "Rating",
-    // cell: ({ row }) => <div>{row.getValue("Rating")}</div>,
-  },
+  
 
   {
     accessorKey: "action",

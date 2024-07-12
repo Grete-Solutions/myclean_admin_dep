@@ -42,120 +42,103 @@ import {
 import ApprovedDriversSheet from "../../../components/Sheetpop/ManageDRIVERS/ApprovedDriverSheet"
 import { Actionbutton } from "./Action"
 
-
-
 type ApprovedData = {
   id: string
-  firstname: string;
-  lastname: string;
-  phone: string;
-  userType: number;
-  email: string;
+  firstname: string
+  lastname: string
+  phone: string
+  userType: number
+  email: string
   createdAt: {
-    _seconds: number;
-    _nanoseconds: number;
-  };
+    _seconds: number
+    _nanoseconds: number
+  }
   updatedAt: {
-    _seconds: number;
-    _nanoseconds: number;
-  };
-  deactivated: number;
-  suspended: number;
-  status: string;
-};
-
-
-const columns: ColumnDef<ApprovedData>[] = [
-  {
-    accessorKey: "Sno",
-    header: "Sno",
-    cell: ({ row }) => <div>{row.index + 1}</div>, 
-  },
-  {
-    accessorKey: "firstname",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        First Name
-        <CaretSortIcon className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <div className="uppercase">{row.getValue("firstname")}</div>
-    ),
-  },
-  {
-    accessorKey: "lastname",
-    header: "Last Name",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("lastname")}</div>
-    ),
-  },
-  {
-    accessorKey: "email",
-    header: "Email",
-    cell: ({ row }) => <div>{row.getValue("email")}</div>,
-  },
-  {
-    accessorKey: "phone",
-    header: "Mobile",
-    cell: ({ row }) => <div>{row.getValue("phone")}</div>,
-  },
-  {
-    accessorKey: "Rating",
-    header: "Rating",
-    // cell: ({ row }) => <div>{row.getValue("Rating")}</div>,
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className={`${row.getValue("status") === 1 ? 'text-green-500' : 'text-red-500 file'} font-semibold`}>
-        {row.getValue("status") === 1 ? 'Active' : 'Inactive'}</div>
-    ),
-  },
-  {
-    accessorKey: "action",
-    header: "Action",
-    cell: ({ row }) => (
-      <div className="text-center text-[#0A8791]">
-        <Actionbutton id={row.original.id} />
-      </div>
-    ),
-  },
-];
+    _seconds: number
+    _nanoseconds: number
+  }
+  deactivated: number
+  suspended: number
+  status: string
+}
 
 export function ApprovePendingDataTable() {
-  const [data, setData] = React.useState<ApprovedData[]>([]);
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [data, setData] = React.useState<ApprovedData[]>([])
+  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+  const [rowSelection, setRowSelection] = React.useState({})
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('/lib/GET/Driver/getPendingDrivers')
+      if (!response.ok) {
+        throw new Error('Failed to fetch data')
+      }
+      const data = await response.json()
+      if (Array.isArray(data.product)) {
+        setData(data.product)
+      } else {
+        setData([])
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/lib/GET/Driver/getPendingDrivers');
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
-        }
-        const data = await response.json();
-        if (Array.isArray(data.product)) {
-          setData(data.product);
-        } else {
-          setData([]); 
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        // Handle error, e.g., set a default state or show an error message
-      }
-    };
+    fetchData()
+  }, [])
 
-    fetchData();
-  }, []);
-
+  const columns: ColumnDef<ApprovedData>[] = [
+    {
+      accessorKey: "Sno",
+      header: "Sno",
+      cell: ({ row }) => <div>{row.index + 1}</div>,
+    },
+    {
+      accessorKey: "firstname",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          First Name
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+      cell: ({ row }) => (
+        <div className="uppercase">{row.getValue("firstname")}</div>
+      ),
+    },
+    {
+      accessorKey: "lastname",
+      header: "Last Name",
+      cell: ({ row }) => (
+        <div className="capitalize">{row.getValue("lastname")}</div>
+      ),
+    },
+    {
+      accessorKey: "email",
+      header: "Email",
+      cell: ({ row }) => <div>{row.getValue("email")}</div>,
+    },
+    {
+      accessorKey: "phone",
+      header: "Mobile",
+      cell: ({ row }) => <div>{row.getValue("phone")}</div>,
+    },
+    {
+      accessorKey: "action",
+      header: "Action",
+      cell: ({ row }) => (
+        <div className="text-center text-[#0A8791]">
+          <Actionbutton id={row.original.id} refreshData={fetchData} />
+        </div>
+      ),
+    },
+  ]
+  
   const table = useReactTable({
     data,
     columns,
