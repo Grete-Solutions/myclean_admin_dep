@@ -70,6 +70,11 @@ const columns: ColumnDef<DeactivatedData>[] = [
     cell: ({ row }) => <div>{row.index + 1}</div>, 
   },
   {
+    accessorKey: "id",
+    header: "id",
+    cell: ({ row }) => <div>{row.getValue("id")}</div>,
+  },
+  {
     accessorKey: "firstName",
     header: ({ column }) => (
       <Button

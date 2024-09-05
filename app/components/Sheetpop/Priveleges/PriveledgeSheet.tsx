@@ -93,7 +93,7 @@ const {toast}= useToast()
 
   return (
     <Sheet>
-    {!isAuthorized && (
+    {isAuthorized && (
       <SheetTrigger className='flex items-center'>
         <Button className='text-[12px] bg-[#0A8791] py-2 h-fit'>
           <PlusCircle className='mr-1' size={12}/> Add

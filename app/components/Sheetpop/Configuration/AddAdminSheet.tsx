@@ -81,16 +81,17 @@ function AddAdminSheet (){
     async function fetchData() {
       const priveledgeData = await fetch('/lib/GET/Priveledges/getActivePrivileges');
       const priveledge = await priveledgeData.json(); 
-      if (priveledge.length > 0) { 
-        setAdminPriv(priveledge.product);
-       }
-      else {
+      console.log(priveledge.product); // Log the product array to check the data structure
+      if (priveledge.product.length > 0) {
+        setAdminPriv(priveledge.product); // Set the product array correctly
+      } else {
         setAdminPriv([]);
       }
     }
-
+  
     fetchData();
   }, []);
+  
 
   // Handle form submission
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

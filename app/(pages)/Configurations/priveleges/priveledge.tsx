@@ -86,14 +86,15 @@ export function Priveleges() {
   const fetchPermission = useCallback(async () => {
     if (!session) return;
     const id = session.user.role;
-    const field_name = 'get_all_roles';
+    const field_name = 'get_all_perm';
     try {
       const response = await fetch(`/lib/GET/Priveledges/getPrivelegesByIDandFieldName?id=${id}&field_name=${field_name}`);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
       const result = await response.json();
-      setIsAuthorized( session?.user.role === 'Super Admin' || session?.user.role === 'Super Admin'|| result.product === 1  );
+      setIsAuthorized(  session?.user.role === 'Super Admin'|| result.product === 1  );
+      console.log('my role',session?.user.role)
     } catch (error) {
       console.error('Error fetching data:', error);
       setError('Failed to fetch permissions. Please try again later.');
