@@ -105,7 +105,7 @@ export function AdminDataTable() {
 
   const fetchPrivilegeData = useCallback(async () => {
     try {
-      const response = await fetch('/lib/GET/Privileges/getallPrivileges');
+      const response = await fetch('/lib/GET/Priveledges/getallPriveledges');
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
@@ -160,16 +160,24 @@ export function AdminDataTable() {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => {
+        
         const isSuspended = row.getValue("isSuspended") === 1;
         const isDeactivated = row.getValue("isDeactivated") === 1;
         const status = isSuspended ? "Suspended" : (isDeactivated ? "Deactivated" : "Active");
         const textColor = isSuspended || isDeactivated ? "text-red-500" : "text-green-500";
-
+        
+        try{
+          
         return (
           <div className={`font-semibold ${textColor}`}>
             {status}
           </div>
         );
+        }
+        catch(error){
+          console.error('Error fetching status:', error);
+          return "Error fetching status";
+        }
       }
     },
     {

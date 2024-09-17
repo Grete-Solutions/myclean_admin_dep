@@ -15,7 +15,7 @@ export async function PATCH(request: Request) {
           headers: {
               'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ status }),
+          body: JSON.stringify({ id,status }),
       });
 
       const text = await res.text();

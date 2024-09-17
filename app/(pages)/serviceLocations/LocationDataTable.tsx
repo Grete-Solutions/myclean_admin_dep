@@ -46,7 +46,7 @@ interface Data {
   countryISOCode: string;
   price: number;
   city: string;
-  status: number;
+  status: boolean;
   action: React.ReactNode;
   commission:number;
   isDelete: number;
@@ -126,8 +126,8 @@ export function Location() {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => (
-        <div className={`${row.getValue("status") === 1 ? 'text-green-500' : 'text-red-500'} font-semibold`}>
-          {row.getValue("status") === 1 ? 'Active' : 'Inactive'}
+        <div className={`${row.getValue("status") ===  false ||1  ? 'text-green-500' : 'text-red-500'} font-semibold`}>
+          {row.getValue("status") === false || 1 ? 'Active' : 'Inactive'}
         </div>
       ),
     },

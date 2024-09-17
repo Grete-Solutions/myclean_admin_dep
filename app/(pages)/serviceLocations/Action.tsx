@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 interface ActionButtonProps {
     id: string; 
-    status: number; 
+    status: boolean; 
     onDelete: number;
     refreshData: () => void; 
 }
@@ -122,7 +122,7 @@ export function Actionbutton({ id, status, onDelete, refreshData }: ActionButton
         }
     };
 
-    const otherStatusLabel = status === 1 ? 'Inactive' : 'Active';
+    const otherStatusLabel = status === true || 1 ? 'Inactive' : 'Active';
 
     return (
         <DropdownMenu>
