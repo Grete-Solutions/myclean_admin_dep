@@ -12,11 +12,13 @@ function Login({}: Props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // New loading state
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError(''); 
+    setError('');
+    setLoading(true); // Set loading state to true when form is submitted
 
     try {
       const res = await fetch('/lib/POST/postlogin', {
@@ -43,6 +45,8 @@ function Login({}: Props) {
     } catch (error: any) {
       console.error('Error:', error);
       setError('Failed to sign in.');
+    } finally {
+      setLoading(false); // Reset loading state after the process is done
     }
   }
 
@@ -101,9 +105,12 @@ function Login({}: Props) {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-[#08898D] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-[#08898dab] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#08898d9d]"
+                className={`flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
+                  loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#08898D] hover:bg-[#08898dab]'
+                }`}
+                disabled={loading} 
               >
-                Sign in
+                {loading ? 'Signing in...' : 'Sign in'}
               </button>
             </div>
           </form>
